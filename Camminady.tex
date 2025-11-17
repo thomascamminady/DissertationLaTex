@@ -1,0 +1,83 @@
+ \documentclass[english,phd]{Aux/KITthesis}
+ %\usepackage[inner=4cm,outer=2cm]{geometry} %left=4cm,right=2cm would be equivalent
+
+
+ 
+\input{Aux/myheader}
+\input{Aux/mycommands}
+\include{Aux/My_document_info}
+\usepackage{dirtytalk}
+%\mathtoolsset{showonlyrefs=true}
+%\usepackage{draftwatermark}
+
+\makeatletter \renewcommand\thealgorithm{\thechapter.\arabic{algorithm}} \@addtoreset{algorithm}{chapter} \makeatother
+
+
+
+
+
+
+\settitle
+\begin{document}
+\setpdf
+
+
+
+\includetitle
+%\includelistoftodos		%%   COMMENT LATER
+\includeepigraph		%% UNCOMMENT LATER
+
+
+
+
+\includeacknowledgments	%% UNCOMMENT LATER
+
+\includeabstract		%% UNCOMMENT LATER
+\addcontentsline{toc}{chapter}{Preface}
+
+\inculdetableofcontents
+
+
+\renewcommand{\listfigurename}{List of figures}
+\renewcommand{\listtablename}{List of tables}
+\renewcommand{\listalgorithmname}{List of algorithms}
+
+
+\cleardoublepage
+\begingroup
+\makeatletter
+\let\ps@plain\ps@empty
+\makeatother
+\listoffigures
+\addcontentsline{toc}{chapter}{List of figures}
+\listoftables
+\addcontentsline{toc}{chapter}{List of tables}
+\listofalgorithms
+\addcontentsline{toc}{chapter}{List of algorithms}
+\cleardoublepage
+\endgroup
+
+
+
+\setmainpart
+\include{Chapters/Chapter1/Chapter1}
+\include{Chapters/Chapter2/Chapter2}
+\include{Chapters/Chapter3/Chapter3}
+
+\include{Chapters/Chapter4/Chapter4}
+\include{Chapters/Chapter5/Chapter5}
+\include{Chapters/Chapter7/Chapter7}
+\bibliographystyle{ieeetr}
+
+\cleardoublepage 
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{Bibliography/bibliomerged.bib}
+\includeglossary
+%\begin{appendices}
+%	\input{Chapters/Appendix1/SphericalHarmonics}
+%\end{appendices}
+
+%\addmybibentry
+%\includehowtouse		%%   COMMENT LATER
+\end{document}

@@ -1,0 +1,47 @@
+
+%	
+%	\section{Boltzmann equation}
+%	The transport equations so far were linear as they describe the interaction of particles with the background medium or with forces. The Boltzmann equation, however, is non-linear as it describes the interaction \textit{between} particles. In the absence of an external force field and sources, we write the Boltzmann equation as
+%	\begin{equation}
+%		\begin{split}
+%			\partial_t \psi(t,\bx,\bv) + \bv \cdot \nabla_\bx \psi(t,\bx,\bv)  = 
+%			J(\psi,\psi) = J^+(\psi,\psi)-J^-(\psi,\psi).
+%			\label{eq:boltzmanneq}
+%		\end{split}
+%	\end{equation}
+%	The non-linearity enters the equation via the gain and loss terms, denoted by $J^+$ and $J^-$. They are given by
+%	\begin{align}
+%		J^+(\psi,\psi)(t,\bx,\bv) = \int_{\RThree\times \mathbb{S}^2_+} B(\mathbf{n},\mathbf{q})
+%		\psi(t,\bx,\bv')\psi(t,\bx,\bw')\, d\mathbf{n}\, d\bw
+%	\end{align}
+%	for the gain term, and
+%	\begin{align}
+%		J^-(\psi,\psi)(t,\bx,\bv) =  \int_{\RThree\times \mathbb{S}^2_+} B(\mathbf{n},\mathbf{q})
+%		\psi(t,\bx,\bv)\psi(t,\bx,\bw)\, d\mathbf{n}\, d\bw
+%	\end{align}
+%	for the loss term, respectively. The pre-collision velocities $\bv$ and $\bw$ are related to the post-collision velocities $\bv'$ and $\bw'$. More precisely,
+%	\begin{align}
+%		\begin{pmatrix}
+%			\bv' \\ \bw'
+%		\end{pmatrix}
+%		=
+%		T_\mathbf{n}
+%		\begin{pmatrix}
+%			\bv \\ \bw
+%		\end{pmatrix}
+%		=
+%		\begin{pmatrix}
+%			\bv-\mathbf{n}\,\langle \mathbf{n}, \bv-\bw\rangle \\
+%			\bw+\mathbf{n}\,\langle \mathbf{n}, \bv-\bw\rangle
+%		\end{pmatrix},
+%	\end{align}
+%	where $\langle \cdot ,\cdot \rangle$ denotes the standard inner product. With $\mathbf{q}=\bw-\bv$, we integrate $\mathbf{n}$ over $\mathbb{S}^2_+$, defined by
+%	\begin{align}
+%		\mathbb{S}^2_+ \defas \{\mathbf{n}\in \mathbb{S}^2 \text{ such that } \langle \mathbf{n},\mathbf{q}\rangle\geq 0\}.
+%	\end{align}
+%	The non-negative kernel $B$ models the way  particles interact with each other. For example, hard sphere collisions can be modeled with $B(\mathbf{n},\mathbf{q}) = |\mathbf{q}|$.
+%	
+%	The Boltzmann equation in this form requires particle interactions to be both binary and instantaneous.
+
+%\subsection{Entropy for the Boltzmann equation}
+%\todo{missing}

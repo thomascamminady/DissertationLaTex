@@ -1,0 +1,172 @@
+
+\section{Correlated and uncorrelated particles with heterogeneities}
+\label{sec:transporteqs}
+Having discussed heterogeneities, we are now equipped with the necessary tools to reconsider the notion of correlated and uncorrelated particles---this time for heterogeneous materials.
+A correlated particle follows potentially different dynamics than an uncorrelated particle. Recall, for example, the obstacle field that resulted from a Poisson disk sampling procedure, where scatterers obey a certain minimal distance. A particle that is placed at a random position inside the obstacle field might collide after traveling a distance smaller than the minimal distance between scatterers; something that is not possible for a particle that just underwent a collision.
+
+If that particle now moves from one homogeneous subdomain into another, it again behaves like a particle that was randomly seeded at the interface between two materials, agnostic to a minimal distance between scatterers. It became, ipso facto, an uncorrelated particle. 
+The notion of correlated and uncorrelated particles is therefore intertwined with the memory-resetting ansatz. Crossing a domain interface, a particle becomes indistinguishable from a particle that is sourced at the same position (with the same direction).
+
+
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{Chapters/Chapter4/figures/flowchart2.pdf}
+	\caption{Life cycle of correlated and uncorrelated particles in the heterogeneous case.}
+	\label{fig:photo2019-12-1617-29-03}
+\end{figure}
+
+
+This naturally defines interface conditions for the heterogeneous case. Consider the situation in Figure \ref{fig:photo2019-12-1914-14-20}. For a domain that spans all of $\mathbb{R}^2$, we place an interface at $x=0$. 
+Quantities on the left (or right) side of the interface are denoted with an additional superscript $L$ (or $R$).
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{Chapters/Chapter4/figures/domain.pdf}
+	\caption{An infinite, heterogeneous domain with an interface at $x=0$.}
+	\label{fig:photo2019-12-1914-14-20}
+\end{figure}
+
+The equations for both sides of the domain are then given by
+\begin{subequations}
+\begin{align}
+%\begin{split}
+\partial_s \psi^L_u(s,\bx,\bOmega) \, +&\, \bOmega\cdot \nabla_\bx \psi_u^L(s,\bx,\bOmega) + \sigma^L_{t,u}(s)\psi^L _u(s,\bx,\bOmega) =\, \delta(s) Q^L_u(\bx),\\
+\begin{split}
+\partial_s \psi^L _c(s,\bx,\bOmega) \, +&\, \bOmega\cdot \nabla_\bx \psi^L _c(s,\bx,\bOmega) + \sigma^L_{t,c}(s)\psi^L _c(s,\bx,\bOmega)\\
+ &=c \, \delta(s) \int_0^\infty \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\left[ \sigma^L_{t,c}(s')\psi^L _c(s',\bx,\bOmega')
++ \sigma^L_{t,u}(s')\psi^L _u(s',\bx,\bOmega') \right] \, d\bOmega'\, ds',
+\end{split}
+\end{align}
+\end{subequations}
+for $x\leq0$, and 
+\begin{subequations}
+	\begin{align}
+	%
+\partial_s \psi^R _u(s,\bx,\bOmega) \, +&\,\bOmega\cdot \nabla_\bx \psi_u^R(s,\bx,\bOmega) + \sigma^R_{t,u}(s)\psi^R _u(s,\bx,\bOmega) =\, \delta(s) Q^R_u(\bx),\\
+\begin{split}
+\partial_s \psi^R _c(s,\bx,\bOmega)  \, +&\, \bOmega\cdot \nabla_\bx \psi^R _c(s,\bx,\bOmega) + \sigma^R_{t,c}(s)\psi^R _c(s,\bx,\bOmega)\\
+&=c \, \delta(s) \int_0^\infty \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\left[ \sigma^R_{t,c}(s')\psi^R _c(s',\bx,\bOmega')
++ \sigma^R_{t,u}(s')\psi^R _u(s',\bx,\bOmega') \right] \, d\bOmega'\, ds',
+%\end{split}
+\end{split}
+\end{align}
+\end{subequations}
+for $x\geq0$. Interface conditions describe how particles---correlated and uncorrelated ones---that leave the domain become uncorrelated particles with $s=0$ for the domain they move into.
+They are given by 
+\begin{subequations}
+%\begin{eqnarray}
+\begin{align}
+ \psi^L _u(0,\bOmega,s)  &= \delta(s) \int_0^\infty  \psi^R _u(0,\bOmega,s') + \psi^R _c(0,\bOmega,s') \, ds'& \text{ for } \bOmega \cdot {\bf{n}}_L <0, \\
+ \psi^L _c(0,\bOmega,s)&=0 &\text{ for } \bOmega \cdot {\bf{n}}_L <0, \\
+ \psi^R _u(0,\bOmega,s)  &= \delta(s) \int_0^\infty  \psi^L _u(0,\bOmega,s') + \psi^L _c(0,\bOmega,s') \, ds' &\text{ for } \bOmega \cdot {\bf{n}}_R <0,\\
+  \psi^R _c(0,\bOmega,s)&=0 &\text{ for } \bOmega \cdot {\bf{n}}_R <0. 
+  \end{align}
+% \end{eqnarray}
+  \label{eq:icsimple}%
+ \end{subequations}
+
+
+This single-interface example can easily be generalized to arbitrary complex geometries.
+Consider therefore a heterogeneous domain $\bar {V}\subset \mathbb{R}^d$ with $d\in \{1,2,3\}$, and assume $\bar  {V} = \cup_{i=1}^N\bar {V}_i$, with all open ${V}_i$ being homogeneous and ${V}_i\cap {V}_j = \emptyset$ if $i\not = j$. Let $\partial {V}$ denote the boundary of $\bar {V}$.
+With $\partial {V}_i = \partial {V}^I_i \cup \partial {V}_i^\Gamma$ we divide the boundary of $\bar {V}_i$ into interface boundaries $\partial {V}^I_i $ and non-interface boundaries $\partial {V}_i^\Gamma$. The interior indicator function $\chi_\text{in}$ satisfies $\chi_\text{in}(\bx) =i$ iff $\bx \in {V}_i$. The outward pointing normal  of $\bar{V}_i$ is ${\bf{n}}_i(\bx)$ for $\bx \in \partial {V}_i$. For $\bx \in \partial  {V}^I_i\cap  \partial {V}^I_j$, the exterior indicator function $\chi_\text{ex}$ satisfies $\chi_\text{ex}(i,\bx) =j$ if  ${\bf{n}}_i (\bx) = -{\bf{n}}_j (\bx) $, i.e. $\bar {V}_j$ neighbors $ \bar{V}_i$ at $\bx$. All cross sections, sources, and the angular fluxes receive a subscript for the respective domain that they are restricted to. Abusing notation, ${l(\bx,\bOmega)}$ denotes now the distance to the next boundary or interface, whichever is closer.
+
+
+{\textbf{The backward formulation}}
+
+We start with the backward formulation where $s$ represents the distance since the last event.
+All non-interface boundaries require boundary conditions for the incoming angular flux, given  for $i=1,\ldots,N$ by
+\begin{subequations}
+	%\begin{eqnarray}
+	\begin{align}
+	  \psi^i_c(s,\bx,\bOmega) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {V}_i^\Gamma,\\
+	  	  \psi^i_u(s,\bx,\bOmega) &=\delta(s)\psi_u^{bc}(\bx,\bOmega) &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {V}_i^\Gamma.
+\end{align}
+\label{eq:general_BC}%
+\end{subequations}
+Interface conditions for $i=1,\ldots,N$ are the generalization of \eqref{eq:icsimple}, \ie
+\begin{subequations}
+	\begin{align}
+	\psi^i_c(s,\bx,\bOmega) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {V}_i^I,\\
+	\psi^i_u(s,\bx,\bOmega) &=\delta(s) \int_0^{l(\bx,\bOmega)}  \psi^{\chi_\text{ex}(i,\bx)}(s',\bx,\bOmega)  \, ds' &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {V}_i^I,
+	\end{align}
+	\label{eq:general_IC}%
+\end{subequations}
+with  $\psi^{\chi_\text{ex}(i,\bx)}(s',\bx,\bOmega)  = \psi^{\chi_\text{ex}(i,\bx)}_u(s',\bx,\bOmega) + \psi^{\chi_\text{ex}(i,\bx)}_c(s',\bx,\bOmega)$.
+Transport for the correlated and uncorrelated flux is described cell-wise for $\bx \in \bar { {V}}_i$ via
+\begin{subequations}
+	\begin{align}
+	%
+	\partial_s \psi^i_u(s,\bx,\bOmega) \, +&\,\bOmega\cdot \nabla_\bx \psi_u^i(s,\bx,\bOmega) + \sigma^i_{t,u}(s)\psi^i_u(s,\bx,\bOmega) =\, \delta(s) Q^i_u(\bx),\\
+	\begin{split}
+	\partial_s \psi^i_c(s,\bx,\bOmega) \, +&\, \bOmega\cdot \nabla_\bx \psi^i_c(s,\bx,\bOmega) + \sigma^i_{t,c}(s)\psi^i_c(s,\bx,\bOmega)\\
+	&=c\, \delta(s) \int_0^{l(\bx,\bOmega)}  \int_{\mathbb{S}^2}
+	s(\bOmega' \cdot \bOmega)\left[ \sigma^i_{t,c}(s')\psi^i_c(s',\bx,\bOmega')
+	+ \sigma^i_{t,u}(s')\psi^i_u(s',\bx,\bOmega') \right] \, d\bOmega'\, ds'.
+	%\end{split}
+	\label{eq:correlatedbackward}
+	\end{split}
+	\end{align}
+
+	\label{eq:general_TRANSPORT}%
+\end{subequations}
+
+Summarizing, we can model non-classical linear transport in heterogeneous media via the boundary conditions \eqref{eq:general_BC}, the interface conditions \eqref{eq:general_IC}, and the transport equations \eqref{eq:general_TRANSPORT}.
+
+
+{\textbf{The forward formulation}}
+
+Recall the forward formulation of non-classical transport in its simplest form
+\begin{align}
+-\partial_s f(s,\bx,\bOmega) + \bOmega\cdot \nabla_\bx f(s,\bx,\bOmega) =c\,  p(s) \int_{\mathbb{S}^2} s(\bOmega'\cdot \bOmega) f(0,\bx,\bOmega')\, d\bOmega',
+\end{align}
+equipped with the boundary condition
+\begin{align}
+	  f(s,\bx,\bOmega) &=p(s)f^{bc}(\bx,\bOmega) &\text{ for } \bOmega \cdot {\bf{n}}(\bx) <0 \text{ and }\bx \in  \partial {V}^\Gamma,
+\end{align}
+and $s$ now interpreted as the distance to the next interaction.
+To model heterogeneous transport, we again need to distinguish correlated from uncorrelated particles and consider interface conditions. As with the backward formulation, we assume that the memory of particles is lost when crossing a domain interface. Consequently, we need to re-sample the distance to collision in the forward formulation. With the same spatial domain as before, we end up with the equations that follow next.
+
+Since particles enter the domain uncorrelated, boundary conditions are given by
+\begin{subequations}
+	%\begin{eqnarray}
+	\begin{align}
+	f^i_c(s,\bx,\bOmega) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {V}_i^\Gamma,\\
+	f^i_u(s,\bx,\bOmega) &=p^i_u(s)f_u^{bc}(\bx,\bOmega) &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {V}_i^\Gamma.
+	\end{align}
+	\label{eq:general_BCfw}%
+\end{subequations}
+The interface conditions for $i=1,\ldots,N$ read 
+\begin{subequations}
+	\begin{align}
+	f^i_c(s,\bx,\bOmega) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {V}_i^I,\\
+	f^i_u(s,\bx,\bOmega) &=p^i_u(s) \int_0^{l(\bx,\bOmega)}  f^{\chi_\text{ex}(i,\bx)}(s',\bx,\bOmega)  \, ds' &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {V}_i^I,
+	\end{align}
+	\label{eq:general_ICfw}%
+\end{subequations}
+with  $f^{\chi_\text{ex}(i,\bx)}(s',\bx,\bOmega)  = f^{\chi_\text{ex}(i,\bx)}_u(s',\bx,\bOmega) + f^{\chi_\text{ex}(i,\bx)}_c(s',\bx,\bOmega)$.
+Transport for the correlated and uncorrelated flux  is then described cell-wise for $\bx \in \bar {{V}}_i$ via
+\begin{subequations}
+	\begin{align}
+	%
+	-\partial_s f^i_u(s,\bx,\bOmega) +&\bOmega\cdot \nabla_\bx f_u^i(s,\bx,\bOmega)   =\, 	p_u^i(s) Q^i_u(\bx),\\
+	\begin{split}
+	-\partial_s f^i_c(s,\bx,\bOmega)  +& \bOmega\cdot \nabla_\bx f^i_c(s,\bx,\bOmega) 
+	=\,c\, p_c^i(s) \int_{\mathbb{S}^2}
+	s(\bOmega' \cdot \bOmega)\left[ f^i_c(0,\bx,\bOmega')
+	+ f^i_u(0,\bx,\bOmega') \right] \, d\bOmega'.
+	%\end{split}
+	\label{eq:correlatedforward}
+	\end{split}
+	\end{align}
+	\label{eq:general_TRANSPORTfw}%
+\end{subequations}
+Cross sections and path length distributions are connected as before.
+
+This added complexity obviously comes at a cost. Evolving two distributions in time inevitably doubles the computational complexity. To justify this, experimental work is necessary that quantifies the improvements that a distinction between \textit{correlated} and \textit{uncorrelated} particles can achieve.
+
+

@@ -1,0 +1,62 @@
+\chapter{On the Relation to SP$_N$}
+
+\section{Theory}
+
+In this section, we are going to outline the relevant mathematical background, as well as the notation that will be used. 
+
+The transport equation describes the evolution of the angular flux $\psi(t,\bf x, \bf \Omega)$ in space and time. On a microscopic level, the dynamics of the process is governed by two physical principles: 1) Particles follow Newton's Law if they do not interact with the medium or other particles and move along straight lines, and 2) particles can interact with the medium or other particles, resulting in absorption or a change of velocity. On a mesoscopic level we are no longer interested in the dynamics of every single particle, but consider instead their statistics. For a system of $n$ particles, $n\cdot \psi(t,\bf x,\bf \Omega)$ is the number of particles at time $t$ and position $\bf x$, traveling along direction $\Omega$. The transport equation describes how $\psi(t,\bf x, \bf \Omega)$ evolves in time and space and is given by
+\begin{equation}\label{eq:kineticEquation}
+\partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) + 
+\sigma_t(\bx) \psi(t,\bx,\bOmega)= \sigma_s (S^+ \psi) (t,\bx,\bOmega) + q(t,\bx).
+\end{equation}
+We denote by $t\in \mathbb{R}^+$ the time and $\bf x = (x,y,z)^T \in \mathbb{R}^3$ is the spatial position. Particles have a velocity $\bf \Omega \in \mathbb{S}^2$. The total cross section is $\sigma_t(\bf x)=\sigma_a(\bf x) + \sigma_s(\bf x)$. Particles scatter with probability $\sigma_s(\bf x) / \sigma_t(\bf x)$ in the case of a collision and are being absorbed with probability $\sigma_a(\bf x)/\sigma_t(\bf x)$ otherwise. In the case of scattering, the in-scattering kernel $S^+(\psi)(t,\bf x, \bf \Omega)$ describes the gain of particles that were previously traveling along direction $\bf \Omega'$ and changed to direction $\bf \Omega$. It is given by
+\begin{equation}\label{eq:in-scattering}
+(S^+ \psi) (t,\bx,\bOmega) = \int_{\mathbb{S}^2} s(\bOmega\cdot\bOmega')\psi(t,\bx,\bOmega') d\bOmega',
+\end{equation}
+where $s(\bOmega\cdot\bOmega')$ is the probability of transitioning from direction $\Omega'$ into direction $\Omega$ or vice versa.
+
+Furthermore, the system might include a source $q(t,\bf x)$ that emits particles isotriopically.
+\subsection{The S$_N$ discretization}
+The transport equation above describes the evolution of a six-dimensional quantity. Discretizing every dimension directly yields tremendous numerical costs and makes solving the equation unfeasible, even for modern day computer architectures \thomas{See....}.
+Instead, the \SN method only allows for a finite set $\{{\bf{\Omega}}_q\}_{q=1,\dots,N_q}$ of $N_q$ directions along which particles may travel.
+
+The \SN equations for a set of ordinates $\bOmega_1,\dots,\bOmega_{N_q}$ and $\psi_q(t,\bx) = \psi(t,\bx,\bOmega_q)$ are 
+\begin{align}\label{eq:SN}
+\partial_t \psi_q(t,\bx) + \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx) + \sigma_t(\bx) \psi_q(t,\bx)= \sigma_s(\bx) \sum_{p=1}^{N_q} w_p \cdot s(\bOmega_q\cdot\bOmega_p) \psi_p(t,\bx) + q(t,\bx),
+\end{align}
+where $w_p$ are quadrature weights, chosen such that 
+\begin{equation}
+\int_{\mathbb{S}^2} \psi(t,{\bf x}, {\bf \Omega}) \approx \sum_{q=1}^{N_q} w_q \cdot \psi_q(t,\bf x).
+\end{equation}
+Then Eq.~\eqref{eq:SN} is a coupled system of $N_q$ four-dimensional equations.
+\section{Numerics}
+
+In this section, we are going to outline the relevant mathematical background, as well as the notation that will be used. 
+
+The transport equation describes the evolution of the angular flux $\psi(t,\bf x, \bf \Omega)$ in space and time. On a microscopic level, the dynamics of the process is governed by two physical principles: 1) Particles follow Newton's Law if they do not interact with the medium or other particles and move along straight lines, and 2) particles can interact with the medium or other particles, resulting in absorption or a change of velocity. On a mesoscopic level we are no longer interested in the dynamics of every single particle, but consider instead their statistics. For a system of $n$ particles, $n\cdot \psi(t,\bf x,\bf \Omega)$ is the number of particles at time $t$ and position $\bf x$, traveling along direction $\Omega$. The transport equation describes how $\psi(t,\bf x, \bf \Omega)$ evolves in time and space and is given by
+\begin{equation}\label{eq:kineticEquation}
+\partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) + 
+\sigma_t(\bx) \psi(t,\bx,\bOmega)= \sigma_s (S^+ \psi) (t,\bx,\bOmega) + q(t,\bx).
+\end{equation}
+We denote by $t\in \mathbb{R}^+$ the time and $\bf x = (x,y,z)^T \in \mathbb{R}^3$ is the spatial position. Particles have a velocity $\bf \Omega \in \mathbb{S}^2$. The total cross section is $\sigma_t(\bf x)=\sigma_a(\bf x) + \sigma_s(\bf x)$. Particles scatter with probability $\sigma_s(\bf x) / \sigma_t(\bf x)$ in the case of a collision and are being absorbed with probability $\sigma_a(\bf x)/\sigma_t(\bf x)$ otherwise. In the case of scattering, the in-scattering kernel $S^+(\psi)(t,\bf x, \bf \Omega)$ describes the gain of particles that were previously traveling along direction $\bf \Omega'$ and changed to direction $\bf \Omega$. It is given by
+\begin{equation}\label{eq:in-scattering}
+(S^+ \psi) (t,\bx,\bOmega) = \int_{\mathbb{S}^2} s(\bOmega\cdot\bOmega')\psi(t,\bx,\bOmega') d\bOmega',
+\end{equation}
+where $s(\bOmega\cdot\bOmega')$ is the probability of transitioning from direction $\Omega'$ into direction $\Omega$ or vice versa.
+
+Furthermore, the system might include a source $q(t,\bf x)$ that emits particles isotriopically.
+\subsection{The S$_N$ discretization}
+The transport equation above describes the evolution of a six-dimensional quantity. Discretizing every dimension directly yields tremendous numerical costs and makes solving the equation unfeasible, even for modern day computer architectures \thomas{See....}.
+Instead, the \SN method only allows for a finite set $\{{\bf{\Omega}}_q\}_{q=1,\dots,N_q}$ of $N_q$ directions along which particles may travel.
+As we see in \cite{einstein} asdasdasd
+The \SN equations for a set of ordinates $\bOmega_1,\dots,\bOmega_{N_q}$ and $\psi_q(t,\bx) = \psi(t,\bx,\bOmega_q)$ are 
+\begin{align}\label{eq:SN}
+\partial_t \psi_q(t,\bx) + \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx) + \sigma_t(\bx) \psi_q(t,\bx)= \sigma_s(\bx) \sum_{p=1}^{N_q} w_p \cdot s(\bOmega_q\cdot\bOmega_p) \psi_p(t,\bx) + q(t,\bx),
+\end{align}
+where $w_p$ are quadrature weights, chosen such that 
+\begin{equation}
+\int_{\mathbb{S}^2} \psi(t,{\bf x}, {\bf \Omega}) \approx \sum_{q=1}^{N_q} w_q \cdot \psi_q(t,\bf x).
+\end{equation}
+Then Eq.~\eqref{eq:SN} is a coupled system of $N_q$ four-dimensional equations.
+
+\endinput

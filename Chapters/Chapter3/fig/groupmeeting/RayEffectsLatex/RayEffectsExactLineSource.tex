@@ -1,0 +1,117 @@
+\documentclass[]{article}
+ \usepackage{graphicx} 
+ \usepackage{subcaption}
+ \usepackage{amsmath}
+ \captionsetup[subfigure]{list=true, font=large, labelfont=bf, 
+ 	labelformat=brace, position=top}
+ 
+ 
+%opening
+\title{Ray effects in almost exact \\ line source simulations}
+\author{Thomas Camminady}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This draft contributes to the understanding of ray effects in two ways. First, we pinpoint the origin of ray effects in an infinite medium test case to oscillations in the number of non-zero quadrature points that are used to compute the scalar flux. Second, we compute the exact angular flux for the line-source problem, use a numerical quadrature to compute the scalar flux, and compare this to (I) the exact scalar flux of the line-source problem and (II) the scalar flux of a full S$_N$ computation.
+
+Two consequences follow: (A) If ray effect mitigation techniques yield a less oscillatory scalar flux for the line-source problem than what can be expected from using the exact angular flux, this can only be due to an error introduced---purposefully---in the angular flux.
+(B) Even if the S$_N$ method computes the angular flux exactly, the scalar flux will be inexact. This inevitably raises the question whether comparing the scalar flux is the correct error metric. 
+\end{abstract}
+
+\section{Infinite medium test case}
+Consider this test case a prelude to the more complex experiment that follows in Section \ref{sec:ls}. We strip away every bit of complexity that is not contributing to the presence of ray effects. To be able to solve for the angular flux analytically, we consider steady state transport in an infinite medium that is purely absorbing with a constant source. The situation is depicted in Figure \ref{fig:setup}, where we see a circular source (green) of radius $0.4$ that emits particles isotropically. We are interested in the solution along the line $x=1$ (black) with particular focus on the three measurement points at $(1,0)$, $(1,0.15)$, and $(1,0.3)$. The scene is drawn to scale. The broad spatial spread of the source in close proximity to the measurement points should, in theory, assure accurate evaluations of the angular and scalar flux. The governing equation is 
+\begin{align}
+	\Omega_x\partial_x \psi(x,y,\Omega_x,\Omega_y) +
+	\Omega_y\partial_y \psi(x,y,\Omega_x,\Omega_y) 
+	+ \sigma_a \psi(x,y,\Omega_x,\Omega_y) = Q(x,y)
+\end{align}
+and the exact solution to the angular flux is
+\begin{align}
+\psi(x,y,\Omega_x,\Omega_y)  = \int_0^\infty e^{- \sigma_a \tau} \, Q(x-\tau \Omega_x, y-\tau \Omega_y) \, d\tau,
+\end{align}
+where the integration can obviously be restricted to the spatial spread of the source.
+
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{../Setup}
+	\caption{Setup}
+	\label{fig:setup}
+\end{figure}
+\begin{figure}
+	\begin{subfigure}[c]{1.0\textwidth}
+	\includegraphics[width=1.0\linewidth]{../figure11_100}
+\caption{}
+\label{fig:figure11100}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{1.0\textwidth}
+	\includegraphics[width=1.0\linewidth]{../figure21_100}
+\caption{}
+\label{fig:figure21100}
+	\end{subfigure}
+	\begin{subfigure}[c]{1.0\textwidth}
+	\includegraphics[width=1.0\linewidth]{../figure201_100}
+\caption{}
+\label{fig:figure201100}
+\end{subfigure}
+\end{figure}
+
+
+
+
+\section{Line-source test case}
+\label{sec:ls}
+\begin{figure}
+\begin{subfigure}[c]{0.43\textwidth}
+	\includegraphics[width=1.0\linewidth]{../REF}
+	\caption{}
+	\label{fig:ref}
+\end{subfigure}
+\hfill
+\begin{subfigure}[c]{0.43\textwidth}
+	\includegraphics[width=1.0\linewidth]{../SN36}
+	\caption{}
+	\label{fig:sn36}
+\end{subfigure}
+\caption{Exact vs S$_6$.}
+\end{figure}
+
+
+\begin{figure}
+	\begin{subfigure}[c]{0.43\textwidth}
+		\includegraphics[width=1.0\linewidth]{../ContributionCombined}
+		\caption{}
+		\label{fig:ContributionCombined}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{0.43\textwidth}
+		\includegraphics[width=1.0\linewidth]{../SN36}
+		\caption{}
+		\label{fig:sn36again}
+	\end{subfigure}
+\caption{Almost exact vs S$_6$.}
+\end{figure}
+	
+
+\begin{figure}
+	\begin{subfigure}[c]{0.43\textwidth}
+		\includegraphics[width=1.0\linewidth]{../ContributionRHS}
+		\caption{}
+		\label{fig:RHS}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[c]{0.43\textwidth}
+		\includegraphics[width=1.0\linewidth]{../ContributionIC}
+		\caption{}
+		\label{fig:IC}
+	\end{subfigure}
+\caption{Contribution of IC and RHS to the almost exact scalar flux.}
+\end{figure}
+
+
+\end{document}

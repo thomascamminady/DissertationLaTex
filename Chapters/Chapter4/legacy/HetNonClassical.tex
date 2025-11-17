@@ -1,0 +1,427 @@
+\documentclass[letterpaper]{template/mandc2019}
+\input{commands.tex}
+ \input{packages.tex}
+\usepackage{amsmath} 
+ \title{Heterogeneous non-classical transport}
+ \author{
+ 		Thomas Camminady,\, Martin Frank,\, {\color{red}Edward W. Larsen?}\\
+ 		%\texttt{firstname.lastname@kit.edu}
+ }
+
+ \begin{document}
+\maketitle
+\justify
+\begin{abstract}
+\end{abstract}
+ 	
+ \section{Introduction}
+	 Classical transport theory describes a memoryless process: The distance that a particle has already traveled since its last collision does not alter the probability of undergoing a collision in the future. While this theory correctly models and predicts transport in various regimes, experimental and theoretical work has shown its limitations. This initiated the quest for a more general formulation of transport in the recent decade---non-classical transport theories. 
+	 
+	On the experimental side, results in atmospheric physics demonstrate the presence of a memory for light transport in clouds [See Larsen jeju citations 1-8]. Since the positions of water droplets in clouds are correlated positively, the presence of water droplets increases the likelihood of finding more droplets in the vicinal neighborhood. Conversely, a photon that has already traveled a large distance since its last collision is likely to further traverse the cloud unhinderedly.
+
+On the theoretical side, we start by mentioning the\textit{ periodic Lorentz gas }
+\cite{bourgain1998distribution,golse2008periodic,caglioti2008boltzmann,marklof2008boltzmann,marklof2014free,marklof2011periodic,marklof2014power,marklof2015generalized}. The underlying motivation was to derive a transport equation for particles that interact with a highly correlated medium. Obstacles are placed on a two-dimensional lattice with certain radii and certain distances apart from another and particles undergo elastic collisions with the obstacles. Shrinking the obstacles' radii and distances carefully yields a transport equation that augments the phase-space of the classical transport equation by an additional variable. This variable is interpreted as \textit{the distance to the next collision}.
+Independently, a generalized transport theory was hypothesized where the additional variable was interpreted as the \textit{distance since the last collisions} \cite{larsen2011generalized,vasques2014non,vasques2014non2}. Originated in the nuclear engineering  community, this generalized theory proofed to be a useful tool for e.g. transport in mixtures\cite{vasques2014accuracy} or pebble bed reactors \cite{vasques2014non2}. 
+
+More recently, non-classical transport has found its way into the computer graphics community. Initial work suggest that non-classical transport is a useful tool for rendering images or animated movies \cite{bitterli2018radiative,d2018reciprocal,d2019reciprocal,deon2019reciprocal3,jarabo2018radiative}. Images appear more realistic and a larger artistic flexibility can be achieved.
+
+Though already considered in its infancy, the computer graphics community has highlighted certain limitations of non-classical transport that have to be lifted for it to find broad acceptance and usability. 
+In this work, we are going to focus on one of these limitations: Non-classical transport in heterogeneous materials where each material dictates different transport behavior. Before hypothesizing heterogeneous non-classical transport equations in Section \ref{sec:transporteqs}, we elaborate on the necessity of distinguishing two species of particles---those that are correlated with the material and those that are uncorrelated---in Section \ref{sec:corr}. Solution methods for the resulting equations are sketched in Section \ref{sec:Solution methods}. We end with a discussion in Section \ref{sec:discuss}.
+ 
+ 
+ 
+\section{Correlated and uncorrelated particles}
+\label{sec:corr}
+We start by summarizing the results of a thought and numerical experiment made in \cite{d2018reciprocal} and independently considered in \cite{jarabo2018radiative}: For non-classical particle transport it is necessary to distinguish particles that are \textit{correlated} with the medium (related quantities are denoted with a subscript $c$) from those particles that are \textit{uncorrelated} with the medium (denoted with a subscript $u$).
+This distinction is explained by considering particle transport in an obstacle field generated via a Poisson disc sampling procedure. Rather than placing scattering obstacles (called scatterers from now on) randomly---as it is the assumption in classical transport theory---we place scatterers in a way such that they obey a certain minimal distance from any other scatterer, visualized in Figure \ref{fig:sub1} and \ref{fig:sub2}, respectively.
+The distribution for the \textit{distance between  consecutive interactions} has to be zero for distances smaller than the minimal distance between scatterers. However, for a particle that is placed independently of the scatters---e.g. by a source---the distribution for the \textit{distance to the next interaction} does not have this property.
+
+Consequently we distinguish correlated and uncorrelated particles. These two species then behave as follows: 
+\begin{enumerate}
+\item[a)] We gain correlated (or uncorrelated) particles by a correlated (or uncorrelated) source. 
+\item[b)] If correlated (or uncorrelated) particles get absorbed we lose correlated (or uncorrelated) particles. 
+\item[c)] If correlated particles scatter they stay correlated. 
+\item[d)] However, if uncorrelated particles scatter they are no longer independent of the medium and become correlated particles.
+\end{enumerate}
+
+
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{figures/random}
+		\caption{Scatterers generated in a uniformly random manner. Scatterers are allowed to overlap since they are sampled independently of another.}
+		\label{fig:sub1}
+	\end{subfigure}%
+	\hfill
+	\begin{subfigure}{.45\textwidth}
+		\centering
+		\includegraphics[width=.9\linewidth]{figures/poisson}
+		\caption{Scatterers generated via Poisson disc sampling where the minimal distance between two boundaries is equal to the radius $r$.}
+		\label{fig:sub2}
+	\end{subfigure}
+	\caption{Scatterers of radius $r=0.01$ generated in the domain $[0,1]\times[0,1]$. Both pictures show $696$ scatterers.}
+	\label{fig:test}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/photo_2020-01-02_12-32-00}
+	\caption{Life cycle of correlated and uncorrelated particles.}
+	\label{fig:photo2019-12-1617-13-40}
+\end{figure}
+Ignoring heterogeneity, this life cycle is depicted in Figure  \ref{fig:photo2019-12-1617-13-40}. 
+We are aware that the above distinction is similar to the one of \textit{collided} and \textit{uncollided} particles. In fact, for the homogeneous case, uncorrelated particles are uncollided ones and correlated particles are collided ones, respectively. For the heterogeneous case however, correlated particles can become uncorrelated, whereas collided particles always stay collided.
+According to \cite{larsen2017equivalence}, non-classical transport can equivalently be described via the distance to the next interaction (resulting in a \textit{forward} transport equation) or the distance since the last collision (resulting in a \textit{backward} transport equation). We will provide both transport equations for the heterogeneous non-classical case. However, we initially work in the backward nomenclature and extend the definitions made in  \cite{larsen2011generalized} by defining:
+
+
+
+\begin{align*}
+{\bf{V}} = &\text{ the domain with boundary }\partial{\bf{V}}.\\
+\bx = & \text{ the position }(x,y,z)\in {\bf{V}}. \\
+{\bf{n}}(\bx) =&\, {\bf{n}} =\text{ the outward pointing normal vector at }\bx \in \partial{\bf{V}}.\\
+\bOmega =& \text{ the direction of flight }(\Omega_x,\Omega_y,\Omega_z) \text { with unit speed.}\\
+s =&\text{ the distance that a particle has traveled since its previous interaction,}\\ & \text{ be it birth or scattering.}\\
+v=& \text{ the particle speed.}\\
+n_u(\bx,\bOmega,s)\, d{\bf{V}}\, d\bOmega\, ds =& \text{ the number of uncorrelated particles in }d{\bf{V}}\, d\bOmega\, ds \text{ about } (\bx,\bOmega,s). \\
+n_c(\bx,\bOmega,s)\,d{\bf{V}}\, d\bOmega\, ds =& \text{ the number of correlated particles in }d{\bf{V}}\, d\bOmega\, ds \text{ about } (\bx,\bOmega,s). \\
+f_u(\bx,\bOmega,s) =&\,  v \, n_u(\bx,\bOmega,s)= \text{the uncorrelated angular flux.}\\
+f_c(\bx,\bOmega,s) =&\,  v \, n_c(\bx,\bOmega,s)= \text{the correlated angular flux.}\\
+\Sigma_{t,u}(s)\, ds =& \text{ the probability that a particle which is uncorrelated with the medium has}\\ &\text{ traveled a distance }s \text{ since its birth by an uncorrelated source to experience}\\ &\text{ an interaction while traveling a further distance } ds.  \\
+\Sigma_{t,c}(s)\, ds =& \text{ the probability that a particle which is correlated with the medium has}\\ &\text{ traveled a distance }s \text{ since its birth by a correlated source or since the last  }\\ &\text{ scattering to experience an interaction while traveling a further distance } ds. \\
+Q_u(\bx)\,d{\bf{V}} =& \text{ the rate at which particles are isotropically emitted by an internal source}\\
+&\text{ that is uncorrelated with the medium in } d{\bf{V}} \text{ about } \bx. \\
+%q_c(\bx)\,d{\bf{V}} =& \text{ the rate at which particles are isotropically emitted by an internal source}\\
+%&\text{ that is correlated with the medium in } d{\bf{V}} \text{ about } \bx.\\
+c =&\text{ the probability that a particle that experiences a collision will scatter.} \\
+s(\bOmega' \cdot \bOmega)\, d\bOmega = & \text{ the probability that a particle  with pre-collision direction } \bOmega' \\ &\text{ scatters into a post-collision direction that lies in }d\bOmega' \text{ about } \bOmega.\\
+\delta(s) =&\text { the delta-function evaluated at }s. 
+\end{align*}
+
+
+Supplementing the definitions above we remark that a) these equations describe homogeneous transport, b) we only choose isotropic sources to shorten notation, and c) we assume the absence of sources that are correlated with the medium on a microscopic level. Following \cite{larsen2011generalized}, we obtain versions of the generalized linear Boltzmann equation (provided first in a similar form in \cite{d2018reciprocal}). They are given by
+\begin{align}
+\partial_s f_u(\bx,\bOmega,s) + \bOmega\cdot \nabla f_u(\bx,\bOmega,s) &+ \Sigma_{t,u}(s)f_u(\bx,\bOmega,s) = \delta(s) Q_u(\bx)
+\label{eq:uncorrelatedtranspor}
+\end{align}
+for the uncorrelated angular flux and
+\begin{equation}
+\begin{split}
+\partial_s f_c(\bx,\bOmega,s) &+ \bOmega\cdot \nabla f_c(\bx,\bOmega,s) + \Sigma_{t,c}(s)f_c(\bx,\bOmega,s)  \\=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)} \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\left[ \Sigma_{t,c}(s')f_c(\bx,\bOmega',s')
++ \Sigma_{t,u}(s')f_u(\bx,\bOmega',s') \right] \, d\bOmega'\, ds'
+\end{split}
+\label{eq:correlatedtranspor}
+\end{equation}
+for the correlated angular flux, respectively. With $l(\bx,\bOmega)$ we denote the distance from $\bx$ to $\partial{\bf{V}}$  moving backward with direction $-\bOmega$. Boundary conditions are given by
+\begin{subequations}
+	\begin{align}
+%{\bf{n}}(\bx) \cdot\nabla 
+ f_c(\bx,\bOmega,s) &= 0  &\text{ for }\bx\in  \partial{\bf{V}}, \,{\bf{n}}(\bx) \cdot \bOmega<0,&\\
+%{\bf{n}}(\bx) \cdot \nabla 
+f_u(\bx,\bOmega,s) &= \delta(s)f_u^{bc}(\bx,\bOmega) & \text{ for }\bx\in  \partial{\bf{V}}, \,{\bf{n}}(\bx) \cdot \bOmega<0,&
+%{\bf{n}}(\bx) \cdot \nabla 
+%f_{i}(\bx,\bOmega,s) &= 0 & \text{ for }\bx\in  \partial{\bf{V}}, \,{\bf{n}}(\bx) \cdot \bOmega\geq 0, &\, i\in\{u,c\}. DO I NEED THIS
+\label{eq:bc}
+\end{align}
+\end{subequations}
+for a prescribed function $f_u^{bc}(\bx,\bOmega)$.
+This means that particles entering the domain can not be correlated since---by definition---they have not yet interacted with the medium. There is only a flux of uncorrelated particles entering the domain for $s=0$.
+
+Since \eqref{eq:uncorrelatedtranspor} can be solved independently of \eqref{eq:correlatedtranspor}, it is possible to solve \eqref{eq:uncorrelatedtranspor} for $f_u(\bx,\bOmega,s)$ first and rewrite  \eqref{eq:correlatedtranspor} as
+\begin{equation}
+\begin{split}
+\partial_s f_c(\bx,\bOmega,s) &+ \bOmega\cdot \nabla f_c(\bx,\bOmega,s) + \Sigma_{t,c}(s)f_c(\bx,\bOmega,s)  \\=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}  \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\Sigma_{t,c}(s')f_c(\bx,\bOmega',s') \, d\bOmega'\, ds'
++ Q_c(\bx,\bOmega,s),
+\end{split}
+\label{eq:correlatedtransporreqritten}
+\end{equation}
+with
+\begin{equation}
+\begin{split}
+Q_c(\bx,\bOmega,s)=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}  \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\Sigma_{t,u}(s')f_u(\bx,\bOmega',s') \, d\bOmega'\, ds'.
+\end{split}
+\label{eq:definitionqc}
+\end{equation}
+
+In the case of classical transport, i.e. $\Sigma_{t,c}(s) = \Sigma_{t,u}(s) = \Sigma_t$ independent of $s$, the equations have to reduce to the classical linear Boltzmann equation. Indeed, when defining the classical angular flux as $f(\bx,\bOmega) = \int_0^{l(\bx,\bOmega)}  f_c(\bx,\bOmega,s) +  f_u(\bx,\bOmega,s) \, ds$, summing up equations \eqref{eq:uncorrelatedtranspor} and \eqref{eq:correlatedtranspor}, and applying $\int_{-\varepsilon}^\infty \cdot \, ds$ with $f(\bx,\bOmega,-\varepsilon)=f(\bx,\bOmega,\infty)=0$, we obtain
+\begin{equation}
+\begin{split}
+ \bOmega\cdot \nabla f(\bx,\bOmega) + \Sigma_{t}f(\bx,\bOmega)  =\, c\,\Sigma_{t} \int_0^{l(\bx,\bOmega)}  \int_{4\pi}
+s(\bOmega' \cdot \bOmega) f(\bx,\bOmega')\, d\bOmega'\, ds' +Q_u(\bx).
+\end{split}
+\label{eq:classical}
+\end{equation}
+Boundary conditions follow analogously.
+
+The necessity for splitting particles into correlated and uncorrelated ones 
+vanishes if $\Sigma_{t,c}(s) = \Sigma_{t,u}(s) = \Sigma_t(s)$, resulting in the generalized linear Boltzmann equation derived in 
+ \cite{larsen2011generalized}
+ \begin{equation}
+ \begin{split}
+ \partial_s f(\bx,\bOmega,s) &+ \bOmega\cdot \nabla f(\bx,\bOmega,s) + \Sigma_{t}(s)f_c(\bx,\bOmega,s)  \\=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}  \int_{4\pi}
+ s(\bOmega' \cdot \bOmega)\Sigma_{t}(s')f(\bx,\bOmega',s') \, d\bOmega'\, ds'
+ + Q_c(\bx,\bOmega,s),
+ \end{split}
+ \label{eq:vasqueslarseneq} 
+ \end{equation}
+ where  $f(\bx,\bOmega,s) = f_c(\bx,\bOmega,s) +  f_u(\bx,\bOmega,s) $.
+
+While the above results are known from the literature, the consideration of heterogeneous non-classical transport is novel. We are now going to elaborate how the relevant equations need to be modified to account for heterogeneous media. 
+
+
+\section{Non-classical transport in heterogeneous media}
+\label{sec:transporteqs}
+The fundamental question for heterogeneous non-classical transport is: \textit{What happens to a particle's memory (encoded via $s$) when traversing through different media?}
+
+The answer to this question is highly dependent on the assumptions that are made to model different media. Consider therefore a simplified situation, illustrated in Figure \ref{fig:photo2019-12-1911-36-00}. At the bottom picture we used Poisson disk sampling to generate an obstacle field for the full domain. In the top picture however, we used Poisson disk sampling for each side of the domain individually. This results in a situation where the two obstacles in red violate the minimal distance requirement that is imposed over the full domain in the bottom picture. Thus, even though both sides individually are instances of Poisson disk sampled obstacles, this is no longer the case when combining both sides.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/photo_2019-12-19_11-36-00}
+	\caption{TODO: Reverse top and bottom.}
+	\label{fig:photo2019-12-1911-36-00}
+\end{figure}
+
+We can make this statement more precise. Let $\mu$ be one instance of a Poisson disk sampled obstacle field and $\Sigma_{t,j}^\mu(s)$ be the respective total cross section for $j \in \{u,c\}$. The ensemble averaged cross sections are then given by
+\begin{align}
+	\Sigma_{t,j}^{\text{bottom}}(s) = \langle \Sigma_{t,j}^\mu(s)\rangle_\mu := \int_{\mathcal{R}}\Sigma_{t,j}^\mu(s)\, d\text{Pr}\{\mu\}\quad \text{ for }j \in \{u,c\}, \label{eq:ensembleavaerage}
+\end{align}
+where $\mathcal{R}$ is the set of all realizations of Poisson disk sampled obstacle fields and $d\text{Pr}\{\mu\}$ the respective probability of sampling instance $\mu$ from all realizations.
+The cross sections for the bottom picture in Figure \ref{fig:photo2019-12-1911-36-00} are then described by \eqref{eq:ensembleavaerage}. The cross sections for the top picture in Figure \ref{fig:photo2019-12-1911-36-00} can be computed via
+\begin{align}
+\Sigma_{t,j}^{\text{top}}(s) = \langle \Sigma_{t,j}^{\mu_L,\mu_R}\rangle_{\mu_L,\mu_R}(s) := \int_{\mathcal{R}_L}\int_{\mathcal{R}_R}\Sigma_{t,j}^{\mu_L,\mu_R}(s)																			\, d\text{Pr}\{\mu_R\}\, d\text{Pr}\{\mu_L\}\quad \text{ for }j \in \{u,c\}, \label{eq:ensembleavaerage2}
+\end{align}
+where $\mathcal{R}_L$ and $\mathcal{R}_R$ are the sets of all realizations for either side with $ d\text{Pr}\{\mu_L\}$ and $d\text{Pr}\{\mu_R\}$ as the respective probabilities of sampling $\mu_L$ and $\mu_R$. For an even $N$, we denote by $\mu=\{(x_n,y_n),n=1,\ldots,N\}\in \mathcal{R}$, $\mu_L=\{(x_n,y_n),n=1,\ldots,N/2\}\in \mathcal{R}_L$, and $\mu_R=\{(x_n,y_n),n=1,\ldots,N/2\}\in \mathcal{R}_R$ the scatterers' positions for each realization. Since $\exists \mu_L\in \mathcal{R}_L,\, \mu_R\in\mathcal{R}_R$ such that $\mu_L\cup \mu_R \not \in \mathcal{R}$, a situation as depicted in the top picture of Figure \ref{fig:photo2019-12-1911-36-00} may occur. 
+
+Consequently, ensemble averaging both sides independently is not equivalent to ensemble averaging over the full domain and particles necessarily need to lose their memory when crossing the interface---even if both sides have the same cross sections. However, particles that lose their memory become uncorrelated with the medium again and the life cycle from Figure 	\ref{fig:photo2019-12-1617-13-40} has to be updated for the heterogeneous case, show in Figure \ref{fig:photo2019-12-1617-29-03}.	
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/photo_2020-01-02_12-31-49}
+	\caption{Life cycle of correlated and uncorrelated particles in the heterogeneous case.}
+	\label{fig:photo2019-12-1617-29-03}
+\end{figure}
+
+
+
+\subsection{Interface conditions for non-classical particle transport}
+All particles that leave a domain across an interface---correlated and uncorrelated ones---become uncorrelated particles without a memory for the domain they are moving into. This naturally defines interface conditions for heterogeneous particle transport. Consider the situation in Figure \ref{fig:photo2019-12-1914-14-20}. For a domain $V= \mathbb{R}^2$, we place an interface at $x=0$. We denote by a supscript $L$ all quantities on the left side of the interfac and by a supscript $R$ all quantities on the right side.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{figures/photo_2019-12-19_14-14-20}
+	\caption{A domain $V= \mathbb{R}^2$ with an interface at $x=0$.}
+	\label{fig:photo2019-12-1914-14-20}
+\end{figure}
+
+The equations for both sides of the domain are then given by
+\begin{subequations}
+\begin{align}
+%\begin{split}
+\partial_s f^L_u(\bx,\bOmega,s) +&\bOmega\cdot \nabla f_u^L(\bx,\bOmega,s) + \Sigma^L_{t,u}(s)f^L_u(\bx,\bOmega,s) =\, \delta(s) Q^L_u(\bx),\\
+\begin{split}
+\partial_s f^L_c(\bx,\bOmega,s)  +& \bOmega\cdot \nabla f^L_c(\bx,\bOmega,s) + \Sigma^L_{t,c}(s)f^L_c(\bx,\bOmega,s)\\
+ &=c \, \delta(s) \int_0^\infty \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\left[ \Sigma^L_{t,c}(s')f^L_c(\bx,\bOmega',s')
++ \Sigma^L_{t,u}(s')f^L_u(\bx,\bOmega',s') \right] \, d\bOmega'\, ds',
+\end{split}
+\end{align}
+\end{subequations}
+for $x\leq0$, and 
+\begin{subequations}
+	\begin{align}
+	%
+\partial_s f^R_u(\bx,\bOmega,s) +&\bOmega\cdot \nabla f_u^R(\bx,\bOmega,s) + \Sigma^R_{t,u}(s)f^R_u(\bx,\bOmega,s) =\, \delta(s) Q^R_u(\bx),\\
+\begin{split}
+\partial_s f^R_c(\bx,\bOmega,s)  +& \bOmega\cdot \nabla f^R_c(\bx,\bOmega,s) + \Sigma^R_{t,c}(s)f^R_c(\bx,\bOmega,s)\\
+&=c \, \delta(s) \int_0^\infty \int_{4\pi}
+s(\bOmega' \cdot \bOmega)\left[ \Sigma^R_{t,c}(s')f^R_c(\bx,\bOmega',s')
++ \Sigma^R_{t,u}(s')f^R_u(\bx,\bOmega',s') \right] \, d\bOmega'\, ds',
+%\end{split}
+\end{split}
+\end{align}
+\end{subequations}
+for $x\geq0$. Interface conditions are given by 
+\begin{subequations}
+%\begin{eqnarray}
+\begin{align}
+ f^L_u(0,\bOmega,s)  &= \delta(s) \int_0^\infty  f^R_u(0,\bOmega,s') + f^R_c(0,\bOmega,s') \, ds'& \text{ for } \bOmega \cdot {\bf{n}}_L <0, \\
+ f^L_c(0,\bOmega,s)&=0 &\text{ for } \bOmega \cdot {\bf{n}}_L <0, \\
+ f^R_u(0,\bOmega,s)  &= \delta(s) \int_0^\infty  f^L_u(0,\bOmega,s') + f^L_c(0,\bOmega,s') \, ds' &\text{ for } \bOmega \cdot {\bf{n}}_R <0,\\
+  f^R_c(0,\bOmega,s)&=0 &\text{ for } \bOmega \cdot {\bf{n}}_R <0. 
+  \end{align}
+% \end{eqnarray}
+  \label{eq:icsimple}
+ \end{subequations}
+Now that we have discussed boundary and interface conditions, we can write out the transport equation for the general heterogeneous setting.
+
+\subsection{Heterogeneous non-classical transport equations}
+
+For a heterogeneous domain $\bar {\bf{V}}\subset \mathbb{R}^d$ with $d\in \{1,2,3\}$, we assume $\bar  {\bf{V}} = \cup_{i=1}^N\bar {\bf{V}}_i$, with all open ${\bf{V}}_i$ being homogeneous and ${\bf{V}}_i\cap {\bf{V}}_j = \emptyset$ if $i\not = j$. Let $\partial {\bf{V}}$ denote the boundary of $\bar {\bf{V}}$ .
+With $\partial {\bf{V}}_i = \partial {\bf{V}}^I_i \cup \partial {\bf{V}}_i^\Gamma$ we divide the boundary of $\bar {\bf{V}}_i$ into interface boundaries $\partial {\bf{V}}^I_i $ and non-interface boundaries $\partial {\bf{V}}_i^\Gamma$. The interior indicator function $\chi_\text{in}$ satisfies $\chi_\text{in}(\bx) =i$ if and only if $\bx \in {\bf{V}}_i$. The outward pointing normal  of $\bar{\bf{V}}_i$ is ${\bf{n}}_i(\bx)$ for $\bx \in \partial {\bf{V}}_i$. For $\bx \in \partial  {\bf{V}}^I_i\cap  \partial {\bf{V}}^I_j$, the exterior indicator function $\chi_\text{ex}$ satisfies $\chi_\text{ex}(i,\bx) =j$ if  ${\bf{n}}_i (\bx) = -{\bf{n}}_j (\bx) $, i.e. $\bar {\bf{V}}_j$ neighbors $ \bar{\bf{V}}_i$ at $\bx$. All cross sections, sources, and the angular flux obtain a subscript for the respective domain that they are restricted to. Abusing notation, ${l(\bx,\bOmega)}$ denotes the distance to the next boundary or interface, whichever is closer.
+
+\subsubsection{The heterogeneous backward transport equations}
+We start with the backward formulation where $s$ represents the distance since the last interaction.
+All non-interface boundaries require boundary conditions for the incoming angular flux, given  for $i=1,\ldots,N$ by
+\begin{subequations}
+	%\begin{eqnarray}
+	\begin{align}
+	  f^i_c(\bx,\bOmega,s) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {\bf{V}}_i^\Gamma,\\
+	  	  f^i_u(\bx,\bOmega,s) &=\delta(s)f_u^{bc}(\bx,\bOmega) &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {\bf{V}}_i^\Gamma.
+\end{align}
+\label{eq:general_BC}
+\end{subequations}
+Interface conditions for $i=1,\ldots,N$ are the generalization of \eqref{eq:icsimple}, i.e.
+\begin{subequations}
+	\begin{align}
+	f^i_c(\bx,\bOmega,s) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {\bf{V}}_i^I,\\
+	f^i_u(\bx,\bOmega,s) &=\delta(s) \int_0^{l(\bx,\bOmega)}  f^{\chi_\text{ex}(i,\bx)}(\bx,\bOmega,s')  \, ds' &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {\bf{V}}_i^I,
+	\end{align}
+	\label{eq:general_IC}
+\end{subequations}
+with  $f^{\chi_\text{ex}(i,\bx)}(\bx,\bOmega,s')  = f^{\chi_\text{ex}(i,\bx)}_u(\bx,\bOmega,s') + f^{\chi_\text{ex}(i,\bx)}_c(\bx,\bOmega,s')$.
+Transport for the correlated and uncorrelated flux is then described cell-wise for $\bx \in \bar {\bf {V}}_i$ via
+\begin{subequations}
+	\begin{align}
+	%
+	\partial_s f^i_u(\bx,\bOmega,s) +&\bOmega\cdot \nabla f_u^i(\bx,\bOmega,s) + \Sigma^i_{t,u}(s)f^i_u(\bx,\bOmega,s) =\, \delta(s) Q^i_u(\bx),\\
+	\begin{split}
+	\partial_s f^i_c(\bx,\bOmega,s)  +& \bOmega\cdot \nabla f^i_c(\bx,\bOmega,s) + \Sigma^i_{t,c}(s)f^i_c(\bx,\bOmega,s)\\
+	&=c\, \delta(s) \int_0^{l(\bx,\bOmega)}  \int_{4\pi}
+	s(\bOmega' \cdot \bOmega)\left[ \Sigma^i_{t,c}(s')f^i_c(\bx,\bOmega',s')
+	+ \Sigma^i_{t,u}(s')f^i_u(\bx,\bOmega',s') \right] \, d\bOmega'\, ds'.
+	%\end{split}
+	\label{eq:correlatedbackward}
+	\end{split}
+	\end{align}
+	
+	\label{eq:general_TRANSPORT}
+\end{subequations}
+
+Non-classical linear transport in heterogeneous materials is then described by the boundary conditions \eqref{eq:general_BC}, the interface conditions \eqref{eq:general_IC}, and the transport equations \eqref{eq:general_TRANSPORT}.
+
+\subsubsection{The heterogeneous forward transport equations}
+Consider now the forward formulation with $z$ as the distance to the next interaction. We model the angular flux $\psi(\bx,\bOmega,z)$. Particles at position $\bx$, facing direction $\bOmega$ will undergo an interaction (collision or absorption) at $\bx + z\bOmega$ where $z$ is the distance to collision, sampled from the corresponding distribution. Particles that move through phase-space reduce their distance to collision. Referring the reader to \cite{larsen2017equivalence} for a detailed derivation, the forward transport equation for the homogeneous case is given by 
+\begin{align}
+-\partial_z \psi(\bx,\bOmega,z) + \bOmega\cdot \nabla \psi(\bx,\bOmega,z) =c\,  P(z) \int_{4\pi} s(\bOmega'\cdot \bOmega) \psi(\bx,\bOmega',0)\, d\bOmega',
+\end{align}
+equipped with the boundary condition
+\begin{align}
+	  \psi(\bx,\bOmega,z) &=P(z)\psi^{bc}(\bx,\bOmega) &\text{ for } \bOmega \cdot {\bf{n}}(\bx) <0 \text{ and }\bx \in  \partial {\bf{V}}^\Gamma.
+\end{align}
+To model heterogeneous transport, we again need to distinguish correlated from uncorrelated particles and consider interface conditions. Since the memory of particles is lost when crossing a domain interface, we need to re-sample the distance to collision in the forward formulation. For the same spatial domain as before we end up with the following equations.
+
+Since particles enter the domain uncorrelatedly, boundary conditions are given by
+\begin{subequations}
+	%\begin{eqnarray}
+	\begin{align}
+	\psi^i_c(\bx,\bOmega,z) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {\bf{V}}_i^\Gamma,\\
+	\psi^i_u(\bx,\bOmega,z) &=P^i_u(z)\psi_u^{bc}(\bx,\bOmega) &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {\bf{V}}_i^\Gamma.
+	\end{align}
+	\label{eq:general_BC}
+\end{subequations}
+The interface conditions for $i=1,\ldots,N$ read 
+\begin{subequations}
+	\begin{align}
+	\psi^i_c(\bx,\bOmega,z) &=0 &\text{ for } \bOmega \cdot {\bf{n}}_i (\bx)<0 \text{ and }\bx \in  \partial {\bf{V}}_i^I,\\
+	\psi^i_u(\bx,\bOmega,z) &=P^i_u(z) \int_0^{l(\bx,\bOmega)}  \psi^{\chi_\text{ex}(i,\bx)}(\bx,\bOmega,z')  \, dz' &\text{ for } \bOmega \cdot {\bf{n}}_i(\bx) <0 \text{ and }\bx \in  \partial {\bf{V}}_i^I,
+	\end{align}
+	\label{eq:general_IC}
+\end{subequations}
+with  $\psi^{\chi_\text{ex}(i,\bx)}(\bx,\bOmega,z')  = \psi^{\chi_\text{ex}(i,\bx)}_u(\bx,\bOmega,z') + \psi^{\chi_\text{ex}(i,\bx)}_c(\bx,\bOmega,z')$.
+Transport for the correlated and uncorrelated flux (for the distance to collision) is then described cell-wise for $\bx \in \bar {\bf {V}}_i$ via
+\begin{subequations}
+	\begin{align}
+	%
+	-\partial_z \psi^i_u(\bx,\bOmega,z) +&\bOmega\cdot \nabla \psi_u^i(\bx,\bOmega,z)   =\, 	P_u^i(z) Q^i_u(\bx),\\
+	\begin{split}
+	-\partial_z \psi^i_c(\bx,\bOmega,z)  +& \bOmega\cdot \nabla \psi^i_c(\bx,\bOmega,z) 
+	=\,c\, P_c^i(z) \int_{4\pi}
+	s(\bOmega' \cdot \bOmega)\left[ \psi^i_c(\bx,\bOmega',0)
+	+ \psi^i_u(\bx,\bOmega',0) \right] \, d\bOmega'.
+	%\end{split}
+	\label{eq:correlatedforward}
+	\end{split}
+	\end{align}
+	\label{eq:general_TRANSPORT}
+\end{subequations}
+Cross sections $\Sigma_{t,j}^i$ and distributions $P_{j}^i$ are related since 
+\begin{align}
+	\Sigma_{t,j}^i(s) = \frac{P_j^i(s)}{1-\int_0^s P_j^i(s')\, ds'}\, \quad \text{ for }j \in \{u,c\}.
+\end{align}
+
+
+
+\section{Solution methods}
+\label{sec:Solution methods}
+We will now shortly comment on numerical solution methods. The forward formulation seems favorable for Monte Carlo method and the backward formulation relates closely to time-dependent deterministic solver. However, existing solver in both scenarios will have to be adapted to treat heterogeneous non-classical transport.
+\subsection{Monte Carlo method}
+\label{sec:SolutionMC}
+Modifying existing Monte Carlo solver to use the forward formulation should be straight forward. In addition to new sampling routines, we only require a ray-tracing routine that tracks whether particles cross interfaces. Given the density functions for the distance to the next interaction $P_c^i(s)$ and $P_u^i(s)$, particles can be tracked inside a homogeneous domain. When these particles cross a domain interface, the distance to the next collision simply gets re-sampled from the domain's distribution functions that these particles enter.
+This however assumes the presence of efficient sampling routines for non-exponential distributions. If these sampling routines are not efficiently implementable, a performance loss is to be expected when comparing classical with non-classical transport.
+
+
+\subsection{Deterministic methods}
+Due to the similarity between stationary non-classical transport and time-dependent classical transport, it seems natural to use classical time-dependent solver.
+However, time-independent non-classical heterogeneous transport differs from time-dependent classical (heterogeneous) transport: Whereas the time $t$ is only increasing, the distance since collision $s$ is reset at an interface. Consequently, time-dependent solver that march forward in time have to be modified.
+
+One possibility to overcome this problem might be an iterative approach. For every iteration, we take the angular flux from the previous iteration for the evaluation of the interface conditions.
+{\color{red} Does this converge? Probably?}
+
+
+
+\section{Discussion}
+\label{sec:discuss}
+Similar to the homogeneous backward transport equation in \cite{larsen2011generalized}, the forward and backward heterogeneous transport equations are hypothesized, not mathematically derived. It is therefore possible that heterogeneous non-classical transport 
+can---or has---to be described by a different set of equations. From a modeling perspective however, the aforementioned equations have the following desirable properties:
+
+\begin{enumerate}
+	\item[a)] A single homogeneous domain results in transport behavior different from transport in the same spatial domain divided into contiguous subdomains of the same medium as the homogeneous domain. Since subdomains are ensemble averaged independently, this behavior is physically reasonable.
+	\item[b)] Correlated and uncorrelated particles are subject to different transport behavior. This is necessary since the initial thought experiment (of Poisson disk sampled scatterers) reveals that is possible for $P_u(s)$ and $P_c(s)$---or consequently $\Sigma_{t,c}(s)$ and $\Sigma_{t,u}(s)$---to be different.
+	\item[c)] In the case of homogeneous transport, the equations reduce to the equations in \cite{d2018reciprocal}. If we additionally omit the distinction of correlated and uncorrelated particles, the equations further simplify to the set of equations in \cite{larsen2011generalized}, including boundary conditions.
+\end{enumerate}
+
+
+
+
+
+
+\bibliographystyle{siamplain}
+\bibliography{bib.bib}
+
+
+\appendix
+\section*{APPENDIX}
+\section{Equivalence between the forward and backward formulation}
+This derivation closely follows the work in  \cite{larsen2017equivalence}---partially even verbatim.
+The forward and backward formulation are related via
+\begin{align}
+\psi(\bx,\bOmega,s) = \int_0^{l(\bx,\bOmega)} \Sigma_t(s'+s) f(\bx+s\bOmega,\bOmega,s'+s)\, ds'
+\end{align}
+and we will show that 
+\begin{align}
+\psi^i_{j}(\bx,\bOmega,s) = \int_0^{l(\bx,\bOmega)} \Sigma^i_{t,j}(s'+s) f^i_j(\bx+s\bOmega,\bOmega,s'+s)\, ds' \quad \text{ for }j \in \{u,c\}
+\label{eq:start1}
+\end{align}
+is the correct counterpart for the heterogeneous case. To do so, set $s=0$ and apply $\int_{4\pi} s(\bOmega\cdot \bOmega') \cdot \left(\ldots\right)\,d\bOmega$ to \eqref{eq:start1}  to obtain (after exchanging the names $\bOmega$ and $\bOmega'$)
+\begin{subequations}
+	\begin{align}
+	\int_{4\pi}s(\bOmega'\cdot \bOmega)\psi^i_{u}(\bx,\bOmega,0)\, d\bOmega' &=
+	\int_{4\pi}\int_0^{l(\bx,\bOmega)}s(\bOmega'\cdot \bOmega)  \Sigma^i_{t,u}(s') f^i_u(\bx,\bOmega,s')\, ds'\, d\bOmega', \label{eq:start2a}\\
+	\int_{4\pi}s(\bOmega'\cdot \bOmega)\psi^i_{c}(\bx,\bOmega,0)\, d\bOmega' &=
+	\int_{4\pi}\int_0^{l(\bx,\bOmega)}s(\bOmega'\cdot \bOmega)  \Sigma^i_{t,c}(s') f^i_c(\bx,\bOmega,s')\, ds'\, d\bOmega'. 
+	\label{eq:start2b}
+	\end{align}
+\end{subequations}
+Summing \eqref{eq:start2a} and \eqref{eq:start2b} yields the right-hand side of \eqref{eq:correlatedbackward} (after multiplication with $c\, \delta(s)$),
+and the right-hand side 
+of \eqref{eq:correlatedforward} (after multiplication with $c\, P_c^i(s)$). 
+This implies that the "physical scattering rate terms [...] in the backward Eq. [...] and the forward Eq. [...] are equal."
+...WORK IN PROGRESS...
+ \end{document}
+ 
