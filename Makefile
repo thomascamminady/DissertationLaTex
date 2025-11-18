@@ -8,7 +8,8 @@ LATEX_EXTS = aux bbl blg bcf fls fdb_latexmk log lof lot out toc \
              synctex.gz run.xml acn glo loa brf ist idx ilg ind \
              nlo tdo nav snm vrb tex~
 
-LATEX_DIRS = Aux Bibliography out
+# Directories to remove (Aux removed!)
+LATEX_DIRS = Bibliography out
 
 # ----------------------------------------
 # Clean LaTeX build artifacts
@@ -39,6 +40,4 @@ fmt:
 	@find . -name "*.tex" -type f -exec tex-fmt {} \;
 	@echo "✔ Done."
 
-
 .PHONY: clean strip fmt
-

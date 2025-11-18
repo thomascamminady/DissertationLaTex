@@ -1,0 +1,37 @@
+\chapter*{Preface}
+The linear transport equation is an integro-differential equation that describes the evolution of the angular flux $\psi$.
+Depending on time $t$, spatial position $\bx$, speed $v$, and direction of flight $\bOmega$, the 
+angular flux is defined as $\psi(t,\bx,\bOmega) \defas v \, N(t,\bx,\bOmega)$ where 
+$N(t,\bx, \bOmega) \, d\bx \, d\bOmega$ represents the number of particles inside the infinitesimal phase space element $\left[\bx,\bx + d\bx\right]  \times \left[\bOmega,\bOmega + d \bOmega\right]$ at time $t$.
+Including information on the angular direction but not on each particle individually, the transport equation models particle systems from a \textit{mesoscopic} viewpoint; poised between a \textit{microscopic} description where the positions and velocities of all particles are known, and a \textit{macroscopic} description that only uses moments of the angular flux to describe the dynamics.
+
+Even in its simplest form, the transport equation describes the evolution of a six-dimensional quantity and, unsurprisingly, analytical solutions to non-trivial applications are scarce.
+One goal of this thesis is therefore to increase the accuracy and performance of numerical algorithms that approximate the transport equation's solution---specifically of the discrete ordinates (S$_N$) method. 
+
+The S$_N$ method reduces the high dimensionality of the problem by discretizing the angular variable and restricting transport to a finite number of ordinates. However, the resulting system of coupled advection equations suffers from a numerical artifact called ray effects. These undesirable oscillations of the particle density throughout the spatial domain can impact the solution quality dramatically. In Chapter \ref{chap:2}, this thesis presents and analyzes two variations of the S$_N$ method, called rS$_N$ method \cite{camminady2019ray} and as-S$_N$ method \cite{frank2020ray}.
+We will see that both methods can mitigate ray effects significantly, once by adding a rotation-and-interpolation step to the S$_N$ method (rS$_N$), and once by adding artificial scattering in form of a  carefully chosen scattering operator to the transport equation's right-hand side (as-S$_N$).
+
+Similar to S$_N$, rS$_N$ and as-S$_N$ require proper angular quadrature points to produce satisfactory results.
+Here, we present spherical quadrature sets that are based on triangulating Platonic solids, resulting in a highly uniform distribution of points on the unit sphere, a low variance in the respective quadrature weights, and an underlying connectivity that allows the interpolation of function values at arbitrary points that are not included in the quadrature set \cite{camminady2019highly}.
+
+After further discretizing the system of S$_N$ equations in both space and time in a way that respects initial and boundary conditions, solution algorithms need to solve the fully discretized system. Transport sweeps, for example, can be used to update the state in every spatial cell at every time step. We provide a proof, stating that this procedure is always possible for two-dimensional domains that are discretized by triangles.
+
+
+Another significant portion of this thesis is concerned with the analysis of non-classical transport. Under certain assumptions, classical transport theory fails to model the particle system's dynamics correctly.
+A new, so-called non-classical transport equation augments the phase space of the classical transport equation by an additional variable.
+Quantities that were equivalent in classical transport---\eg the distribution of distances \textit{to} the next collision and the distribution of distances \textit{from} the last collision---now need to be distinguished carefully.
+
+Moreover, non-classical transport in the presence of heterogeneities has only recently been investigated \cite{camminady2017nonclassical}. Heterogeneous versions of non-classical cross sections and path length distributions are provided that model the effect of domain interfaces along particles' trajectories.
+
+Lastly, the notion of \textit{correlated} and \textit{uncorrelated} particles \cite{d2018reciprocal} is extended to include heterogeneities.
+
+This thesis relies, partially, on work that has previously been published with coauthors in journals or presented at conferences and included in the respective proceedings. 
+Especially the work on ray effect mitigation techniques is noteworthy, since it has subsequently been included in the Ph.D. thesis of Kusch \cite{10.5445/IR/1000121168}. The following two paragraphs serve to clarify my contributions to the rS$_N$ and as-S$_N$ method.
+
+The rS$_N$ method was published in Camminady et al. \cite{camminady2019ray}. I developed and implemented the quadrature sets and implemented the rotation-and-interpolation subroutine. Additionally, I reimplemented large parts of an explicit version of the S$_N$ algorithm in the Julia programming language. Using this code, I analyzed the influence of the rotation magnitude (with varying numbers of quadrature points) on the line-source and the lattice test case. The idea and subsequent realization of the rS$_N$ method (mitigating ray effects by adding a rotation-and-interpolation step) has been developed by all authors collaboratively.
+
+The as-S$_N$ method was published in Frank et al. \cite{frank2020ray}.
+	I significantly contributed to the analysis and implementation of the artificial scattering operator and performed the related asymptotic analysis. The code that was used to generate the numerical results is largely based on the rS$_N$ code, except for the implicit time integration, which was added by a coauthor. I performed numerical experiments that resulted in  optimal parameter configurations for the explicit time discretization.
+	The core idea of the as-S$_N$ method (mitigating ray effects by adding artificial scattering) has been initiated by a coauthor.
+
+
