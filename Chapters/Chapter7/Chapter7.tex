@@ -1,130 +1,321 @@
 \part{Concluding remarks}
 
 \chapter{Summary}
-As already hinted in this document's name, we have covered two topics---classical and non-classical transport---with three different perspectives---theory, modeling, and numerics.
+As already hinted in this document's name, we have covered two
+topics---classical and non-classical transport---with three different
+perspectives---theory, modeling, and numerics.
 
-The initial microscopic description of transport in Chapter \ref{sec:transportequations} was not only crucial in understanding the origin of kinetic theory, it also highlighted how different modeling assumptions lead to different governing equations. This has manifested itself throughout Part \ref{part:2}: Changing the scatterers' positions from completely random to a lattice structure fundamentally changed the dynamics of particle transport, requiring a completely new set of governing equations.
+The initial microscopic description of transport in Chapter
+\ref{sec:transportequations} was not only crucial in understanding
+the origin of kinetic theory, it also highlighted how different
+modeling assumptions lead to different governing equations. This has
+manifested itself throughout Part \ref{part:2}: Changing the
+scatterers' positions from completely random to a lattice structure
+fundamentally changed the dynamics of particle transport, requiring a
+completely new set of governing equations.
 
-Moreover, the particle billiard game of Chapter \ref{sec:transportequations} directly motivated the Monte Carlo method as one member of the class of numerical algorithms to solve the transport equation that were presented in Chapter \ref{chap:2}.
+Moreover, the particle billiard game of Chapter
+\ref{sec:transportequations} directly motivated the Monte Carlo
+method as one member of the class of numerical algorithms to solve
+the transport equation that were presented in Chapter \ref{chap:2}.
 
-We discussed the crucial role of spherical quadratures for the discrete ordinates method and presented quadratures that are based on the triangulation of Platonic solids, resulting in a highly uniform distribution of quadrature points on the unit sphere.
+We discussed the crucial role of spherical quadratures for the
+discrete ordinates method and presented quadratures that are based on
+the triangulation of Platonic solids, resulting in a highly uniform
+distribution of quadrature points on the unit sphere.
 
-The underlying connectivity of these quadratures was imperative to the successful realization of the rS$_N$ method. Together with as-S$_N$, these two ray effect mitigation techniques drastically reduced the spurious oscillations that are inherent to the discrete ordinates method. 
+The underlying connectivity of these quadratures was imperative to
+the successful realization of the rS$_N$ method. Together with
+as-S$_N$, these two ray effect mitigation techniques drastically
+reduced the spurious oscillations that are inherent to the discrete
+ordinates method.
 
-We saw in Chapter \ref{chap:3} that ray effects are a result of incorrect computation of the spherical integral. The rS$_N$ and as-S$_N$ method both circumvent this problem to an extend where it is possible to (i) either gain a significant boost in accuracy while keeping the runtime constant, or (ii) reduce the runtime while keeping the solution quality virtually unaltered.
+We saw in Chapter \ref{chap:3} that ray effects are a result of
+incorrect computation of the spherical integral. The rS$_N$ and
+as-S$_N$ method both circumvent this problem to an extend where it is
+possible to (i) either gain a significant boost in accuracy while
+keeping the runtime constant, or (ii) reduce the runtime while
+keeping the solution quality virtually unaltered.
 
-The introduction of non-classical particle transport in Chapter \ref{chap:nonclassicaltransportequations}
-allowed us to tackle questions around non-classical transport in heterogeneous materials.  Throughout Chapter \ref{chap:heterogeneousnonclassical}, we provided different ansätze to model the behavior of particles that cross material interfaces; each obeying different theoretical requirements. The existing notion of correlated and uncorrelated particles was also extended to include heterogeneities.
+The introduction of non-classical particle transport in Chapter
+\ref{chap:nonclassicaltransportequations}
+allowed us to tackle questions around non-classical transport in
+heterogeneous materials.  Throughout Chapter
+\ref{chap:heterogeneousnonclassical}, we provided different ansätze
+to model the behavior of particles that cross material interfaces;
+each obeying different theoretical requirements. The existing notion
+of correlated and uncorrelated particles was also extended to include
+heterogeneities.
 
-
-Let us now discuss the main results of the different chapters in more detail. 
-Acknowledging the introductory nature of Chapter \ref{sec:transportequations}, we start with Chapter \ref{chap:2}.
-
+Let us now discuss the main results of the different chapters in more detail.
+Acknowledging the introductory nature of Chapter
+\ref{sec:transportequations}, we start with Chapter \ref{chap:2}.
 
 {\textbf{{Numerical solution methods}}
-	
-Three different solution methods for transport equations, as well as their main ingredients were presented and analyzed. 
 
-For the Monte Carlo method, we discussed ways to efficiently sample random numbers, \eg via inverse transform sampling or rejection sampling.
-Moreover, we discussed the advantages and disadvantages of interpreting Monte Carlo as a numerical integrator that can be used to approximately solve the transport equation.
+  Three different solution methods for transport equations, as well
+  as their main ingredients were presented and analyzed.
 
-% Interpreting Monte Carlo as a numerical integrator allowed us to see how it can be used to approximate quantities of interests of transport equations such as the energy doses. Its main disadvantage is the slow convergence order of $N^{-1/2}$, although it can be efficiently parallelized. 
+  For the Monte Carlo method, we discussed ways to efficiently sample
+  random numbers, \eg via inverse transform sampling or rejection sampling.
+  Moreover, we discussed the advantages and disadvantages of
+  interpreting Monte Carlo as a numerical integrator that can be used
+  to approximately solve the transport equation.
 
-The main focus was on the discrete ordinates method where we started with a discussion of quadrature sets. The octahedron- and icosahedron-based quadratures (Camminady, Frank, and Kusch \cite{camminady2019highly}) have three desirable properties: (i) Arbitrary many quadrature points with strictly positive quadrature weights can be generated at low costs; (ii) the ratio between the maximal and minimal quadrature weight can be kept at around $2.0$ and below $1.5$ for the icosahedron \textit{lerp} and \textit{slerp} versions, respectively; and (iii) the resulting triangulation can be used to easily interpolate function values at points that are not included in the original quadrature set.
+  % Interpreting Monte Carlo as a numerical integrator allowed us to
+  % see how it can be used to approximate quantities of interests of
+  % transport equations such as the energy doses. Its main
+  % disadvantage is the slow convergence order of $N^{-1/2}$,
+  % although it can be efficiently parallelized.
 
-For transport sweeps as one of the ways to solve the system of S$_N$ equations, we have proven that it is always possible to find an ordering that allows us to march through all spatial cells while considering the involved dependencies.
+  The main focus was on the discrete ordinates method where we
+  started with a discussion of quadrature sets. The octahedron- and
+  icosahedron-based quadratures (Camminady, Frank, and Kusch
+  \cite{camminady2019highly}) have three desirable properties: (i)
+  Arbitrary many quadrature points with strictly positive quadrature
+  weights can be generated at low costs; (ii) the ratio between the
+  maximal and minimal quadrature weight can be kept at around $2.0$
+  and below $1.5$ for the icosahedron \textit{lerp} and
+  \textit{slerp} versions, respectively; and (iii) the resulting
+  triangulation can be used to easily interpolate function values at
+  points that are not included in the original quadrature set.
 
-Representing the class of moment methods, we have seen that the P$_N$ method can be used to obtain symmetrical solutions, albeit at the cost of oscillations that can render the solution negative.
+  For transport sweeps as one of the ways to solve the system of
+  S$_N$ equations, we have proven that it is always possible to find
+  an ordering that allows us to march through all spatial cells while
+  considering the involved dependencies.
 
-{\textbf{Ray effects and their mitigation}}
+  Representing the class of moment methods, we have seen that the
+  P$_N$ method can be used to obtain symmetrical solutions, albeit at
+  the cost of oscillations that can render the solution negative.
 
-With the help of a simple experiment, we have seen that ray effects are ultimately not the result of restricting transport to a fixed set of ordinates. Even in cases where we can solve for the angular flux $\psi(t,\bx,\bOmega)$ exactly (or at least up to machine precision), ray effects in the scalar flux $\phi(t,\bx)$ are omnipresent. Instead, the occurrence of these numerical artifacts can be attributed to the inexact approximation 
-\begin{align*}
-	\int_{\mathbb{S}^2}  \psi(t,\bx,\bOmega') \, d\bOmega' \approx \sum_{q'=1}^{n_q} w_{q'} \, \psi(t,\bx,\bOmega_{q'}).
-\end{align*}
-Both the presented rS$_N$ method (Camminady, Kusch, Frank, and Küpper \cite{camminady2019ray}) and the as-S$_N$ method (Frank, Kusch, Camminady, and Hauck \cite{frank2020ray}) mitigated this problem by making the angular flux easier to integrate,  once via additional angular diffusion and once with the help of artificial scattering.
+  {\textbf{Ray effects and their mitigation}}
 
-By adding a rotation-and-interpolation step to the standard S$_N$ method, the rS$_N$ method significantly reduced ray effects in the line-source problem and the lattice test case. The solution quality of the scalar flux that is computed with the rS$_N$ method is on par with that of the S$_N$ method with up to three times the number of quadrature points. Adding the rotation-and-interpolation step only marginally increases the runtime of the S$_N$ method (by up to approximately 10$\%$ in our implementation).
-A drawback of the rS$_N$ method is the change of ordinates between two consecutive time steps. As a result, the order of transport sweeps needs to be recomputed which might create a bottleneck in highly optimized, many-core implementations on large-scale computers. However, forth-and-back rotations with two interpolation steps have the potential to overcome this problem by keeping the quadrature set fixed.
+  With the help of a simple experiment, we have seen that ray effects
+  are ultimately not the result of restricting transport to a fixed
+  set of ordinates. Even in cases where we can solve for the angular
+  flux $\psi(t,\bx,\bOmega)$ exactly (or at least up to machine
+  precision), ray effects in the scalar flux $\phi(t,\bx)$ are
+  omnipresent. Instead, the occurrence of these numerical artifacts
+  can be attributed to the inexact approximation
+  \begin{align*}
+    \int_{\mathbb{S}^2}  \psi(t,\bx,\bOmega') \, d\bOmega' \approx
+    \sum_{q'=1}^{n_q} w_{q'} \, \psi(t,\bx,\bOmega_{q'}).
+  \end{align*}
+  Both the presented rS$_N$ method (Camminady, Kusch, Frank, and
+  Küpper \cite{camminady2019ray}) and the as-S$_N$ method (Frank,
+  Kusch, Camminady, and Hauck \cite{frank2020ray}) mitigated this
+  problem by making the angular flux easier to integrate,  once via
+  additional angular diffusion and once with the help of artificial scattering.
 
+  By adding a rotation-and-interpolation step to the standard S$_N$
+  method, the rS$_N$ method significantly reduced ray effects in the
+  line-source problem and the lattice test case. The solution quality
+  of the scalar flux that is computed with the rS$_N$ method is on
+  par with that of the S$_N$ method with up to three times the number
+  of quadrature points. Adding the rotation-and-interpolation step
+  only marginally increases the runtime of the S$_N$ method (by up to
+  approximately 10$\%$ in our implementation).
+  A drawback of the rS$_N$ method is the change of ordinates between
+  two consecutive time steps. As a result, the order of transport
+  sweeps needs to be recomputed which might create a bottleneck in
+  highly optimized, many-core implementations on large-scale
+  computers. However, forth-and-back rotations with two interpolation
+  steps have the potential to overcome this problem by keeping the
+  quadrature set fixed.
 
-The as-S$_N$ method altered the transport equation by including an additional scattering term with scattering kernel 
-\begin{align*}
-	s_\varepsilon(\mu) = \frac{2}{\sqrt{\pi} \,  \varepsilon \, \text{Erf}\left(\frac{2}{\varepsilon}\right)} \exp\left(-\frac{(1-\mu)^2}{\varepsilon^2}\right).
-\end{align*}
-Asymptotically, this forward-peaked type of scattering effectively behaves like a Fokker-Planck operator.
-Furthermore, the choice $\varepsilon = \beta / n_q$ ensured that the added effect vanishes in the limit of $n_q\rightarrow \infty$ as we recover the original S$_N$ equations. Together with $\sigma_{as}$, the as-S$_N$ method then requires the user to select two parameters. For the line-source test case, we have seen an error reduction in the scalar flux of a factor four. Transferring the same pair of optimal parameters to the lattice test case on a significantly finer grid (in space, angle, and time) still reduced the error down to $72\%$ of the original error. This indicated that both different test cases as well as different discretizations can be used as a surrogate model with which optimal parameters can be derived at low costs before applying them to the actual test case of interest.
+  The as-S$_N$ method altered the transport equation by including an
+  additional scattering term with scattering kernel
+  \begin{align*}
+    s_\varepsilon(\mu) = \frac{2}{\sqrt{\pi} \,  \varepsilon \,
+    \text{Erf}\left(\frac{2}{\varepsilon}\right)}
+    \exp\left(-\frac{(1-\mu)^2}{\varepsilon^2}\right).
+  \end{align*}
+  Asymptotically, this forward-peaked type of scattering effectively
+  behaves like a Fokker-Planck operator.
+  Furthermore, the choice $\varepsilon = \beta / n_q$ ensured that
+  the added effect vanishes in the limit of $n_q\rightarrow \infty$
+  as we recover the original S$_N$ equations. Together with
+  $\sigma_{as}$, the as-S$_N$ method then requires the user to select
+  two parameters. For the line-source test case, we have seen an
+  error reduction in the scalar flux of a factor four. Transferring
+  the same pair of optimal parameters to the lattice test case on a
+  significantly finer grid (in space, angle, and time) still reduced
+  the error down to $72\%$ of the original error. This indicated that
+  both different test cases as well as different discretizations can
+  be used as a surrogate model with which optimal parameters can be
+  derived at low costs before applying them to the actual test case of interest.
 
-Since the as-S$_N$ method does not change the initial ordinates, it is potentially better suited for optimized codes than the rS$_N$ method.
+  Since the as-S$_N$ method does not change the initial ordinates, it
+  is potentially better suited for optimized codes than the rS$_N$ method.
 
+  {\textbf{Non-classical transport equations}
 
-{\textbf{Non-classical transport equations}
-	
-This chapter introduced the non-classical transport equation in its forward and backward formulation. 
-Several examples and numerical experiments revealed discrepancies between the 
-the behavior predicted by classical transport and the observations that are made.
-A transformation between both formulations is possible (Larsen, Frank, and Camminady \cite{larsen2017equivalence}), and we can equivalently encode the non-classical dynamics in $s$-dependent cross sections or  non-exponential path length distributions.
+    This chapter introduced the non-classical transport equation in
+    its forward and backward formulation.
+    Several examples and numerical experiments revealed discrepancies
+    between the
+    the behavior predicted by classical transport and the
+    observations that are made.
+    A transformation between both formulations is possible (Larsen,
+    Frank, and Camminady \cite{larsen2017equivalence}), and we can
+    equivalently encode the non-classical dynamics in $s$-dependent
+    cross sections or  non-exponential path length distributions.
 
-Furthermore, the existing concept of \textit{correlated} and \textit{uncorrelated} particles was presented, indicating the necessity to differentiate between particles that have already collided with scatterers from those that have not.
+    Furthermore, the existing concept of \textit{correlated} and
+    \textit{uncorrelated} particles was presented, indicating the
+    necessity to differentiate between particles that have already
+    collided with scatterers from those that have not.
 
+    {\textbf{Non-classical transport in heterogeneous materials}
 
-{\textbf{Non-classical transport in heterogeneous materials}
+      Different ways to model material heterogeneities were
+      introduced and juxtaposed.
+      Depending on the model, we were able to argue for a
+      preservation or a reset of the particles' memory. For both
+      cases, we extended the non-classical cross sections and path
+      length distributions to include material heterogeneities
+      (Camminady, Frank, and Larsen
+      \cite{camminady2017nonclassical}). In the more complicated
+      setting of \textit{true} heterogeneity in which the particles'
+      memory should be preserved, the ODE system
+      \begin{align*}
+        \begin{cases}
+          P(0,\bx,\bOmega) &= 0, \\
+          \frac{d}{ds}P(s,\bx,\bOmega) &= p_{\bx(s)}(
+          P_{\bx(s)}^{-1}\left ( P(s,\bx,\bOmega) \right))
+        \end{cases}
+        \label{eq:ode}
+      \end{align*}
+      had to be solved in order to generate samples of the path
+      length distribution. Since this is costly, we provided
+      efficient sampling strategies, applicable to (reasonably)
+      simplified scenarios. Additionally, we discussed a series of
+      sanity checks to investigate the validity of the proposed distribution.
 
-Different ways to model material heterogeneities were introduced and juxtaposed. 
-Depending on the model, we were able to argue for a preservation or a reset of the particles' memory. For both cases, we extended the non-classical cross sections and path length distributions to include material heterogeneities (Camminady, Frank, and Larsen \cite{camminady2017nonclassical}). In the more complicated setting of \textit{true} heterogeneity in which the particles' memory should be preserved, the ODE system 
-\begin{align*}
-	\begin{cases}
-		P(0,\bx,\bOmega) &= 0, \\
-		\frac{d}{ds}P(s,\bx,\bOmega) &= p_{\bx(s)}( P_{\bx(s)}^{-1}\left ( P(s,\bx,\bOmega) \right))
-	\end{cases}
-	\label{eq:ode}
-\end{align*}
-had to be solved in order to generate samples of the path length distribution. Since this is costly, we provided efficient sampling strategies, applicable to (reasonably) simplified scenarios. Additionally, we discussed a series of sanity checks to investigate the validity of the proposed distribution.
+      Lastly, the notion of correlated and uncorrelated particles was
+      extended to include material heterogeneities as well. Particles
+      that cross a material interface enter the new domain as
+      uncorrelated particles---ultimately, this was the reason to not
+      adopt the notion of \textit{collided} and \textit{uncollided} particles.
+      As a result, two species of particles are described by two
+      coupled non-classical transport equations.
 
-Lastly, the notion of correlated and uncorrelated particles was extended to include material heterogeneities as well. Particles that cross a material interface enter the new domain as uncorrelated particles---ultimately, this was the reason to not adopt the notion of \textit{collided} and \textit{uncollided} particles.
-As a result, two species of particles are described by two coupled non-classical transport equations.
+      \chapter{Outlook}
 
+      The presented ray effect mitigation techniques are implemented
+      in a Julia research code that cannot be used to make
+      predictions about the effectiveness of both methods on
+      large-scale computing systems. An integration of both methods
+      into production-ready software is therefore necessary to
+      investigate both methods on a more quantitative level---rather
+      than the more qualitative studies included in this thesis.
 
+      Complexity that arises from adding energy-dependency,
+      unstructured meshes, or high-order time-integration  is another
+      hurdle that needs to be tackled as a logical next step. Several
+      improvements, especially for the as-S$_N$ method are apparent.
+      (i) A more granular tuning of the amount of artificial
+      scattering is desirable. The artificial scattering strength
+      $\sigma_{as}$ can become space-dependent. Moreover, work that
+      researches whether it is sufficient to only add artificial
+      scattering temporarily is underway. (ii) Whether it is possible
+      to transfer optimal parameter sets from low-cost surrogate
+      models to the actual high-cost simulation needs to be tested
+      more broadly. To promote the as-S$_N$ method as a reliable ray
+      effect mitigation technique, it is necessary to provide
+      guidance on how to choose the involved parameters optimally and
+      efficiently. (iii) For the rS$_N$ method, changing ordinates in
+      every time-step might  impact the sweeping procedure too
+      severely to prove useful. If this is the case, versions of the
+      rS$_N$ method that do not suffer from this problem need to be
+      investigated more rigorously. For example, instead of rotating
+      once per time step, it is possible to perform two
+      rotations---once forth, once back---in every time step with
+      half the rotation magnitude. This has already been discussed,
+      but not further analyzed.
 
-\chapter{Outlook}
+      Current research on angular adaptivity for the S$_N$ method has
+      shown promising results \cite{DARGAVILLE2020109124}. The
+      angular quadrature set is refined or coarsened in different
+      areas of the spatial domain and at different time steps. The
+      filtered spherical harmonics method is used as an error
+      indicator, telling the algorithm where to refine or coarsen the
+      angular mesh. This error indicator can, in theory, be used for
+      the as-S$_N$ or rS$_N$ method as well, indicating regions that
+      require artificial scattering or rotation, respectively.
 
-The presented ray effect mitigation techniques are implemented in a Julia research code that cannot be used to make predictions about the effectiveness of both methods on large-scale computing systems. An integration of both methods into production-ready software is therefore necessary to investigate both methods on a more quantitative level---rather than the more qualitative studies included in this thesis.
+      Compared to classical transport, non-classical transport theory
+      is still in its infancy.
+      Here too, quantitative studies are necessary to understand the
+      effect that $s$-dependent cross sections or non-exponential
+      path length distributions have  on real-world problems. So far,
+      mostly the Monte Carlo method has been explored as a way to
+      solve the non-classical transport equation. However,
+      non-classical time-independent transport is structurally
+      similar to time-dependent classical transport. Whereas time
+      only increases, the path length $s$ gets reset after every
+      collision (in the backward formulation).
+      Nevertheless, if we rewrite the backward formulation as
+      \begin{align*}
+        \begin{cases}
+          \partial_s \psi(s,\bx,\bOmega) +\bOmega \cdot \nabla_\bx
+          \psi(s,\bx,\bOmega) + \sigma_t(s) \psi(s,\bx,\bOmega)  = 0, \\
+          \psi(0,\bx,\bOmega) =  \int_0^{l(\bx,\bOmega)}
+          \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot
+          \bOmega) \, \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+  Q(\bx),
+        \end{cases}
+      \end{align*}
+      we can add indices $l$ and $l-1$ to the equation to obtain
+      \begin{align*}
+        \begin{cases}
+          \partial_s \psi^{l}(s,\bx,\bOmega) +\bOmega \cdot
+          \nabla_\bx \psi^l(s,\bx,\bOmega) + \sigma_t(s)
+          \psi^l(s,\bx,\bOmega)  = 0, \\
+          \psi^l(0,\bx,\bOmega) =  \int_0^{l(\bx,\bOmega)}
+          \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot
+          \bOmega) \, \psi^{l-1}(s',\bx,\bOmega')\, d\bOmega' \, ds'.
+        \end{cases}
+      \end{align*}
+      With $\psi^{0}(s,\bx,\bOmega) \equiv Q(\bx)$, we can solve this
+      system repeatedly with a standard S$_N$ solver. In this
+      formulation, $\psi^{l+1}$ relates to those particles that have
+      scattered at most $l$ times. Assuming convergence due to
+      sufficient absorption, $\psi^{L}(s,\bx,\bOmega) \approx
+      \psi(s,\bx,\bOmega)$ for a sufficiently large $L$.
+      True when moving from classical to non-classical transport, the
+      added complexity of the distinction between correlated and
+      uncorrelated particles needs to be quantified, too.
 
-Complexity that arises from adding energy-dependency, unstructured meshes, or high-order time-integration  is another hurdle that needs to be tackled as a logical next step. Several improvements, especially for the as-S$_N$ method are apparent. (i) A more granular tuning of the amount of artificial scattering is desirable. The artificial scattering strength $\sigma_{as}$ can become space-dependent. Moreover, work that researches whether it is sufficient to only add artificial scattering temporarily is underway. (ii) Whether it is possible to transfer optimal parameter sets from low-cost surrogate models to the actual high-cost simulation needs to be tested more broadly. To promote the as-S$_N$ method as a reliable ray effect mitigation technique, it is necessary to provide guidance on how to choose the involved parameters optimally and efficiently. (iii) For the rS$_N$ method, changing ordinates in every time-step might  impact the sweeping procedure too severely to prove useful. If this is the case, versions of the rS$_N$ method that do not suffer from this problem need to be investigated more rigorously. For example, instead of rotating once per time step, it is possible to perform two rotations---once forth, once back---in every time step with half the rotation magnitude. This has already been discussed, but not further analyzed. 
+      Next is the topic of heterogeneities. Ultimately, the proposed
+      distributions need to be validated by means of real-world,
+      physical experiments or computer simulations. Actually
+      simulating trajectories of particles throughout a heterogeneous
+      field of non-classically arranged scatterers and tallying those
+      that do cross a domain interface is computationally expensive,
+      if a sufficient statistics is to be achieved. This procedure
+      gets more complicated when acknowledging the fact that we have
+      limited knowledge about non-classical arrangements of
+      scatterers. For example, algebraic decay of the path length
+      distribution for the periodic Lorentz gas is observed only asymptotically.
+      However, it does seem as if this is problem is conquerable by
+      efficient implementations of the particle billiard games
+      mentioned throughout this thesis.
 
-Current research on angular adaptivity for the S$_N$ method has shown promising results \cite{DARGAVILLE2020109124}. The angular quadrature set is refined or coarsened in different areas of the spatial domain and at different time steps. The filtered spherical harmonics method is used as an error indicator, telling the algorithm where to refine or coarsen the angular mesh. This error indicator can, in theory, be used for the as-S$_N$ or rS$_N$ method as well, indicating regions that require artificial scattering or rotation, respectively.
+      The computer graphics community has been using non-exponential
+      transport as a tool that enhances the artistic degree of
+      freedom when creating renders
+      \cite{bitterli2018radiative,jarabo2018radiative}.
+      The $s$-dependent cross sections are chosen freely, without
+      considering whether they correspond to a certain arrangement of obstacle.
+      Understanding which cross sections (and path length
+      distributions) are the result of actual arrangements of
+      scatterers might prove fruitful beyond mathematical curiosity:
+      It enables us to better understand the physical world around us
+      and make simulations and renders  more accurate.
 
-Compared to classical transport, non-classical transport theory is still in its infancy. 
-Here too, quantitative studies are necessary to understand the effect that $s$-dependent cross sections or non-exponential path length distributions have  on real-world problems. So far, mostly the Monte Carlo method has been explored as a way to solve the non-classical transport equation. However, non-classical time-independent transport is structurally similar to time-dependent classical transport. Whereas time only increases, the path length $s$ gets reset after every collision (in the backward formulation). 
-Nevertheless, if we rewrite the backward formulation as 
-\begin{align*}
-	\begin{cases}
-		\partial_s \psi(s,\bx,\bOmega) +\bOmega \cdot \nabla_\bx \psi(s,\bx,\bOmega) + \sigma_t(s) \psi(s,\bx,\bOmega)  = 0, \\
-		\psi(0,\bx,\bOmega) =  \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot \bOmega) \, \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+  Q(\bx),
-	\end{cases}
-\end{align*}
-we can add indices $l$ and $l-1$ to the equation to obtain 
-\begin{align*}
-	\begin{cases}
-		\partial_s \psi^{l}(s,\bx,\bOmega) +\bOmega \cdot \nabla_\bx \psi^l(s,\bx,\bOmega) + \sigma_t(s) \psi^l(s,\bx,\bOmega)  = 0, \\
-		\psi^l(0,\bx,\bOmega) =  \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot \bOmega) \, \psi^{l-1}(s',\bx,\bOmega')\, d\bOmega' \, ds'.
-	\end{cases}
-\end{align*}
-With $\psi^{0}(s,\bx,\bOmega) \equiv Q(\bx)$, we can solve this system repeatedly with a standard S$_N$ solver. In this formulation, $\psi^{l+1}$ relates to those particles that have scattered at most $l$ times. Assuming convergence due to sufficient absorption, $\psi^{L}(s,\bx,\bOmega) \approx \psi(s,\bx,\bOmega)$ for a sufficiently large $L$. 
-True when moving from classical to non-classical transport, the added complexity of the distinction between correlated and uncorrelated particles needs to be quantified, too.
-
-
-
-Next is the topic of heterogeneities. Ultimately, the proposed distributions need to be validated by means of real-world, physical experiments or computer simulations. Actually simulating trajectories of particles throughout a heterogeneous field of non-classically arranged scatterers and tallying those that do cross a domain interface is computationally expensive, if a sufficient statistics is to be achieved. This procedure gets more complicated when acknowledging the fact that we have limited knowledge about non-classical arrangements of scatterers. For example, algebraic decay of the path length distribution for the periodic Lorentz gas is observed only asymptotically.
-However, it does seem as if this is problem is conquerable by efficient implementations of the particle billiard games mentioned throughout this thesis.
-
-
-The computer graphics community has been using non-exponential transport as a tool that enhances the artistic degree of freedom when creating renders \cite{bitterli2018radiative,jarabo2018radiative}.
-The $s$-dependent cross sections are chosen freely, without considering whether they correspond to a certain arrangement of obstacle. 
-Understanding which cross sections (and path length distributions) are the result of actual arrangements of scatterers might prove fruitful beyond mathematical curiosity: It enables us to better understand the physical world around us and make simulations and renders  more accurate. 
-
-
-%Finally, all added complexity has to be justified by measurable improvements of a model's predictions.
-%Finding more real-world applications that benefit from (and hence justify) non-classical transport is therefore paramount to the theory's success and acceptance in the scientific community.
-
- 
+      %Finally, all added complexity has to be justified by
+      % measurable improvements of a model's predictions.
+      %Finding more real-world applications that benefit from (and
+      % hence justify) non-classical transport is therefore paramount
+      % to the theory's success and acceptance in the scientific community.

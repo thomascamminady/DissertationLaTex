@@ -1,34 +1,48 @@
 \chapter{Numerical solution methods}
 \label{chap:2}
-\enquote{There ain't no such thing as a free lunch.} Popularized by Robert Heinlein's 1966
+\enquote{There ain't no such thing as a free lunch.} Popularized by
+Robert Heinlein's 1966
 novel \textit{The Moon is a Harsh Mistress},
-this statement tends to be ubiquitous in mathematics and the sciences as well. We have seen
+this statement tends to be ubiquitous in mathematics and the sciences
+as well. We have seen
 in
 the previous
-section that the  transport equation is a powerful tool, allowing us to describe a variety of
-systems in a detailed manner. Thus it is unsurprising that solving the transport equation is
-costly at best and infeasible at worst. Solution methods---analytical and numerical in
-nature---have been research topics for decades.  Because analytical solutions can only be
+section that the  transport equation is a powerful tool, allowing us
+to describe a variety of
+systems in a detailed manner. Thus it is unsurprising that solving
+the transport equation is
+costly at best and infeasible at worst. Solution methods---analytical
+and numerical in
+nature---have been research topics for decades.  Because analytical
+solutions can only be
 derived in oversimplified scenarios, we will exclusively investigate
 numerical
 solution methods.
 
-Broadly speaking, numerical solution methods fall into one of the following two categories:
+Broadly speaking, numerical solution methods fall into one of the
+following two categories:
 They either involve some degree of (pseudo-)randomness or they are purely
-deterministic. Both categories have their merits and deficiencies; are both rich in mathematical
-theory and relevant for applications; and tend to cause partisan debates about which of them
+deterministic. Both categories have their merits and deficiencies;
+are both rich in mathematical
+theory and relevant for applications; and tend to cause partisan
+debates about which of them
 is better.
 
-Though this section focuses more strongly on deterministic solution methods, we will also
+Though this section focuses more strongly on deterministic solution
+methods, we will also
 sketch the
-fundamental idea of the Monte Carlo method as a representative of non-deterministic
-methods. On the deterministic side, the main focus will be on the discrete ordinates
-method---also known as the S$_N$ method---but moment methods will be discussed as well.
-We will start with the Monte Carlo method, because it nicely transforms the underlying physics of the
-transport equation into a numerical method, allowing us to recall some of the principles and
+fundamental idea of the Monte Carlo method as a representative of
+non-deterministic
+methods. On the deterministic side, the main focus will be on the
+discrete ordinates
+method---also known as the S$_N$ method---but moment methods will be
+discussed as well.
+We will start with the Monte Carlo method, because it nicely
+transforms the underlying physics of the
+transport equation into a numerical method, allowing us to recall
+some of the principles and
 ideas that were discussed so far. A short introduction with relevant historical
 context is prepended to the mathematical description of the respective methods.
-
 
 %\section{Open-source software}
 %Open-source software made this thesis possible.
@@ -37,49 +51,63 @@ context is prepended to the mathematical description of the respective methods.
 
 %\todo{Write this somehow}
 
-
 \section{Monte Carlo method}
-Origins of the Monte Carlo method date back as early as 1946. Back then, Stanisław Marcin
+Origins of the Monte Carlo method date back as early as 1946. Back
+then, Stanisław Marcin
 Ulam
-suggested the method to John von Neumann as a way to compute the success rate for the
+suggested the method to John von Neumann as a way to compute the
+success rate for the
 card game Canfield solitaire \cite{eckhardt1987monte}.
-Canfield solitaire is luck based since not all configurations allow to successfully finish the game.
-The fundamental idea that Ulam and von Neumann pioneered---and that has arguably been
+Canfield solitaire is luck based since not all configurations allow
+to successfully finish the game.
+The fundamental idea that Ulam and von Neumann pioneered---and that
+has arguably been
 unchanged until today---was the following:
 Instead of coming up with an analytical way to predict
 the success rate,
-one could repeatedly play newly shuffled instances of the game and keep track of the number
-of successful finishes; ultimately gauging the success rate as the ratio of that number by the
+one could repeatedly play newly shuffled instances of the game and
+keep track of the number
+of successful finishes; ultimately gauging the success rate as the
+ratio of that number by the
 total number of games played.
-One year later, in March 1947, Ulam, von Neumann, and Robert Davis Richtmeyer wrote a
-report that outlined the applicability of the Monte Carlo method for neutron diffusion and
-multiplication problems, together with tentative computing sheets \cite{ulam1947statistical}.
+One year later, in March 1947, Ulam, von Neumann, and Robert Davis
+Richtmeyer wrote a
+report that outlined the applicability of the Monte Carlo method for
+neutron diffusion and
+multiplication problems, together with tentative computing sheets
+\cite{ulam1947statistical}.
 In that report, von Neumann also speculates on the computational costs:
 %
 %\begin{figure}[h!]
-%	\centering%
-%	\includegraphics[width=1.0\linewidth]{../../../Desktop/vonneumannquote}
-%	\caption{An excerpt of a letter from von Neumann from 1947. V}%
-%	\label{fig:vonneumannquote}
+%  \centering%
+%  \includegraphics[width=1.0\linewidth]{../../../Desktop/vonneumannquote}
+%  \caption{An excerpt of a letter from von Neumann from 1947. V}%
+%  \label{fig:vonneumannquote}
 %\end{figure}
 
 \begin{quote}
-	I cannot assert this with certainty yet, but it seems to me very likely that the instructions given
-	on this \textquotesingle computing sheet\textquotesingle\, do not exceed the \textquotesingle logical\textquotesingle\,
-	capacity
-	of the ENIAC\footnote{The
-		Electronic Numerical Integrator and Computer (ENIAC) was the first general-purpose
-		Turing-complete computer. It was completed and put to work in 1945.}. I
-	doubt
-	that the
-	processing of 100 \textquotesingle neutrons\textquotesingle\, will take much longer than the
-	reading, punching, and (once)
-	sorting time of 100 cards;  i.e., about 3 minutes. Hence, taking 100 \textquotesingle
-	neutrons\textquotesingle\, through 100 of
-	these stages should take about 300 minutes; i.e., 5 hours.
+  I cannot assert this with certainty yet, but it seems to me very
+  likely that the instructions given
+  on this \textquotesingle computing sheet\textquotesingle\, do not
+  exceed the \textquotesingle logical\textquotesingle\,
+  capacity
+  of the ENIAC\footnote{The
+    Electronic Numerical Integrator and Computer (ENIAC) was the
+    first general-purpose
+  Turing-complete computer. It was completed and put to work in 1945.}. I
+  doubt
+  that the
+  processing of 100 \textquotesingle neutrons\textquotesingle\, will
+  take much longer than the
+  reading, punching, and (once)
+  sorting time of 100 cards;  i.e., about 3 minutes. Hence, taking
+  100 \textquotesingle
+  neutrons\textquotesingle\, through 100 of
+  these stages should take about 300 minutes; i.e., 5 hours.
 \end{quote}
 The Monte Carlo method, ENIAC, and it's 1951 predecessor
-MANIAC---Mathematical and Numerical Integrator and Calculator---played essential roles in
+MANIAC---Mathematical and Numerical Integrator and
+Calculator---played essential roles in
 the Manhattan
 project  and the development of the first
 hydrogen
@@ -90,41 +118,61 @@ bomb
 
 Nowadays, the Monte Carlo method is used in civil nuclear applications as
 well. Both
-radiation therapy \cite{verhaegen2003monte, paganetti2004accurate, seco2013monte} and nuclear reactor design \cite{shim2012mccard,wu2015cad} inherently rely on the Monte Carlo method. But also nearly every other discipline in the sciences uses the Monte Carlo method
-to compute quantities that are as diverse as the fields themselves. For example, biology \cite{manly2006randomization, mode2011applications}, chemistry \cite{hammond1994monte, nightingale1998quantum},  social sciences \cite{axtell2000agents,carsey2013monte,hancock2018reviewer}, or finance \cite{jackel2002monte,joy1996quasi} make use of Monte Carlo methods.
+radiation therapy \cite{verhaegen2003monte, paganetti2004accurate,
+seco2013monte} and nuclear reactor design
+\cite{shim2012mccard,wu2015cad} inherently rely on the Monte Carlo
+method. But also nearly every other discipline in the sciences uses
+the Monte Carlo method
+to compute quantities that are as diverse as the fields themselves.
+For example, biology \cite{manly2006randomization,
+mode2011applications}, chemistry \cite{hammond1994monte,
+nightingale1998quantum},  social sciences
+\cite{axtell2000agents,carsey2013monte,hancock2018reviewer}, or
+finance \cite{jackel2002monte,joy1996quasi} make use of Monte Carlo methods.
 This work will focus on the Monte Carlo
 method as a tool to solve the transport equation approximately.
 
 \subsection{Random numbers}
-Without random numbers, there would be no Monte Carlo method. Not only is it important to
-sample random numbers \textit{fast enough}, they also need to be \textit{good enough}.
-True random number generators are infeasible when random numbers need to be generated
+Without random numbers, there would be no Monte Carlo method. Not
+only is it important to
+sample random numbers \textit{fast enough}, they also need to be
+\textit{good enough}.
+True random number generators are infeasible when random numbers need
+to be generated
 quickly, limiting most applications to pseudo-random numbers instead.
 
 A common pseudo-random number generator is the linear congruential generator,
 which generates a sequence of numbers
 \begin{align}
-	X_{i+1} = aX_i + b \text{ mod } c,
+  X_{i+1} = aX_i + b \text{ mod } c,
 \end{align}
-with $a$, $b$, and $c$ being large, carefully chosen integers. A pseudo-random number
+with $a$, $b$, and $c$ being large, carefully chosen integers. A
+pseudo-random number
 generator does
-therefore not generate random numbers in the sense that they are irreproducible. Any
+therefore not generate random numbers in the sense that they are
+irreproducible. Any
 sequence can be reproduced when $a$, $b$, and $c$ are known.
-However, being presented with only a set of pseudo-random numbers $\{X_0, X_1,\ldots,X_i\}$,
+However, being presented with only a set of pseudo-random numbers
+$\{X_0, X_1,\ldots,X_i\}$,
 it is hard to predict $X_{i+1}$.
 The linear congruential generator is one of the simpler generators and therefore
 unsuited for cryptographic applications. More sophisticated
 generators are the Mersenne Twister \cite{matsumoto1998mersenne}, the WELL (well
-equidistributed long-period linear) generator \cite{panneton2006improved}, or xorshift
-random number generators \cite{marsaglia2003xorshift} to only name a few prominent
+equidistributed long-period linear) generator
+\cite{panneton2006improved}, or xorshift
+random number generators \cite{marsaglia2003xorshift} to only name a
+few prominent
 representatives.
 % of the class of pseudo-random number generators.
-Hereinafter, we assume that we are equipped with an algorithm that generates uniform
+Hereinafter, we assume that we are equipped with an algorithm that
+generates uniform
 random
-numbers in the interval $[0,1]$. The distinction between pseudo-random and random is
+numbers in the interval $[0,1]$. The distinction between
+pseudo-random and random is
 omitted; pseudo-randomness is assumed implicitly from now on.
 
-Since, for example, the distance that a particle travels between consecutive collisions is not
+Since, for example, the distance that a particle travels between
+consecutive collisions is not
 uniformly distributed, samples from non-uniform distributions with arbitrary
 probability density $f_X$ need to be generated as well.
 Two common methods for generating
@@ -134,146 +182,183 @@ these samples are inverse transform sampling and rejection sampling.
 \label{subsec:inverse}
 Let us assume that we want to generate samples from a distribution with a
 Lebesgue-integrable  probability density
-function $f_X: [a,b] \to \Rgeqz$, satisfying $\int_a^b f_X(x') \, dx' = 1$. The cumulative
+function $f_X: [a,b] \to \Rgeqz$, satisfying $\int_a^b f_X(x') \, dx'
+= 1$. The cumulative
 distribution
-function is defined as $F_X(x) \defas \int_a^x f_X(x') \, dx'$. The random variable $X$ has
+function is defined as $F_X(x) \defas \int_a^x f_X(x') \, dx'$. The
+random variable $X$ has
 probability density function $f_X$ if
 \begin{align}
-	\Pr[x_0 \leq X \leq x_1] = \int_{x_0}^{x_1} f_X(x')\, dx'.
+  \Pr[x_0 \leq X \leq x_1] = \int_{x_0}^{x_1} f_X(x')\, dx'.
 \end{align}
-Here, $\Pr[x_0 \leq X \leq x_1] $ denotes the probability that a random sample falls in the
+Here, $\Pr[x_0 \leq X \leq x_1] $ denotes the probability that a
+random sample falls in the
 interval $[x_0,x_1]$. Denote by $U$ a sample from the uniform distribution
 $\mathcal{U}(0,1)$.
 The distribution of $F_X^{-1}(U)$ is then identical to the
 distribution of $X$ and we are able to generate samples from $F_X$ by sampling
-$U\sim\mathcal{U}(0,1)$ and evaluating $Y=F_X^{-1}(U)$. See \eg \cite{smith2013uncertainty}
+$U\sim\mathcal{U}(0,1)$ and evaluating $Y=F_X^{-1}(U)$. See \eg
+\cite{smith2013uncertainty}
 for the simple proof.
 
-This method does however require the cumulative distribution function and its inverse to be available
-and cheap to evaluate. Usually, this can be achieved by precomputing $F_X^{-1}$ numerically and
+This method does however require the cumulative distribution function
+and its inverse to be available
+and cheap to evaluate. Usually, this can be achieved by precomputing
+$F_X^{-1}$ numerically and
 tabulating the values to generate a lookup table.
 
 \subsubsection{Rejection sampling}
 \label{subsec:rejection}
-Another method that generates samples from a density $f_X$---requiring neither the evaluation of
-$F_X$, nor of $F_X^{-1}$---is rejection sampling. What is necessary, however, is a function that serves as
+Another method that generates samples from a density
+$f_X$---requiring neither the evaluation of
+$F_X$, nor of $F_X^{-1}$---is rejection sampling. What is necessary,
+however, is a function that serves as
 an upper bound for $f_X$ from which samples can be generated efficiently.
-The situation is visualized in Figure \ref{fig:rejectionsampling}. As an example, the distribution
+The situation is visualized in Figure \ref{fig:rejectionsampling}. As
+an example, the distribution
 from
 which we wish to
-sample is given by $f_X(x) = c \cdot (x-1)^2\cdot(x+1)^2 \cdot \mathcal{N}_{0,1}(x)$ with
-$\mathcal{N}_{\mu,\sigma^2}(x)$ as the normal distribution with mean $\mu$ and variance
-$\sigma^2$. The constant $c$ normalizes $f_X$ in the sense that $\int_{-\infty}^\infty f_X(x') \, dx'=1$.
+sample is given by $f_X(x) = c \cdot (x-1)^2\cdot(x+1)^2 \cdot
+\mathcal{N}_{0,1}(x)$ with
+$\mathcal{N}_{\mu,\sigma^2}(x)$ as the normal distribution with mean
+$\mu$ and variance
+$\sigma^2$. The constant $c$ normalizes $f_X$ in the sense that
+$\int_{-\infty}^\infty f_X(x') \, dx'=1$.
 An
-upper bound to $f_X(x)$ is $ 3\cdot f_Y(x)$, with $f_Y(x) = \mathcal{N}_{0,9}(x)$.
+upper bound to $f_X(x)$ is $ 3\cdot f_Y(x)$, with $f_Y(x) =
+\mathcal{N}_{0,9}(x)$.
 
 \begin{figure}[h!]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rejectionsampling/rejection_sampling.pdf}
-	\caption{To generate samples from $f_X$ via rejection sampling, we use $3\cdot f_Y$ as
-		an
-		upper bound. Here, $f_Y$ is a normal distribution with mean $\mu=0$ and variance
-		$\sigma^2=9$.}
-	\label{fig:rejectionsampling}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rejectionsampling/rejection_sampling.pdf}
+  \caption{To generate samples from $f_X$ via rejection sampling, we
+    use $3\cdot f_Y$ as
+    an
+    upper bound. Here, $f_Y$ is a normal distribution with mean
+    $\mu=0$ and variance
+  $\sigma^2=9$.}
+  \label{fig:rejectionsampling}
 \end{figure}
-To generalize, assume that our proposal distribution is $f_Y(x)$ and $M\cdot f_Y(x)$ is an
+To generalize, assume that our proposal distribution is $f_Y(x)$ and
+$M\cdot f_Y(x)$ is an
 upper
 bound
-to $f_X(x)$. Clearly, there exist multiple choices for $M$. In applications it is important to choose $M$
-such that $M\cdot f_Y$ is a tight upper bound to $f_X$ (\ie the situation in Figure
-\ref{fig:rejectionsampling}
-could
+to $f_X(x)$. Clearly, there exist multiple choices for $M$. In
+applications it is important to choose $M$
+such that $M\cdot f_Y$ is a tight upper bound to $f_X$ (\ie the
+  situation in Figure
+  \ref{fig:rejectionsampling}
+  could
 be optimized by choosing a constant slightly smaller than $M=3$). An
 implementation\footnote{Algorithms
-	presented in this thesis will obey a Python-ish style; instead of curly parentheses or closing
-	\texttt{end} statements, we use indentations. Comments are right-aligned in gray.} of rejection
+  presented in this thesis will obey a Python-ish style; instead of
+  curly parentheses or closing
+  \texttt{end} statements, we use indentations. Comments are
+right-aligned in gray.} of rejection
 sampling is
 then given in Algorithm \ref{alg:rejectionsampling}.
 
 \begin{algorithm}[h!]
-	\caption{Rejection sampling.}
-	\begin{algorithmic}[1]
-		\Function{rejectionsampling}{$f_X,f_Y,Y,M$}
-		\While{True}
-		\State $y \gets Y(\,)$ \Comment{Variable $y$ is a sample from distribution $Y$.}
-		\State $u \gets \mathcal{U}(\,)$ \Comment{Variable $u$ is a sample from $\mathcal{U}(0,1)$.}
-		\If{$u\cdot M \cdot f_Y(y) < f_X(y)$}
-		\State \textbf{return} $y$\Comment{Variable $y$ is also a sample from distribution $X$.}
-		\EndIf
-		\EndWhile
-		\EndFunction
-	\end{algorithmic}
-	\label{alg:rejectionsampling}
+  \caption{Rejection sampling.}
+  \begin{algorithmic}[1]
+    \Function{rejectionsampling}{$f_X,f_Y,Y,M$}
+    \While{True}
+    \State $y \gets Y(\,)$ \Comment{Variable $y$ is a sample from
+    distribution $Y$.}
+    \State $u \gets \mathcal{U}(\,)$ \Comment{Variable $u$ is a
+    sample from $\mathcal{U}(0,1)$.}
+    \If{$u\cdot M \cdot f_Y(y) < f_X(y)$}
+    \State \textbf{return} $y$\Comment{Variable $y$ is also a sample
+    from distribution $X$.}
+    \EndIf
+    \EndWhile
+    \EndFunction
+  \end{algorithmic}
+  \label{alg:rejectionsampling}
 \end{algorithm}
 
-In Figure 	\ref{fig:rejectionsampling2}, we see the output of the rejection sampling algorithm.
-As indicated by the orange dashes at the bottom, the $x$ values of the accepted points (in
+In Figure   \ref{fig:rejectionsampling2}, we see the output of the
+rejection sampling algorithm.
+As indicated by the orange dashes at the bottom, the $x$ values of
+the accepted points (in
 orange) are
-obeying the density $f_X$. However, the high number of rejected samples (in purple) means
+obeying the density $f_X$. However, the high number of rejected
+samples (in purple) means
 that it might
-potentially take a long time to generate the required number of samples. The number of
-rejected points equals $657$, the number of accepted points is $343$; this approximately
+potentially take a long time to generate the required number of
+samples. The number of
+rejected points equals $657$, the number of accepted points is $343$;
+this approximately
 agrees
 with the
 predicted acceptance rate of $1/M$.
 
-
 \begin{figure}[h!]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rejectionsampling/rejection_sampling2.pdf}
-	\caption{Output of the rejection sampling algorithm. Purple points are being rejected. For
-		the orange points, the corresponding $x$ values are distributed according to $f_X$,
-		illustrated by the orange dashes at the bottom. We observe that many points are being
-		rejected, indicating that $f_Y$ is no optimal choice.}
-	\label{fig:rejectionsampling2}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rejectionsampling/rejection_sampling2.pdf}
+  \caption{Output of the rejection sampling algorithm. Purple points
+    are being rejected. For
+    the orange points, the corresponding $x$ values are distributed
+    according to $f_X$,
+    illustrated by the orange dashes at the bottom. We observe that
+    many points are being
+  rejected, indicating that $f_Y$ is no optimal choice.}
+  \label{fig:rejectionsampling2}
 \end{figure}
 
-It remains to show that Algorithm \ref{alg:rejectionsampling} does indeed generate samples
+It remains to show that Algorithm \ref{alg:rejectionsampling} does
+indeed generate samples
 that are
 distributed as prescribed by the density $f_X$.
 
 \begin{proof}
-	We have to prove that the distribution of $Y$ given that  $u\cdot M \cdot f_Y(y) < f_X(y)$ is
-	the distribution of $X$, \ie $\Pr[y\leq y' \,|\, u\cdot M \cdot f_Y(y) < f_X(y)] = F_X(y')$.
-	Note that
-	\begin{align}
-		\Pr[u\cdot M \cdot f_Y(y) < f_X(y)\,\vert \, y =y' ] = \frac{f_X(y')}{M\cdot f_Y(y')}
-	\end{align}
-	and thus
-	\begin{align}
-		\Pr[u\cdot M \cdot f_Y(y) < f_X(y) ] =\int_{-\infty}^\infty \frac{f_X(y')}{M\cdot f_Y(y')} f_Y(y') \,
-		dy'=\frac{1}{M}.
-	\end{align}
+  We have to prove that the distribution of $Y$ given that  $u\cdot M
+  \cdot f_Y(y) < f_X(y)$ is
+  the distribution of $X$, \ie $\Pr[y\leq y' \,|\, u\cdot M \cdot
+  f_Y(y) < f_X(y)] = F_X(y')$.
+  Note that
+  \begin{align}
+    \Pr[u\cdot M \cdot f_Y(y) < f_X(y)\,\vert \, y =y' ] =
+    \frac{f_X(y')}{M\cdot f_Y(y')}
+  \end{align}
+  and thus
+  \begin{align}
+    \Pr[u\cdot M \cdot f_Y(y) < f_X(y) ] =\int_{-\infty}^\infty
+    \frac{f_X(y')}{M\cdot f_Y(y')} f_Y(y') \,
+    dy'=\frac{1}{M}.
+  \end{align}
 
-	A simple
-	computation then completes the proof:
-\begin{subequations}
-	\begin{align}
-		\Pr & [y\leq y' \,|\, u\cdot M \cdot f_Y(y) < f_X(y)]               \\
-		    & = \Pr[ u\cdot M \cdot f_Y(y) < f_X(y)\, | \, y\leq y'
-		] \cdot \frac{\Pr[y\leq y']}{\Pr[u\cdot M \cdot f_Y(y) < f_X(y)]}   \\
-		    & =
-		\Pr[ u\cdot M \cdot f_Y(y) < f_X(y)\, | \, y\leq y'
-		] \cdot \frac{F_Y(y')}{1/M}                                         \\
-		    & =
-		\frac{\Pr[ u\cdot M \cdot f_Y(y) < f_X(y),\, y\leq y'
-			]}{F_Y(y')}\cdot \frac{F_Y(y')}{1/M}
-		\\
-		    & =
-		\int_{-\infty}^{y'} \Pr[u\cdot M \cdot f_Y(z) < f_X(z)\, | \, z\leq y'
-		]f_Y(z) \, dz\cdot M
-		\\
-		    & =
-		\int_{-\infty}^{y'} \frac{f_X(z)}{M\cdot f_Y(z)}f_Y(z) \, dz\cdot M \\
-		    & =
-		F_X(y').
-	\end{align}
-\end{subequations}
+  A simple
+  computation then completes the proof:
+  \begin{subequations}
+    \begin{align}
+      \Pr & [y\leq y' \,|\, u\cdot M \cdot f_Y(y) < f_X(y)]               \\
+      & = \Pr[ u\cdot M \cdot f_Y(y) < f_X(y)\, | \, y\leq y'
+      ] \cdot \frac{\Pr[y\leq y']}{\Pr[u\cdot M \cdot f_Y(y) < f_X(y)]}   \\
+      & =
+      \Pr[ u\cdot M \cdot f_Y(y) < f_X(y)\, | \, y\leq y'
+      ] \cdot \frac{F_Y(y')}{1/M}                                         \\
+      & =
+      \frac{\Pr[ u\cdot M \cdot f_Y(y) < f_X(y),\, y\leq y'
+      ]}{F_Y(y')}\cdot \frac{F_Y(y')}{1/M}
+      \\
+      & =
+      \int_{-\infty}^{y'} \Pr[u\cdot M \cdot f_Y(z) < f_X(z)\, | \, z\leq y'
+      ]f_Y(z) \, dz\cdot M
+      \\
+      & =
+      \int_{-\infty}^{y'} \frac{f_X(z)}{M\cdot f_Y(z)}f_Y(z) \, dz\cdot M \\
+      & =
+      F_X(y').
+    \end{align}
+  \end{subequations}
 
-	%http://www.columbia.edu/~ks20/4703-Sigman/4703-07-Notes-ARM.pdf
+  %http://www.columbia.edu/~ks20/4703-Sigman/4703-07-Notes-ARM.pdf
 \end{proof}
-Having discussed the main ingredients of the Monte Carlo method, we are now going to
-demonstrate how it can be used as a numerical integrator and a solution method for the
+Having discussed the main ingredients of the Monte Carlo method, we
+are now going to
+demonstrate how it can be used as a numerical integrator and a
+solution method for the
 transport equation.
 
 \subsubsection{Monte Carlo as a numerical integrator}
@@ -284,1489 +369,1925 @@ of $V$ is given by $|V| = \int_V 1 \, d\bx$. With $I$ we
 denote the
 linear integral operator
 \begin{align}
-	I(f) \defas \int_{V}f(\bx)\, d\bx.
+  I(f) \defas \int_{V}f(\bx)\, d\bx.
 \end{align}
 We wish to approximate $I(f)$ via Monte Carlo.
 For a random process,
 where $\bx$ has density $\rho(\bx)$, we define the expected value of $f(\bx)$ as
 \begin{align}
-	E[	f] = \int_V f(\bx) \rho(\bx)\, d\bx
+  E[  f] = \int_V f(\bx) \rho(\bx)\, d\bx
 \end{align}
 and the variance of $f(\bx)$ as
 \begin{align}
-	\text{Var}[	f] = \int_V\left( f(\bx) -E[f] \right)^2\rho(\bx)\, d\bx.
+  \text{Var}[  f] = \int_V\left( f(\bx) -E[f] \right)^2\rho(\bx)\, d\bx.
 \end{align}
-
 
 Let $\bx^{(1)},\dots,\bx^{(N)}$ be independent
 and identically distributed (iid) samples from $\mathcal{U}(V)$ and define
 \begin{align}
-	I^N(f) \defas \frac{|V|}{N} \sum_{i=1}^N f(\bx^{(i)})
+  I^N(f) \defas \frac{|V|}{N} \sum_{i=1}^N f(\bx^{(i)})
 \end{align}
 as the numerical approximation of $I(f)$ via Monte Carlo.
 The expected value of $I^N(f)$ is
-exactly $I(f)$ since $E[I^N(f)] = \frac{|V|}{N}\sum_{i=1}^N E[f\left(\bx^{(i)}\right) ] =
-	\frac{|V|}{N} \sum_{i=1}^N \int_V f\left(\bx^{(i)}\right)  \frac{1}{|V|}\, d\bx^{(i)} = I(f)$.
+exactly $I(f)$ since $E[I^N(f)] = \frac{|V|}{N}\sum_{i=1}^N
+E[f\left(\bx^{(i)}\right) ] =
+\frac{|V|}{N} \sum_{i=1}^N \int_V f\left(\bx^{(i)}\right)
+\frac{1}{|V|}\, d\bx^{(i)} = I(f)$.
 Likewise, the resulting error
 $\varepsilon^N(f) \defas I(f) -I^N(f)$ is itself a random variable.
 
-Using both the law of large numbers and the central limit theorem, %\todo{cite something here}
+Using both the law of large numbers and the central limit theorem,
+%\todo{cite something here}
 the well known convergence result for Monte Carlo can be derived, \ie
 \begin{align}
-	\sqrt{E[ \left(\varepsilon^N(f)\right)^2]} = \sqrt{\frac{\text{Var}[f]}{N}}.
-	\label{eq:convergenceordermontecarlo12}
+  \sqrt{E[ \left(\varepsilon^N(f)\right)^2]} = \sqrt{\frac{\text{Var}[f]}{N}}.
+  \label{eq:convergenceordermontecarlo12}
 \end{align}
 We can draw several conclusions from \eqref{eq:convergenceordermontecarlo12}:
 \begin{itemize}
-	\item The expected error decreases with order $N^{-1/2}$ as the number of samples $N$
-	      increases.
-	\item The expected order of convergence is independent of the dimension.
-	\item The expected error itself, however, might depend on $f$ via
-	      $\text{Var}[f]$.
+  \item The expected error decreases with order $N^{-1/2}$ as the
+    number of samples $N$
+    increases.
+  \item The expected order of convergence is independent of the dimension.
+  \item The expected error itself, however, might depend on $f$ via
+    $\text{Var}[f]$.
 \end{itemize}
 
-There exists a vast body of literature  discussing the Monte Carlo method in great detail and
-several important aspects of Monte Carlo have been omitted so far (\eg Quasi Monte Carlo \cite{niederreiter1992random}, Markov Chain Monte Carlo \cite{doi:10.1080/01621459.1990.10476213}, Zero-Variance Monte Carlo \cite{assaraf1999zero}).
-However, that is not to say we are not equipped with the necessary tools to finally discuss
+There exists a vast body of literature  discussing the Monte Carlo
+method in great detail and
+several important aspects of Monte Carlo have been omitted so far
+(\eg Quasi Monte Carlo \cite{niederreiter1992random}, Markov Chain
+  Monte Carlo \cite{doi:10.1080/01621459.1990.10476213}, Zero-Variance
+Monte Carlo \cite{assaraf1999zero}).
+However, that is not to say we are not equipped with the necessary
+tools to finally discuss
 how the Monte Carlo method  can be used to solve transport equations.
 
-
 \subsection{Monte Carlo for transport equations}
-%There exists a vast body of literature, discussing the many different nuances of Monte Carlo games that can be %simulated to approximate the transport equation's solution---see %\cite{spanier2008monte,luxmonte,bielajew2001fundamentals}, to name only a few.
+%There exists a vast body of literature, discussing the many
+% different nuances of Monte Carlo games that can be %simulated to
+% approximate the transport equation's solution---see
+% %\cite{spanier2008monte,luxmonte,bielajew2001fundamentals}, to name
+% only a few.
 %Additionally,
- The complexity of Monte Carlo simulations can increase almost arbitrarily, based upon the physical processes that should be incorporated into the model. These include, but are not limited to, the pair production in photon transport or the long-range interactions when simulating plasma.
+The complexity of Monte Carlo simulations can increase almost
+arbitrarily, based upon the physical processes that should be
+incorporated into the model. These include, but are not limited to,
+the pair production in photon transport or the long-range
+interactions when simulating plasma.
 
-Here, we will restrict ourselves to the description of time-independent, energy-dependent transport of uncharged particles, focusing on the important building blocks of the Monte Carlo method  without including too much physical complexity (which ultimately differs from application to application).
+Here, we will restrict ourselves to the description of
+time-independent, energy-dependent transport of uncharged particles,
+focusing on the important building blocks of the Monte Carlo method
+without including too much physical complexity (which ultimately
+differs from application to application).
 
-Assume a domain $V\subset \mathbb{R}^d$ with $d\in\{2,3\}$, boundary $\partial V$, and known cross sections $\sigma_s(\bx,E)$ and $\sigma_a(\bx,E)$ for every point $\bx \in V$ and positive energies $E$.
-Particles enter the domain through boundary conditions $\psi^{bc}(\bx,\bOmega,E)$ for $\bx \in \partial V$ and $\bOmega \cdot {\bf{n}}(\bx) < 0$. Here, ${\bf{n}}(\bx)$ is the outward-pointing normal vector at $\bx$.
-For every $(\bx_0,\bOmega_0)$, the cross sections along $\bx_0 + s \,\bOmega_0$ are computed with a ray-tracing algorithm up to the point $\bx_0 + \tilde{s} \, \bOmega_0$ where the particle would leave the domain again.
-Particles lose energy in two ways: (i) Via soft stopping interaction where particles lose energy based upon the distance that they travel through a given material \cite{BARO199531}. Randomness is included in this process as well since the amount of energy that particles lose is sampled from a distribution. (ii) In case of a interactions, particles lose energy again (sampled from a different distribution).
+Assume a domain $V\subset \mathbb{R}^d$ with $d\in\{2,3\}$, boundary
+$\partial V$, and known cross sections $\sigma_s(\bx,E)$ and
+$\sigma_a(\bx,E)$ for every point $\bx \in V$ and positive energies $E$.
+Particles enter the domain through boundary conditions
+$\psi^{bc}(\bx,\bOmega,E)$ for $\bx \in \partial V$ and $\bOmega
+\cdot {\bf{n}}(\bx) < 0$. Here, ${\bf{n}}(\bx)$ is the
+outward-pointing normal vector at $\bx$.
+For every $(\bx_0,\bOmega_0)$, the cross sections along $\bx_0 + s
+\,\bOmega_0$ are computed with a ray-tracing algorithm up to the
+point $\bx_0 + \tilde{s} \, \bOmega_0$ where the particle would leave
+the domain again.
+Particles lose energy in two ways: (i) Via soft stopping interaction
+where particles lose energy based upon the distance that they travel
+through a given material \cite{BARO199531}. Randomness is included in
+this process as well since the amount of energy that particles lose
+is sampled from a distribution. (ii) In case of a interactions,
+particles lose energy again (sampled from a different distribution).
 
-The setting described here could, for example, describe radiation therapy. To treat cancer, radiation targets the cancerous tissue with the goal of damaging its DNA, leading to the cells' death. It is obvious that an accurate estimate of the absorbed energy is necessary. Too little energy will leave cancerous tissue intact, whereas too much energy will harm the surrounding, healthy tissue unnecessarily.
-Cross sections vary as a result of the body composition---the chance for particles to scatter in the lungs is smaller than in fat---and can be obtained via a CT scan a priori.
+The setting described here could, for example, describe radiation
+therapy. To treat cancer, radiation targets the cancerous tissue with
+the goal of damaging its DNA, leading to the cells' death. It is
+obvious that an accurate estimate of the absorbed energy is
+necessary. Too little energy will leave cancerous tissue intact,
+whereas too much energy will harm the surrounding, healthy tissue unnecessarily.
+Cross sections vary as a result of the body composition---the chance
+for particles to scatter in the lungs is smaller than in fat---and
+can be obtained via a CT scan a priori.
 
-If we are now interested in the energy doses $D(V)$ that describes the amount of energy absorbed in voxel ${v} \subset V$, we can use the fact that Monte Carlo is a numerical integrator. A particle's trajectory $t$, from \textit{birth} at ($\bx_b,\bOmega_b,E_b)$ to \textit{death} at $(\bx_d,\bOmega_d,E_d)$, is a random sample that might increase the amount of absorbed energy in $v$ (if the trajectory passes through $v$).
-Henceforth, with $d_{v}(t_i)$ denoting the amount of energy that the $i$-th particle with trajectory $t_i$ loses in $v$, we approximate
+If we are now interested in the energy doses $D(V)$ that describes
+the amount of energy absorbed in voxel ${v} \subset V$, we can use
+the fact that Monte Carlo is a numerical integrator. A particle's
+trajectory $t$, from \textit{birth} at ($\bx_b,\bOmega_b,E_b)$ to
+\textit{death} at $(\bx_d,\bOmega_d,E_d)$, is a random sample that
+might increase the amount of absorbed energy in $v$ (if the
+trajectory passes through $v$).
+Henceforth, with $d_{v}(t_i)$ denoting the amount of energy that the
+$i$-th particle with trajectory $t_i$ loses in $v$, we approximate
 \begin{align}
-	D({v}) \approx D^{N}({v}) \defas \frac{1}{N} \sum_{i=1}^N d_{v}(t_i).
+  D({v}) \approx D^{N}({v}) \defas \frac{1}{N} \sum_{i=1}^N d_{v}(t_i).
 \end{align}
 The computational complexity lies  in the computation of samples $t_i$.
-A particle has to be traced through the computational domain, path lengths and new directions need to be sampled at every collision, and energy needs to be tallied.
-For complicated distributions, inverse sampling (Section \ref{subsec:inverse}) might not be possible and samples need to be generated via rejection sampling (Section \ref{subsec:rejection}), rendering the process significantly more expensive.
-
+A particle has to be traced through the computational domain, path
+lengths and new directions need to be sampled at every collision, and
+energy needs to be tallied.
+For complicated distributions, inverse sampling (Section
+\ref{subsec:inverse}) might not be possible and samples need to be
+generated via rejection sampling (Section \ref{subsec:rejection}),
+rendering the process significantly more expensive.
 
 \subsection{Advantages and disadvantages of the Monte Carlo method}
-Let us summarize the advantages and disadvantages of the Monte Carlo method as a way to approximately solve the transport equation.
+Let us summarize the advantages and disadvantages of the Monte Carlo
+method as a way to approximately solve the transport equation.
 
 {\textbf{Advantages}}
 
-The Monte Carlo method is \textit{embarrassingly parallel}. Trajectories can be computed simultaneously and independently of another  with marginal communication overhead, rendering the method predestined for parallel computers.
+The Monte Carlo method is \textit{embarrassingly parallel}.
+Trajectories can be computed simultaneously and independently of
+another  with marginal communication overhead, rendering the method
+predestined for parallel computers.
 %However, Monte Carlo simulations are frequently memory-bound because
 
-Since ray-tracing is not limited to a voxel-based geometry, arbitrary complex geometries can be represented exactly, albeit at increased computational cost.
+Since ray-tracing is not limited to a voxel-based geometry, arbitrary
+complex geometries can be represented exactly, albeit at increased
+computational cost.
 
-Because the variance is an exact proxy for the expected error, Monte Carlo has a built-in error estimator. This error estimator can be used to terminate the generation of new trajectories once a prescribed accuracy is obtained.
+Because the variance is an exact proxy for the expected error, Monte
+Carlo has a built-in error estimator. This error estimator can be
+used to terminate the generation of new trajectories once a
+prescribed accuracy is obtained.
 
-The convergence order of Monte Carlo is $N^{-1/2}$, regardless of the dimensionality of the problem.
+The convergence order of Monte Carlo is $N^{-1/2}$, regardless of the
+dimensionality of the problem.
 
 {\textbf{Disadvantages}
 
-The convergence order of Monte Carlo is \textit{only} $N^{-1/2}$, regardless of the dimensionality of the problem.
-Listed as an advantage in the case of many dimensions, convergence order $1/2$ is slow for a small to moderate number of dimensions.
-
-Moreover, even though the \textit{order} of the error is independent of the dimension, the error itself is not. Due to subregions of the domain that particles are unlikely to reach, the variance of the dose might be significant and is certainly not independent of the problem's dimensionality \cite{trefethen2017cubature}.
-Almost always, variance reduction techniques need to be used to reduce the variance in domains with strong material heterogeneities.
-
-
-
-\section{Discrete ordinates method}
-The discrete ordinates (S$_N$) method is usually ascribed to  Chandrasekhar
-\cite{chandrasekhar1944radiative} and work by Wick \cite{wick1943ebene}, dating back to the mid 1940s.
-Carlson and Lee discussed numerical quadratures for the transport equation in 1961 \cite{carlson1961mechanical}.
-Noteworthy, too, is Chandrasekhar's 1969 book \textit{Radiative Transfer} \cite{chandrasekhar2013radiative}.
-In the preface of this book, he writes that the motivation and historic relevance of radiative transfer stems from astrophysics and
-investigations performed  by Rayleigh in 1871.
-Nevertheless, his work impacts nuclear engineers and mathematicians as well.
-Convergence properties (under mild assumptions) were derived by Madsen in 1971 \cite{madsen1971pointwise} and  Anselone and Gibbs in 1974 \cite{anselone1974convergence}.
-
-At its core, the S$_N$ method restricts the movements of particles to a fixed set of directions. The angular-dependent transport equation reduces to a set of angular-independent transport equations, coupled via scattering. The left-hand side of each equation is a simple advection equation that can be solved forward in time.
-
-Ultimately, the spherical quadrature's job is to make the approximation
-\begin{align}
-	\int_{\mathbb{S}^2} \psi(t,\bx,\bOmega') \, d\bOmega' \approx \sum_{q'=1}^{n_q} w_{q'} \, \psi(t,\bx,\bOmega_{q'})
-	\label{eq:montecarlointegration}
-\end{align}
-as accurate as possible. For example, using isotropic scattering, this is the scattering operator on the transport equation's right-hand side. Henceforth, we will first discuss spherical quadratures before analyzing how the resulting system of coupled equations can be time-integrated.
-
-\subsection{Angular discretization}
-The fundamental idea of the S$_N$ method is to approximate a high-dimensional equation by
-a lower-dimensional system of equations via discretization of the angular variable. This
-avoids solving the full linear transport equation
-\eqref{eq:lineartransport} that reads
-\begin{equation*}
-	\begin{split}
-		\partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +\sigma_a
-		\psi(t,\bx,\bOmega) \\
-		&= {\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') -
-		\psi(t,\bx,\bOmega)\right)\, d\bOmega'+ q(t,\bx,\bOmega).
-	\end{split}
-\end{equation*}
-Since we are discussing a discretization in angle, the energy dependency is omitted. A
-spherical quadrature consists of a finite set of ordinates
-$\{\bOmega_1,\ldots,\bOmega_{n_q}\}\subset \mathbb{S}^2$ and quadrature weights
-$\{w_1,\ldots,w_{n_q}\}$, such
-that \eqref{eq:montecarlointegration} is as accurate as possible.
-
-The discrete ordinates method demands \eqref{eq:lineartransport} to be satisfied only at the
-set
-of ordinates $\{\bOmega_1,\ldots,\bOmega_{n_q}\}$ and deploys
-\eqref{eq:montecarlointegration} to circumvent the spherical integral on the right-hand side. The
-S$_N$ approximation to the linear transport equation is then
-\begin{equation}
-	\begin{split}
-		\partial_t \psi_q(t,\bx) +& \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx) +\sigma_a
-		\psi_q(t,\bx) \\
-		&= {\sigma_s}\sum_{q'=1}^{n_q}w_{q'} s(\bOmega_q \cdot \bOmega_{q'})\left(\psi_{q'}(t,\bx) -
-		\psi_q(t,\bx)\right)+ q(t,\bx,\bOmega_q),
-	\end{split}
-	\label{eq:SN}
-\end{equation}
-for $q=1,\ldots,n_q$ and with $\psi_q(t,\bx) \defas \psi(t,\bx,\bOmega_q)$.
-%Because we have
-%defined
-%the spherical integral in a way that it satisfies $\int_{\mathbb{S}^2} 1\, d\bOmega=1$, the
-%quadrature weights fulfill $\sum_{q=1}^{n_q} w_q = 1$.
-The left-hand side of \eqref{eq:SN} is a set of $n_q$ linear advection equations that could be
-solved independently if it were not for the right-hand side. The coupling is a result
-of the discretized scattering operator. We can rewrite \eqref{eq:SN} more compactly as
-\begin{equation}
-	\begin{split}
-		L\bm{\psi} (t,\bx) +  \sigma_a
-		\bm{\psi}(t,\bx)
-		&= {\sigma_s}(S^+-S^-)\bm{\psi}(t,\bx)+ \bm{q}(t,\bx),
-	\end{split}
-	\label{eq:SNmatrix}
-\end{equation}
-with $\bm{\psi}(t,\bx) = (\psi_1(t,\bx),\ldots,\psi_{n_q}(t,\bx))^T$, the linear transport operator
-$L:\mathbb{R}^{n_q} \to \mathbb{R}^{n_q}$ that satisfies $L_{q,q'} = \delta_{q,q'}\left(
-	\partial_t
-	+ \bOmega_q \cdot \nabla_\bx\right)$, and the linear in- and out-scattering operators
-$S^+:\mathbb{R}^{n_q}
-	\to \mathbb{R}^{n_q}$ satisfying $S^+_{q,q'} = w_{q'}\,s(\bOmega_q \cdot \bOmega_{q'}) $ and
-$S^-:\mathbb{R}^{n_q}
-	\to \mathbb{R}^{n_q}$ with $S^-_{q,q'} = \delta_{q,q'}
-	\sum_{p=1}^{n_q}w_{p}s(\bOmega_q
-	\cdot \bOmega_{p})$, respectively. The source $\bm{q}(t,\bx)$ is defined analogously to the
-angular flux vector $\bm{\psi}(t,\bx)$.
-Since the spherical quadrature does not necessarily guarantee $\sum_{q'=1}^{n_q} w_{q'}
-	s(\bOmega_q \cdot \bOmega_{q'})=1$ (which is the case for the exact spherical integration), we
-can move out-scattering to the left-hand side before applying the S$_N$ discretization to
-obtain
-%\todo{in this paragraph I first used vec instead of bm, check this again}
-\begin{equation}
-	\begin{split}
-		L\bm{\psi}(t,\bx) +  \sigma_t
-		\bm{\psi}(t,\bx)
-		&= {\sigma_s}S^+\bm{\psi}(t,\bx)+ \bm{q}(t,\bx).
-	\end{split}
-	\label{eq:SNmatrixV2}
-\end{equation}
-
-Recalling \eqref{eq:HGkernelexpansion}, in the case of the Henyey-Greenstein scattering
-kernel, we can expand $s_g$ in terms of spherical harmonics as
-
-\begin{equation*}
-	\begin{split}
-		s_g(\bOmega' \cdot \bOmega) =\frac{1-g^2}{4\pi\left(1-2g \,\bOmega' \cdot
-			\bOmega+g^2\right)^{3/2}} = \sum_{n=0}^\infty  g^n \sum_{m=-n}^nY_n^m(\bOmega) \,
-		\overline{Y_n^m(\bOmega')}.
-	\end{split}
-\end{equation*}
-Truncating the first sum at $N$, we get an approximation to the Henyey-Greenstein
-scattering kernel with a finite number of expansion coefficients
-\begin{equation}
-	\begin{split}
-		s_g(\bOmega' \cdot \bOmega) \approx s_g^N(\bOmega' \cdot \bOmega) \defas \sum_{n=0}^N
-		g^n \sum_{m=-n}^nY_n^m(\bOmega) \,
-		\overline{Y_n^m(\bOmega')}.
-	\end{split}
-	\label{eq:HGkernelapprox}
-\end{equation}
-For a fixed value of $N$, this approximation is more accurate when $|g|$ is close to zero
-(scattering is almost isotropic) and less accurate when $|g|$ is close to one (scattering is
-peaked forward or backward).
-If we substitute the approximation \eqref{eq:HGkernelapprox} into \eqref{eq:SNmatrixV2}, the
-in-scattering matrix $S^+$ has entries
-\begin{align}
-	S^+_{q,q'} =  w_{q'}  \sum_{n=0}^N
-	g^n \sum_{m=-n}^nY_n^m(\bOmega_q) \,
-	\overline{Y_n^m(\bOmega_{q'})}.
-	\label{eq:truncatedscatteringmatrixindices}
-\end{align}
-Define the matrices
-\begin{subequations}
-\begin{align}
-	O \in \mathbb{R}^{n_q \times N^2}     & ,\quad  O_{q,\text{idx}(n,m)} = Y_{n}^m(\bOmega_q),        \\
-	\Sigma\in \mathbb{R}^{N^2 \times N^2} & , \quad \Sigma_{\text{idx}(n,m),\text{idx}(n,m)} =
-	g^n,                                                                                               \\
-	M \in \mathbb{R}^{N^2 \times n_q}     & ,\quad M_{\text{idx}(n,m),q'} = \overline{Y_n^m(\bOmega_{q'})},
-\end{align}
-\end{subequations}
-with $\text{idx}(n,m) = n\cdot(N+1)+m+1$, $0\leq n\leq N$, and $-n\leq m \leq n$. Then the
-approximated
-in-scattering matrix $S^+$ with entries given by \eqref{eq:truncatedscatteringmatrixindices}
-can be decomposed into $S^+ = O\Sigma M$.
-
-
-We will discuss two methods to solve the coupled system of equations in Sections
-\ref{sec:finitevolume} and \ref{sec:sweeps}. Additionally, we will elaborate how the
-decomposition $S^+ = O\Sigma M$ can be used to speed up the computation. The choice of
-the quadrature is crucial for the S$_N$ method to work and will be discussed in the next
-section.
-
-
-
-\begin{remark}
-	The truncation order $N$ has to be high when scattering is highly peaked to have an
-	accurate approximation. Thus, the
-	decomposition is usually only used when the scattering is close to isotropic, since then the
-	expansion coefficients $g^n$ decay sufficiently fast.
-\end{remark}
-
-\begin{remark}
-	The expansion  $S^+ = O\Sigma M$ can similarly be formulated for different choices of the
-	scattering kernel $s$. However, in the case of the Henyey-Greenstein phase function, the
-	decomposition is easy to derive  analytically. This is one of the arguments for choosing the
-	Henyey-Greenstein phase function to model scattering.
-\end{remark}
-
-
-
-
-
-\subsection{Quadrature rules in one dimension}
-Because several quadrature rules are based upon one-dimensional quadrature rules, we will
-start by summarizing some of the classical results regarding numerical integration in one
-spatial dimension before continuing
-with spherical integration. Additionally, one-dimensional quadrature rules are necessary for applying
-the S$_N$ method to the transport equation in slab geometry.
-
-In general, one-dimensional quadratures try to approximate the bounded integral
-\begin{align}
-	\int_a^b f(x) w(x)\, dx, \label{eq:definitionoffiniteintegral}
-\end{align}
-using  a sum of $n_q$ finite terms via
-\begin{align}
-	\sum_{q=1}^{n_q} w_q f(x_q).
-\end{align}
-To do this as accurately as possible, both the quadrature points and the quadrature weights
-need to be chosen carefully. While it is obvious that a quadrature with $n_q$ quadrature
-points can integrate \eqref{eq:definitionoffiniteintegral} for $f$ being a polynomial up to
-degree $n_q-1$, Gaussian quadratures are special in the sense that they correctly integrate
-polynomials up to degree $2n_q-1$.
-Gaussian quadratures use orthogonal polynomials that, for a given weight function $w$, are
-defined by the relation
-\begin{align}
-	\langle P_i,P_j\rangle_w \defas \int_a^b P_i(x) P_j(x) w(x) \, dx = \delta_{i,j}. \label{eq:defortho}
-\end{align}
-For different weight functions $w$, some orthogonal polynomials are given in Table
-\ref{tab:orthopolys}.
-
-
-\begin{table}
-	\centering
-	\begin{tabular}{lcr}
-		\toprule
-		\hfill Weight function \hfill & Interval           & \hfill Orthogonal polynomials \hfill \\
-		\midrule
-		$w(x) = 1$                    & $[-1,1]$           & Legendre                             \\ \addlinespace
-		$w(x) = 1/\sqrt{1-x^2}$       & $(-1,1)$           & Chebyshev ($1^{\text{st}}$ kind)     \\
-		\addlinespace
-		$w(x) = \sqrt{1-x^2}$         & $[-1,1]$           & Chebyshev  ($2^{\text{nd}}$ kind)    \\
-		\addlinespace
-		$w(x) = e^{-x}$               & $[0,\infty)$       & Laguerre                             \\ \addlinespace
-		$w(x) = e^{-x^2}$             & $(-\infty,\infty)$ & Hermite                              \\ \addlinespace
-		\bottomrule
-	\end{tabular}
-	\caption{Table of weight functions and corresponding orthogonal polynomials.}
-	\label{tab:orthopolys}
-\end{table}
-
-\begin{definition}[Gaussian quadratures]
-	A Gaussian quadrature is a quadrature rule that approximates the integral
-	$\int_a^b f(x) w(x)\, dx$
-	by the finite sum
-	$\sum_{q=1}^{n_q} w_q f(x_q)$.
-	The quadrature points $x_1,\ldots,x_{n_q}$ are the roots of the $n_q$-th orthogonal
-	polynomial $P_{n_q}$, defined via \eqref{eq:defortho}. The corresponding quadrature weights
-	are
-	defined by
-	\begin{align}
-		w_q =\frac{1}{F'(x_q) }\int_a^b  \frac{F(x) w(x)}{x-x_q} \, dx,
-	\end{align}
-with
-	\begin{align}
-		F(x)  = \prod_{q=1}^{n_q} (x-x_q).
-  	\end{align}
-\end{definition}
-
-\begin{theorem}[Optimality of Gaussian quadratures]
-	A Gaussian quadrature is optimal in the sense that it approximates $\int_a^b \pi(x) w(x) \, dx$
-	for polynomials $\pi(x)$ up to including degree $2n_q-1$ (but generally not higher) exactly,
-	using only $n_q$ quadrature
-	points and $n_q$ quadrature weights.
-\end{theorem}
-\begin{proof}
-	See, \eg Chandrasekhar \cite{chandrasekhar2013radiative}.
-\end{proof}
-
-\begin{remark}
-	Although Gaussian quadratures are optimal, other quadratures might be superior in certain applications \cite{doi:10.1137/060659831}.
-\end{remark}
-
-
-
-
-\subsection{Spherical quadrature rules}
-
-
-All quadrature sets try to achieve \eqref{eq:montecarlointegration} sufficiently well. However, not all of them are
-necessarily suitable for the S$_N$ method. Several properties are desirable:
-\begin{enumerate}
-	\item In the limit of $n_q \rightarrow \infty$, \eqref{eq:montecarlointegration} should become
-	      an equality.
-	\item Quadrature weights and nodes should be easily computable; even up to a high
-	      number.
-	\item Quadrature points should be spaced equidistantly on the sphere for the method to be
-	      invariant under rotation. (At least for 90° rotations around the $x$-, $y$-, and $z$-axis this is often a desirable property.)
-	\item Quadrature weights should have a small variance. This is a result of the quadrature
-	      points being spaced equidistantly.
-	\item It is often demanded that the quadrature correctly integrates spherical harmonics or
-	      Legendre polynomials up
-	      to a certain degree. This potentially contradicts the third point. For example, we can use specific knowledge about the first $N$ spherical harmonics that we want to integrate correctly to \textit{intelligently} place quadrature points, sacrificing rotational invariance.
-	\item The quadrature should allow for (possibly adaptive) refinement strategies.
-	\item Quadrature weights should be positive. This might be in conflict with property five, but is desirable to ensure positivity of the S$_N$ method.
-\end{enumerate}
-
-The first two properties are self-evident. The third property can be explained when
-considering, to name only a simple example, an anisotropic, highly forward-peaked source in
-an almost void domain. In this advective setting, particles will predominantly move along
-straight lines in accordance with the source. If, however, the dominant direction is unknown a
-priori, no direction should be preferred by the quadrature set. The best (and sometimes
-only) guess is to space quadrature points equidistantly. Point four relates to the previous point
-since a lack of preference in direction immediately dictates a lack of preference in the weight
-associated to that direction. The fifth point is closely related to
-\eqref{eq:truncatedscatteringmatrixindices}. Finally, (adaptive) refinement in the angular
-discretization allows to leverage multi-level strategies or to dynamically increase
-the angular accuracy in regions of interest \cite{SOUCASSE2017215,DARGAVILLE2020109124}.
-
-
-Next, we are going to provide examples of common spherical quadrature sets and investigate both their
-theoretical and practical properties.
-
-
-\begin{exmp}[Level-symmetric quadrature]
-	The level-symmetric quadrature set dates back to the early and mid 1960s
-	\cite{carlson1961mechanical,lathrop1964discrete,carlson1965transport}. It is a spherical
-	quadrature set that is invariant under 90° rotations around the $x$-, $y$-, and
-	$z$-axis\footnote{This property is common and allows us to only provide quadrature points for
-		one of the eight octants since all other quadrature points and weights follow from
-		symmetry.}. For a fixed, even number $N$, we pick $N/2$ points along the $x$-axis
-	$x_1,\ldots,x_{N/2}$. These points are replicated along the other two axes, \ie $x_i=y_i=z_i$ for
-	$i=1,\ldots,N/2$.
-	The set of quadrature points is then $\{ (x_i,y_j,z_k)^T \, | \,i+j+k = N/2+2\}$.
-	If $p_1 \defas (x_i,y_j,z_k)^T \in \mathbb{S}^2$ is a point of the level-symmetric
-	quadrature, then for $p_2 \defas (x_i,y_{j+1},z_{k'})^T$ to be a point of the level-symmetric
-	quadrature as well, we have to require $k' = k-1$ due to symmetry. From $||p_1||_2 =
-		||p_2||_2 = 1$ follows
-\begin{subequations}
-	\begin{align}
-		            & y_{j+1}^2-y_j^2 = z_{k+1}^2-z_k^2 \\
-		\Rightarrow & x_{j+1}^2-x_j^2 = x_{k+1}^2-x_k^2,
-	\end{align}
-\end{subequations}
-	for all feasible values of $j$ and $k$, implying $x_{j+1}^2 = x_{j}^2+C$ for $j=1,...,N/2-1$.
-	The variable $C$ is determined by enforcing that $x_1^2+y_1^2+z_{N/2}^2=1$ which
-	follows from the fact that $(x_1,y_1,z_{N/2})$ is part of the quadrature set. Lastly, we choose
-	the quadrature weights in such a way that they correctly integrate the Legendre polynomials
-	in each of the variables \cite{lewis1984computational}.
-	Following through with this requirement, individual quadrature weights turn negative for
-	$N \geq 22$. Figures \ref{fig:levelsymmetric_fixedorder} and
-	\ref{fig:fixeddegreenq} demonstrate that $\int_0^\pi \int_0^{2\pi} Y_j^i(\theta,\phi)
-		\overline{Y_l^k(\theta,\phi)} \sin(\phi) \, d\theta \, d\phi = \delta_{i=k} \delta_{j=l}$ is integrated
-	correctly (with machine precision) up to a certain degree.
-	%In Figure \ref{fig:level-symmetric-weightvar}, we see the
-	%variance of the quadrature weights for different orders, indicating a more constant value of
-	%the variance when compared with other quadratures (some of which tend to have diverging
-	%variances).
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/level-symmetric_fixedorder.pdf}
-		\caption{For a fixed quadrature order $N$, the level-symmetric quadrature computes the
-			integral  exactly (up to machine precision) if $i+k \leq N$.}
-		\label{fig:levelsymmetric_fixedorder}
-	\end{figure}
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/level-symmetric_fixeddegreenq.pdf}
-		\caption{The level-symmetric quadrature becomes more accurate the higher the number of
-			quadrature points gets. Eventually, the integral is computed exactly (up to machine precision). The
-			number of quadrature points grows quadratically with the order.}
-		\label{fig:fixeddegreenq}
-	\end{figure}
-
-
-
-
-	%\begin{figure}
-	%\centering%
-	%
-	%\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/level-symmetric-weightvar}
-	%	\caption{Distribution of quadrature weights for the level-symmetric quadrature.}%
-	%	\label{fig:level-symmetric-weightvar}
-	%\end{figure}
-
-\end{exmp}
-
-
-\begin{exmp}[Tensorized Gauss-Legendre]
-
-
-
-
-	The tensorized (or product) Gauss-Legendre quadrature stems from the idea of rewriting a spherical
-	integral in spherical coordinates, \ie
-	\begin{align}
-		\int_{\mathbb{S}^2} f(\bOmega) \, d\bOmega = \int_0^{2\pi} \int_0^\pi \hat{f}(\theta,\phi)
-		\sin(\theta)\,
-		d\theta \, d\phi.
-	\end{align}
-
-
-
-
-	Abusing notation, we drop the superscript hat in the integrand from now onward. The
-	integral can then be approximated via
-	\begin{align}
-		Q^{n_q}[f] \defas \frac{\pi}{n_q} \sum_{j=1}^{2n_q} \sum_{i=1}^{n_q/2} w_i f(\theta_i, \phi_j),
-	\end{align}
-	where the $\phi_j$ are spaced equidistantly along the unit circle, and the $\theta_i$ and $w_i$
-	are, respectively, the quadrature points and weights of the one-dimensional Gauss-Legendre
-	quadrature. The degree of the aforementioned quadrature is $2n_q-1$
-	\cite{atkinson1982numerical}, demonstrated in Figure \ref{fig:gauss-legendrefixedorder}. The
-	quadrature is \textit{tensorized} in the sense that the
-	spherical quadrature points are products of two one-dimensional quadratures---and so are
-	the quadrature weights. That the Gauss-Legendre quadrature is not designed under
-	consideration of uniform quadrature weights is exemplified in Figure
-	\ref{fig:gauss-legendreweightvar} where we see that the ratio between the maximal quadrature
-	weight and the minimal quadrature weight diverges.
-	A more detailed discussion of the Gauss-Legendre quadrature can be found in the work by Atkinson
-	\cite{atkinson1982numerical} and the literature therein.
-
-
-
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/Gauss-Legendre_fixedorder.pdf}
-		\caption{For a fixed quadrature order $N$, the level-symmetric quadrature computes the
-			integral  exactly (up to machine precision) if $i+k \leq 2N-1$.}
-		\label{fig:gauss-legendrefixedorder}
-	\end{figure}
-
-
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/Gauss-Legendre_weightratio.pdf}
-		\caption{The spread of the quadrature weights, \ie the ratio between the maximal weight
-			and the minimal weight, diverges for the Gauss-Legendre quadrature. This also holds true in the three-dimensional case, when using a tensorized quadrature that is based on the Gauss-Legendre points and weights. Nevertheless, the Gauss-Legendre quadrature's capability to satisfy the fifth point on the list of desirable properties makes it one of the most commonly used quadratures. }
-		\label{fig:gauss-legendreweightvar}
-	\end{figure}
-\end{exmp}
-
-
-\begin{exmp}[Octahedron-  and icosahedron-based quadratures with connectivity]
-	\label{exmp:octaico}
-	In Camminady et al. \cite{camminady2019highly},
-	we present highly uniform quadratures that are purely geometric and result from a
-	triangulation of an octahedron or, alternatively, an icosahedron---the Platonic solids with eight
-	or twenty triangular faces, respectively. Platonic solids are regular,
-	convex polyhedra with identical faces, all having the same area. Projecting from these
-	platonic solids onto the unit sphere yields highly uniformly distributed points. This idea has been used within climate forecasting \cite{rieger2015icon} where a
-	uniform discretization of the earth's atmosphere is desirable.
-
-
-	\begin{figure}
-		\centering
-		\begin{subfigure}{0.50\textwidth}
-			\centering
-			\includegraphics[width=0.99\textwidth]{Chapters/Chapter2/figs/mc/oct}
-			\caption{Octahedron within the unit sphere, \\ used to generate the O$_N^l$ quadrature.}
-			\label{fig:oct}
-		\end{subfigure}\hfill
-		\begin{subfigure}{0.50\textwidth}
-			\centering
-			\includegraphics[width=0.99\textwidth]{Chapters/Chapter2/figs/mc/ico} % second figure
-			%itself
-			\caption{Icosahedron within the unit sphere, \\ used to generate the I$_N^l$ quadrature}
-			\label{fig:icos}
-		\end{subfigure}\hfill
-		\caption{Generation of the quadrature sets. One face of the octahedron and icosahedron
-			have been further refined. Vertices will be projected onto the unit sphere and taken as
-			quadrature points.} \label{fig:icoocta}
-	\end{figure}
-
-\begin{figure}[h]
-	\begin{subfigure}{0.45\textwidth}
-			\centering
-			\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesredo/planar.pdf}
-			\caption{For the lerp version, the triangulation happens in planar geometry.}
-				\label{fig:screenshot20200707143206a}
-	\end{subfigure}
-\hfill
-\begin{subfigure}{0.45\textwidth}
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesredo/projected.pdf}
-	\caption{Quadrature points result from projecting the planar points onto the unit sphere.}
-		\label{fig:screenshot20200707143206b}
-\end{subfigure}
-	\caption{Triangulation for $\text{order}=4$ with the corresponding quadrature
-		points in the plane and on the surface of the unit sphere, together
-		with the connectivity and the quadrature weight for the center point in
-		green. Quadrature points and weights for the seven other octants result
-		from symmetry. Figure \ref{fig:screenshot20200707143206a} demonstrates the lerp procedure. For the slerp quadratures, the points in Figure \ref{fig:screenshot20200707143206b} would have to be spaced equally.}
-	\label{fig:screenshot20200707143206}
-\end{figure}
-
-	%\begin{figure}[h!]
-	%	\centering
-	%	\includegraphics[width=0.6\linewidth]{Figures/test3}
-	%	\caption{Construction of the quadrature set O$^l_N$. Vertices on the sphere correspond to
-	%quadrature points and the area of the red hexagon corresponds to the quadrature weight of
-	%the centered point.}
-	%	\label{fig:octahedronquadrature}
-	%\end{figure}
-
-	The triangulation can be performed by \textbf{l}inear int\textbf{erp}olation (lerp) or
-	\textbf{s}pherical \textbf{l}inear int\textbf{erp}olation (slerp), demonstrated for the lerp
-	version in Fig.~\ref{fig:oct} for the octahedron, and in Fig.~\ref{fig:icos} for the icosahedron.
-	Linear interpolation places points with equidistant spacing in planar geometry, whereas
-	spherical linear interpolation places the points equidistantly on the sphere.
-	Given two points $p_0,p_1 \in \mathbb{R}^3$, we perform spherical linear interpolation via
-	% \begin{align}
-	% 	\text{lerp}(p_0,p_1,t) = (1-t)p_0 + tp_1
-	% \end{align}
-	% and spherical linear interpolation via
-	\begin{align*}
-		\text{slerp}(p_0,p_1,t) = \frac{\sin((1-t)\Omega)}{\sin(\Omega)}p_0 +
-		\frac{\sin(t\Omega)}{\sin(\Omega)}p_1,
-	\end{align*}
-	where $\cos(\Omega) = p_0 \cdot p_1$.
-	Consequently, we obtain a total of four quadrature sets: O$^l_N$, O$^s_N$, I$^{l}_N$, and
-	I$^{s}_N$. Here, O and I distinguish between the octahedron and the icosahedron version, and
-	$l$ and $s$ between the lerp and slerp version, respectively. Since the difference in the
-	construction between the octahedron and the icosahedron version is minor, we focus on the
-	octahedron version.
-	Similar to the T$_N$ quadrature \cite{thurgood1995tn}, the planar area is the equilateral
-	triangle in three dimension with  vertices $(1,0,0)$, $(0,1,0)$ and $(0,0,1)$, presented in
-	Figure \ref{fig:screenshot20200707143206a}.
-	Refining the triangulation in the planar setting and then projecting each vertex onto the
-	sphere yields the quadrature points for one of the eight octants, shown in Figure \ref{fig:screenshot20200707143206b}.
-
-	The quadrature weights correspond to the area associated with each quadrature point. This
-	area is the hexagon that is defined by connecting the midpoints of the six triangles that every
-	vertex is associated with.
-		As an example, the quadrature weight for the centered point in Figure \ref{fig:screenshot20200707143206b} is given by the area of the green
-	hexagon on the unit sphere.
-	%In general, we can compute quadrature weights by computing the spherical area of the
-	%hexagon that is defined by the midpoints of the six surrounding triangles.
-	%Since the quadrature points at the poles are associated to only four triangles, the resulting
-	%shape is a quadrilateral.
-	In contrast, the T$_N$ method takes the triangle midpoints as the quadrature points and the
-	associated triangle area as the quadrature weight.
-	The slerp version of the quadrature can be constructed analogously by performing the linear interpolation, i.e. the refinement of the triangulation, on the sphere
-	instead of in the planar geometry.
-
-	To obtain the icosahedron versions of the quadratures, the planar geometry is replaced by
-	one face of an icosahedron.
-	%, defined by e.g. the vertices\footnote{The three points still have to be normalized to live on
-	%the unit sphere.} $(0,1,\phi)$, $(0,-1,\phi)$ and $(\phi,0,1)$ with $\phi=(1+\sqrt{5})/2$ as the
-	%golden ratio. The full list of vertices and faces for the regular icosahedron can also be found
-	%in
-	%the appendix.
-	%For the octahedron quadratures, the number of quadrature points is given by $4N^2-8N+6$
-	%and for the icosahedron quadratures by $10N^2-20N+12$, where $N$ is the number of
-	%points
-	%on one of the edges of the planar area.
-
-	%Since we do not place the quadrature points inside the triangles as it is the case for the
-	%T$_N$ quadrature, interpolating function values at unknown points on the sphere becomes
-	%easy: After determining the spherical triangle that a new point falls into, we can use
-	%barycentric interpolation to prescribe a new function value at that point that is guaranteed
-	%to
-	%be positive.
-	%This property will be beneficial in different ray-effect mitigation techniques.
-
-	For the aforementioned quadratures, properties of the quadrature weights are presented in
-	Figure \ref{fig:weightsstat}. As expected, the I$_N$ versions have lower variance
-	in the quadrature weights and smaller ratios between the maximal and minimal quadrature
-	weights. Additionally, the slerp versions have smaller ratios and variance than the lerp
-	versions. Combining these two effects, the I$_N^l$ quadrature behaves similar to the O$_N^s$
-	quadrature, whereas the O$_N^l$ has the highest ratios and variance and the I$_N^s$
-	quadrature the lowest ratios and variance.
-
-	Finally, Figure \ref{fig:icooctaoverview} shows the distribution of quadrature weights on the unit sphere for all four quadrature sets. Notably, the slerp versions are less symmetric than their lerp counterparts. This is due to the fact that the slerp interpolation does not treat all three sides of an equilateral triangle in the same way, resulting in a loss of perfect symmetry. Furthermore, since the quadrature points at the vertices of the platonic solid only neighbor four (in the octahedron case) or five (in the icosahedron case) triangles as opposed to six triangles for every other quadrature point, their quadrature weight is significantly lower.
-
-
-
-
-
-
-
-
-\begin{figure}
-	\begin{subfigure}{0.45\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/octl326}
-		\caption{Octahedron quadrature (lerp) with number of quadrature points $n_q=326$.}
-		\label{fig:octl326}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/octs326}
-				\caption{Octahedron quadrature (slerp) with number of quadrature points  $n_q=326$.}
-		\label{fig:octs326}
-	\end{subfigure}
-	\vfill
-	\begin{subfigure}{0.45\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/icol812}
-		\caption{Icosahedron quadrature (lerp) with number of quadrature points  $n_q=812$.}
-		\label{fig:icol812}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/icos812}
-		\caption{Icosahedron quadrature (slerp) with number of quadrature points $n_q=812$.}
-		\label{fig:icol812}
-	\end{subfigure}
-\caption{Octahedron and icosahedron quadrature. Due to the implementation of the spherical linear interpolation, the slerp versions of the quadratures have less symmetry than the lerp versions. They are, however, not as spread in their weight distribution. The smallest quadrature weights are associated with the vertices of the respective platonic solids. Since their quadrature weights are significantly lower, they are excluded from the colorbar and highlighted in white to avoid distortion.}
-\label{fig:icooctaoverview}
-\end{figure}
-
-
-
-
-\begin{figure}[t]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/visrotation/octaico.pdf}
-	\caption{The spread of the quadrature weights, \ie the ratio between the maximal weight
-		and the minimal weight, diverges for the octahedron and icosahedron quadratures. Note the gap in the $y$-axis, inserted to make it possible to include all four graphs.}
-	\label{fig:weightsstat}
-\end{figure}
-
-
-
-
-
-
-\end{exmp}
-
-\newpage
-
-\subsubsection{Comparison and source code}
-
-Various spherical quadratures are implemented in the Python package \texttt{SphericalQuadpy}, available at \url{https://github.com/camminady/sphericalquadpy} under the MIT license. The library provides quadrature points and weights for different orders and different quadrature types.
-A comparison to other state of the art quadratures has been published \cite{camminady2019highly}, indicating the octahedron and icosahedron quadratures' high degree of uniformity (with respect to the distribution of quadrature points in the sphere).
-However, different from other quadratures, the icosahedron and octahedron quadratures were not generated with the goal to integrate certain types of functions exactly.
-The comparison includes quadratures that were generated with the idea to ensure positivity of quadrature weights \cite{thurgood1995tn}. Other, more advanced ideas additionally emphasize high order convergence when integrating spherical harmonics and are based on finite elements \cite{doi:10.13182/NSE75-A26752} or discontinuous finite elements \cite{jarrell2011discrete,doi:10.13182/NSE16-28}.
-
-
-
-
-\newpage
-
-\subsection{Finite volume schemes}
-\label{sec:finitevolume}
-Spherical quadrature sets are used for the angular discretization of the transport equation. It
-remains to discretize the space and time dimension. Let us recall the S$_N$ discretization
-\eqref{eq:SN}, given by
-\begin{equation*}
-	\begin{split}
-		\partial_t \psi_q(t,\bx) +& \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx) +\sigma_a
-		\psi_q(t,\bx) \\
-		&= {\sigma_s}\sum_{q'=1}^{n_q}w_{q'} s(\bOmega_q \cdot \bOmega_{q'})\left(\psi_{q'}(t,\bx) -
-		\psi_q(t,\bx)\right)+ q(t,\bx,\bOmega_q).
-	\end{split}
-\end{equation*}
-Besides the coupling term on the right-hand side, this is a simple linear advection equation
-which we can solve using the finite volume method, explained in the following for order one.
-For a Cartesian mesh, define $C_{i,j,k} \defas [x_i,x_{i+1}] \times [y_j,y_{j+1}] \times
-	[z_k,z_{k+1}]$
-with volume $|C_{i,j,k}| \defas \Delta x_i \cdot \Delta y_j \cdot \Delta z_k $, where $\Delta
-	\xi_i \defas \xi_{i+1}-\xi_i$ for $\xi \in \{x,y,z\}$. The indices $i$, $j$, and $k$ run from $1$ to
-$n_x$, $n_y$, and $n_z$, respectively. Time is discretized equidistantly such that $t^n\defas
-	\Delta t \cdot n$ for some $\Delta t>0$ with $n=0,\ldots,n_t$. Quintessentially, the finite volume method
-approximates
-the solution of the transport equation by cell-averaged quantities for which an update rule is
-based on the fluxes over the cell edges. These cell-averaged quantities are
-\begin{align}
-	\psi_{q;i,j,k}^n \approx \frac{1}{|C_{i,j,k}|}\int_{C_{i,j,k}} \psi_q(t^n,\bx) \, d\bx,
-\end{align}
-and the update rule for Cartesian grids can be written as
-\begin{equation}
-	\begin{split}
-		\psi_{q;i,j,k}^{n+1} = \psi_{q;i,j,k}^n & - \frac{\Delta t}{|C_{i,j,k}|} \left(
-		f_{q;i+1/2,j,k} -f_{q;i-1/2,j,k} + f_{q;i,j+1/2,k}-f_{q;i,j-1/2,k}+ f_{q;i,j,k+1/2}-f_{q;i,j,k-1/2}
-		\right) \\
-		&-\Delta t \left( \sigma_a \psi_{q;i,j,k}^n - \sigma_s
-		\sum_{q'=1}^{n_q}w_{q'} s(\bOmega_q \cdot \bOmega_{q'})\left(\psi^n_{q';i,j,k} -
-		\psi^n_{q;i,j,k}\right)- q^n_{q;i,j,k} \right),
-		\label{eq:updaterulefvm}
-	\end{split}
-\end{equation}
-where $f_{q;i+1/2,j,k}$ represents the flux between cells $C_{i,j,k}$ and $C_{i+1,j,k}$, given a
-fixed direction $\bOmega_q$. All other
-terms in \eqref{eq:updaterulefvm} can be interpreted analogously.
-If the outward facing normal vector for cell $C_{i,j,k}$ at the edge touching cell $C_{i+1,j,k}$ is
-denoted by $\bn$, the upwind flux formulation for a fixed direction $\bOmega_q$ is given by
-\begin{align}
-	f_{q;i+1/2,j,k} = \Delta x_i  \, \langle \bn ,\bOmega_q  \rangle \cdot \begin{cases}
-		\psi^n_{q;i,j,k}   & \text{ if }   \langle \bn , \bOmega_q\rangle \geq 0, \\
-		\psi^n_{q;i+1,j,k} & \text{ if }   \langle \bn , \bOmega_q\rangle < 0.
-	\end{cases}
-\end{align}
-Since this method is explicit, the time steps can become so small that the associated computational costs render this time-stepping scheme inapplicable.
-
-\subsection{Source iteration and transport sweeps}
-\label{sec:sweeps}
-Iterative methods for the numerical solution of transport processes often
-make use of source iteration to solve the transport equation.
-To illustrate the core idea of source iteration and transport sweeps, we restrict
-ourselves to mono-energetic, time-independent, and isotropic transport. The equation we
-wish to solve---in angularly discretized form---is then
-\begin{equation}
-	\begin{split}
-		\bOmega_q \cdot \nabla_\bx \psi_q(\bx) +\sigma_t
-		\psi_q(\bx) = {\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi_{q'}(\bx) +
-		q(\bx,\bOmega_q),
-	\end{split}
-	\label{eq:SN_steadystate}
-\end{equation}
-for all $q=1,...,n_q$, abbreviated as
-\begin{align}
-	L_q \psi_q = S^+({\bm{\psi}}  )+q_q,
-	\label{eq:sscompactORIG}
-\end{align}
-with the streaming operator $L_q =  \bOmega_q \cdot \nabla_\bx  +\sigma_t$,
-in-scattering $S^+(\bm{\psi})={\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi_{q'}(\bx),$
-and source $q_q = q(\bx,\bOmega_q)$. We may also write $L\bm{\psi} = \bm{S}^+(\bm{\psi}) +
-	\bm{q}$ to group the $n_q$ equations of type \eqref{eq:sscompactORIG} together.
-Source iteration then iterates on
-\begin{align}
-	L\bm{\psi}^{(l+1)} = \bm{S}^+(\bm{\psi}^{(l)}) +
-	\bm{q}, \quad l\geq 0,
-	\label{eq:sourceiterationvec}
-\end{align}
-with some initial $\bm{\psi}^{(0)}$. This fixed-point iteration is repeated until the solution is approximated reasonably well, \ie
-$||\bm{\psi}^{(l)}-\bm{\psi}^\text{exact}|| \leq \varepsilon/(1-C)$ for some norm $||\cdot ||$, Lipschitz-constant $C$, and
-prescribed tolerance $\varepsilon$. Physically, $\bm{\psi}^{(l)}$ represents the contributions
-of particles that have scattered at most $l$ times, which consequently outlines the problem of
-source iteration in regions of marginal absorption and high scattering: Convergence
-will be relatively slow. A comprehensive overview of the possible acceleration strategies is
-summarized in the review paper of Adams and Larsen \cite{ADAMS20023}. However, instead of
-discussing ways to accelerate the convergence of \eqref{eq:sscompactORIG}, we will discuss how to
-actually solve one iteration of \eqref{eq:sscompactORIG}. For a fixed $l$, \eqref{eq:sscompactORIG}
-becomes a system of $n_q$ equations with a given right-hand side, given by
-\begin{align}
-	L_q \psi^{(l+1)}_q = S^+({\bm{\psi}}^{(l)}  )+q_q =: r_q^{(l)}.
-	\label{eq:sscompact}
-\end{align}
-It remains to show how to solve this equation, which can be rewritten for
-the
-two-dimensional case as
-\begin{align}
-	\Omega_x \partial_x \psi(\bx) + \Omega_y \partial_y \psi(\bx) + \sigma_t
-	\psi(\bx) = r(\bx).
-	\label{eq:writtenouteq}
-\end{align}
-
-
-
-\begin{figure}
-	\centering
-	\begin{subfigure}{0.48\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping/tri1pdf}
-		\caption{Two inflow edges (green) and one outflow edge (blue) since $\bm{n}_1\, \cdot \, \bOmega< 0$ and
-			$\bm{n}_3 \, \cdot \, \bOmega< 0$.}
-		\label{fig:triangle1_secondsituation}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping/tri2pdf}
-		\caption{One inflow edge (green) and two outflow edges (blue) since only $\bm{n}_2\cdot \bOmega<0 $.}
-		\label{fig:triangle2_secondsituation}
-	\end{subfigure}
-	\caption{Two possible situations for sweeping through a domain of triangles: There are
-		either
-		two inflow edges (green) and one outflow edge (blue), or one inflow edge and two outflow
-		edges.}
-	\label{fig:trianglebothcasessweeping_secondsituation}
-\end{figure}
-
-We omitted the direction-index $q$ because  we assume fixed values for $\Omega_x$ and
-$\Omega_y$ and follow the analysis from Lewis and Miller \cite{lewis1984computational}.
-Introducing a triangulation of the spatial domain that consists of triangular cells $C_i$ with
-boundary
-$\partial C_i$ and outward pointing normal vector $\bm{n}$, we can integrate
-\eqref{eq:writtenouteq} over $C_i$ and use the divergence theorem to obtain the equality
-\begin{align}
-	\oint_{\partial C_i} \bOmega \cdot \bm{n}(\bm{s}) \psi(\bm{s}) \, d\bm{s} + \sigma_t \int_{C_i}
-	\psi(\bm{x})\, d\bm{x} =  \int_{C_i} r(\bm{x})\, d\bm{x}.
-\end{align}
-Acknowledging that the normal vectors are constant along the three edges and using cell-, as
-well
-as
-boundary-averaged quantities, we can rewrite the above equation as
-\begin{align}
-	\sum_{j=1}^3 \bOmega \cdot \bm{n}_j  \, \frac{|C_{i,j}|}{|C_i|}\psi_{i,\bm{n}_j} + \sigma_t
-	\psi_i =   r_i,
-	\label{eq:splittriangles}
-\end{align}
-where $\bm{n}_j$ are the three normal vectors of cell $C_i$ with area $|C_i|$. The
-boundary-averaged fluxes are
-given
-by
-\begin{align}
-	\psi_{i,\bm{n}_j}\defas
-	\frac{1}{|C_{i,j}|}\oint_{C_{i,j}}\psi(\bm{s}) \, d\bm{s}
-\end{align}
-for each side of the triangle $C_{i,j}$ with
-length $|C_{i,j}|$.
-Lastly, $\psi_i$ and
-$r_i$ are the
-respective averaged cell integrals. There has been no spatial approximation made so far. Thus,
-\eqref{eq:splittriangles} is exact.
-As discussed by Lewis and Miller \cite{lewis1984computational} and visualized in Figure
-\ref{fig:trianglebothcasessweeping}, two cases need to be distinguished: There are either two
-inflow edges and one outflow edge, or one inflow edge  two outflow edges. We also assume
-the triangles to be equilateral ($C_{i,j}=L$) since we can simply map the equilateral triangle to
-an
-arbitrary
-triangle via a linear transformation (and vice versa).
-In Figure \ref{fig:triangle1},
-the ansatz $\psi_i = \frac{1}{3} \sum_{j=1}^3 \psi_{i,\bm{n}_j}$  then allows to uniquely solve
-\eqref{eq:splittriangles} for the only unknown $\psi_i$ via elimination of $\psi_{i,\bm{n}_2}$
-since
-values for $\psi_{i,\bm{n}_1}$ and $\psi_{i,\bm{n}_3}$ are known from the cells that proceed
-cell
-$i$ in the sweeping order. This is not possible for the second scenario, where, as shown in
-Figure \ref{fig:triangle2}, only $\psi_{i,\bm{n}_2}$ is known and the system is therefore
-underdetermined.
-
-
-
-\begin{figure}
-	\centering
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping_secondsituation/tri1pdf}
-		\caption{Values at the two green edges are known and we wish to solve for values at the
-			blue vertices.}
-		\label{fig:triangle1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping_secondsituation/tri2pdf}
-		\caption{Values at the two green vertices are known and we wish to solve for values at the
-			blue edges.}
-		\label{fig:triangle2}
-	\end{subfigure}
-	\caption{We augment the situation by one additional variable. For triangles with two inflow
-		edges, we solve for flux values at the two outflow vertices. These two outflow vertices are
-		inflow vertices for the adjacent triangle. Known variables are green, unknown variables blue.}
-	\label{fig:trianglebothcasessweeping}
-\end{figure}
-
-Counterintuitive at first, we can overcome this problem when augmenting the situation by an
-additional variable, illustrated in Figure \ref{fig:trianglebothcasessweeping_secondsituation}.
-We again distinguish two different situations. In Figure \ref{fig:triangle1_secondsituation}, two
-edges are inflow edges and we know the respective averaged flux values. In this situation, the
-two unknowns are the flux values at the two vertices of the outflow edge, which are taken as
-known inputs for the situation in Figure \ref{fig:triangle2_secondsituation}. This situation's
-unknowns are the averaged flux values along the two outflow edges. Due to the way that the
-triangles are connected, the two known variables are always given from a proceeding triangle.
-
-Since we have an additional variable, we also need an additional equation. If we assume the
-flux to be linear in a given triangle, we can write the averaged fluxes as
-\begin{subequations}
-\begin{align}
-	\psi_{i,\bm{n}_1} & = \frac{1}{2} \left( \tilde{\psi}_{i,\bm{n}_2} +\tilde{\psi}_{i,\bm{n}_3} \right), \\
-	\psi_{i,\bm{n}_2} & = \frac{1}{2} \left( \tilde{\psi}_{i,\bm{n}_1} +\tilde{\psi}_{i,\bm{n}_3} \right),
-	\\
-	\psi_{i,\bm{n}_3} & = \frac{1}{2} \left( \tilde{\psi}_{i,\bm{n}_1} +\tilde{\psi}_{i,\bm{n}_2} \right),
-\end{align}
-\end{subequations}
-where the flux at the vertex opposite of edge $j$ is denoted by $\tilde{\psi}_{i,\bm{n}_j}$.
-Together with  \newline $\psi_i = \frac{1}{3} \sum_{j=1}^3 \psi_{i,\bm{n}_j}$, fluxes along edges and at
-vertices
-relate to the cell average via
-\begin{align}
-	2 \psi_{i,\bm{n}_j} = 3\psi_i- \tilde{\psi}_{i,\bm{n}_j}.
-	\label{eq:relateallthree}
-\end{align}
-Finally, we are able to write out the update rule for both cases. For two inflow edges and one
-outflow edge we can solve \eqref{eq:splittriangles} for $\psi_n$ via elimination of
-$\psi_{i,\bm{n}_2}$ and obtain
-\begin{align}
-	\psi_i = \frac{1}{3w_2 + \sigma_t} \left (  \psi_{i,\bm{n}_1}(w_2-w_1) + \psi_{i,\bm{n}_3}(w_2-w_3)
-	+r_i \right),
-	\label{eq:updaterule}
-\end{align}
-where $w_j \defas \bOmega \cdot \bm{n}_j \frac{|C_{i,j}|}{|C_i|}$. The fluxes at the two
-outflow vertices $\psi_{i,\bm{n}_1}$ and $\psi_{i,\bm{n}_3}$ are then computed by means of
-\eqref{eq:relateallthree}.
-Similarly, for the case of two outflow edges and one inflow edge we substitute
-$\psi_{i,\bm{n}_1} = \frac{3}{2}\psi_i -\frac{1}{2}\tilde{\psi}_{i,\bm{n}_1}$ and
-$\psi_{i,\bm{n}_3} = \frac{3}{2}\psi_i -\frac{1}{2}\tilde{\psi}_{i,\bm{n}_3}$ in
-\eqref{eq:updaterule} and rearrange terms to get
-\begin{equation}
-	\begin{split}
-		%\psi_i &= \frac{1}{3w_2 + \sigma_t} \left (  \psi_{i,\bm{n}_1}(w_2-w_1) +
-		%\psi_{i,\bm{n}_3}(w_2-w_3)
-		%+r_i \right) \\
-		%\Leftrightarrow %
-		%\psi_i &= \frac{1}{6w_2 + 2\sigma_t} \left ( \left(3\psi_i -\tilde{\psi}_{i,\bm{n}_1}\right)
-		%(w_2-w_1) + \left ( 3\psi_i -\tilde{\psi}_{i,\bm{n}_3}\right)(w_2-w_3)
-		%+2r_i \right) \\
-		%\Leftrightarrow
-		\psi_i &= \frac{1}{ 3(w_1+w_3) +2\sigma_t} \left(\tilde{\psi}_{i,\bm{n}_1} (w_1-w_2)
-		+ \tilde{\psi}_{i,\bm{n}_1}(w_3-w_2) +2r_i\right).
-	\end{split}
-\end{equation}
-Fluxes of outflow edges can again be computed by means of \eqref{eq:relateallthree}.
-
-So far we have implicitly assumed that we can iterate through the spatial domain in a way that
-obeys the dependency between cells. Phrased more precisely: If two connected cells $C_i$ and
-$C_j$ share edge $e_{i,j}$, and $e_{i,j}$ is an outflow edge for $C_i$ and an inflow edge for
-$C_j$, we  have to perform computations in $C_i$ prior to computations in $C_j$. It remains to
-prove that this ordering does indeed exist for a regular, triangular mesh. We use the following
-theorem and two definitions from graph theory.
-
-
-\begin{definition}[Topological sorting]
-	A topological sorting of a directed graph $G=(V,E)$
-	is a linear ordering of vertices where  $V_i$
-	precedes
-	$V_j$ whenever there exists a directed edge $(V_i,V_j) \in E$.
-\end{definition}
-
-\begin{definition}[Directed acyclic graph]
-	A graph $G=(V,E)$ is called a directed acyclic graph (DAG), if there exists no sequence of
-	vertices $V_{1},V_2,...,V_N,V_1$ where all two consecutive vertices $V_i$ and $V_{i+1}$ are
-	connected by a directed
-	edge
-	$(V_i,V_{i+1})\in E$.
-\end{definition}
-
-
-\begin{theorem}[Topological sorting for DAGs]
-	Every directed acyclic graph  has at least one topological sorting.
-\end{theorem}
-
-\begin{proof}
-	See the algorithm by Kahn \cite{kahntopo} that creates a topological sorting  with an asymptotic runtime in $\mathcal{O}(|V|+|E|)$.
-
-\end{proof}
-
-
-\begin{figure}
-	\centering
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1\linewidth]{Chapters/Chapter2/figs/sweeping/sweep1.pdf}
-		\caption{A computational domain, subdivided into spatial cells.}
-		\label{fig:sweep1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1\linewidth]{Chapters/Chapter2/figs/sweeping/sweep4.pdf}
-		\caption{Given a fixed direction $\bOmega$, we can translate the spatial domain into a
-			graph.}
-		\label{fig:sweep2}
-	\end{subfigure}
-	\caption{For a given spatial discretization, a direction $\bOmega$ induces a directed
-		dependency graph $G=(V,E)$. A directed edge $e_{i,j} \in E$ from $V_i$ to $V_j$ implies that
-		for
-		computations to start in cell $C_j$, we must have finished computations in cell $C_i$.}
-	\label{fig:sweepingbothpictures}
-\end{figure}
-
-
-Sweeping is therefore possible, if---given a fixed direction $\bOmega$---the induced
-dependency graph $G=(V,E)$ is acyclic.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\begin{theorem}[Sweeping is possible for a triangular mesh]
-	\label{thm:sweeping}
-	Consider a domain that is discretized by a set of cells
-	$\{C_i\}_{i=1,\dots,I}$ where each cell $C_i$ is a triangle and we do not allow
-	for hanging nodes, exemplified  in Figure \ref{fig:sweep1}.
-	Furthermore, we have a
-	fixed direction $\bOmega$ that
-	prescribes the flow of
-	information. Under these conditions, sweeping is possible.
-\end{theorem}
-
-\newpage
-
-\begin{proof}
-	We know that sweeping is possible, if and only if the induced dependency
-	graph
-	$G=(V,E)$ is acyclic.
-	Now assume the dependency graph is not acyclic and provoke a
-	contradiction.
-
-	If the dependency graph $G$ is not acyclic, there exists an ordered sequence of
-	cells \\
-	$\{C_{i_1},C_{i_2}, \dots,C_{i_M},C_{i_1}\}$, such that two consecutive
-	cells
-	share an edge
-	$e_{{i_j},{i_{j+1}}}$ and $ \bm{n}_{i_j}\cdot \bOmega>0, \forall
-		j=1,\dots,M$. Without loss of generality, let $i_j=j$ and assume that we
-	pass
-	through the cells in a counterclockwise manner as shown in Figure
-	\ref{fig:cycle_nocolor} for the spatial domain of Figure \ref{fig:cycle}.
-
-	\begin{figure}
-		\begin{subfigure}{0.45\textwidth}
-			\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/1}
-			\caption{A spatial domain that is discretized by triangles.}
-			\label{fig:cycle}
-		\end{subfigure}
-		\hfill
-		\begin{subfigure}{0.45\textwidth}
-			\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/2c}
-			\caption{A possible sequence of cells that form a circle.}
-			\label{fig:cycle_nocolor}
-		\end{subfigure}
-		\caption{For sweeping to work, there can not be a circular dependency in the mesh.}
-	\end{figure}
-
-
-	Now label the angles between $\bn_i$ and $\bn_{i+1}$ by
-	$\alpha_{i}$, shown in Figure \ref{fig:cellci}. A counterclockwise turn
-	corresponds to $\alpha_{i}>0$ and
-	a
-	clockwise turn to $\alpha_{i}<0$.
-	We know that $-\pi<\alpha_{i}<\pi$, because we
-	consider regular triangles. Since we perform a full counterclockwise turn,
-	$\sum_{i=1}^M \alpha_i=2\pi$.
-	Denote the angle between $\bm{n}_1$ and $\bOmega^\perp$ by $\theta$ as sketched
-	in
-	Figure \ref{fig:vectors2}, with $0<\theta<\pi$ and
-	$\bOmega^\perp$ the vector normal to
-	$\bOmega$.
-	Let $R_{\alpha_i}$ be the rotation matrix that encodes rotating with
-	magnitude $\alpha_i$ around the $z$-axis.
-	Then
-	\begin{align*}
-		\bm{n}_{i+1} =R_{\alpha_{i}}\bm{n}_i = \prod_{k=1}^{i} R_{\alpha_{k}}
-		\bm{n}_1= R_{\sum_{k=1}^{i} \alpha_k} \bm{n}_1.
-	\end{align*}
-	If we turn $\bm{n}_1$ (counterclockwise) by more than $\theta$ but less than
-	$\theta+\pi$, then $ \bm{n}_1 \cdot \bOmega<0$.
-	However, there exist $i^*$ such that
-	$\sum_{k=1}^{i^*-1} \alpha_k \leq \theta$, but $\theta<\sum_{k=1}^{{i^*}}
-		\alpha_k <
-		\theta+\pi<2\pi$, as $-\pi<\alpha_{i^*}<\pi$.
-	Then $\bm{n}_{i^*+1}$ is $\bm{n}_1$ turned (counterclockwise) by more than $\theta$,
-	but
-	less
-	than $\theta+\pi$.
-	Therefore $ \bm{n}_{i^*+1}\cdot  \bOmega<0$ which contradicts the
-	assumption
-	and finishes
-	the proof. This proof is available as a preprint \cite{camminady2018short}.
-
-\end{proof}
-
-
-
-\begin{figure}
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/vectors}
-		\caption{Nomenclature for inflow and outflow edges. }
-		\label{fig:cellci}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=0.8\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/vectors2}
-		\caption{The normal $\bm{n}_1$, with $\bOmega$ and $\bOmega^\perp$, as well as the
-			angle $\theta$ between $\bm{n}_1$ and $\bOmega^\perp$.}
-		\label{fig:vectors2}
-	\end{subfigure}
-	\caption{Sketches for the proof of Theorem \ref{thm:sweeping}.}
-\end{figure}
-
-
-
-
-
-
-
-
-
-\newpage
-
-%The analogue setup for the three-dimensional case would be a triangulation with
-%tetrahedra, again with no hanging nodes.
-% Here, the previously described chain
-%of arguments does no longer hold, since we have rotations around different
-%axes
-%(always the edge that three consecutive tetrahedra share). Rewriting the
-%product
-%of rotation matrices as the rotation matrix of the sum of the angles is
-%therefore
-%no longer possible.
-In general, allowing arbitrary convex quadrilaterals for the triangulation of a
-computational domain does not imply the absence of circular dependencies. This
-is sketched in Figure \ref{fig:parallelogram}. Quadrilaterals can be arranged in
-a plane, perpendicular to the $z$-axis such that they form a circular
-dependency for a direction of flow along the $z$-axis.
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.5\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/parallelogram}
-	\caption{Quadrilaterals can be arranged in a circle such that no
-		topological
-		ordering can be obtained for $\bOmega=(0,0,-1)^T$. }
-	\label{fig:parallelogram}
-\end{figure}
-
-
-\subsubsection{Source iteration for time dependent problems}
-It is straightforward to include time in \eqref{eq:SN_steadystate}, resulting in
-\begin{equation}
-	\begin{split}
-		\partial_t \psi_q(t,\bx) + \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx) +\sigma_t
-		\psi_q(t,\bx) = {\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi_{q'}(t,\bx) +
-		q(t,\bx,\bOmega_q),
-	\end{split}
-	\label{eq:SN_time}
-\end{equation}
-or---when time is discretized implicitly---in
-\begin{equation}
-	\begin{split}
-		\bOmega_q \cdot \nabla_\bx \psi^{n+1}_q(\bx) +\left(\sigma_t + \frac{1}{\Delta t}\right)
-		\psi^{n+1}_q(\bx) = {\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi^{n+1}_{q'}(\bx) +
-		q^{n+1}(\bx,\bOmega_q)+\frac{1}{\Delta t}\psi^{n}_q(\bx).
-	\end{split}
-	\label{eq:SN_time_discr}
-\end{equation}
-The superscript $n+1$ denotes the unknown quantities evaluated at time $t^{n+1} = (n+1)\cdot
-	\Delta t$ and $\psi^{n}_q(\bx)$ is known from the previous time step. We can again abbreviate
-this formulation, this time via
-\begin{align}
-	\tilde{L}_q \psi^{n+1}_q = S^+({\bm{\psi}^{n+1}}  )+q^{n+1}_q,
-	\label{eq:sscompact_impli}
-\end{align}
-where $\tilde{L}_q \defas  \bOmega_q \cdot \nabla_\bx  +\left(\sigma_t+ \frac{1}{\Delta
-		t}\right)$
-and
-$q^{n+1}_q \defas q^{n+1}(\bx,\bOmega_q) + \frac{1}{\Delta t} \psi_q^n(\bx)$. In-scattering is
-again denoted by $S^+$.
-This formulation is equivalent to \eqref{eq:sscompact} with different cross section and source.
-We can therefore use source iteration and transport sweeps in the exact same manner,
-just repeatedly to march forward in time. Source iteration at time step $n+1$ can be initialized
-with the angular flux of the previous step, \ie $\psi^{n+1\,(0)}\defas \psi^{n\, (l)}$ where $l$
-denotes the number of transport sweeps at time step $n$.
-
-%ut convergence rates}
-
-\subsection{Advantages and disadvantages of the discrete  ordinates method}
-We start by discussing the advantages of the S$_N$ method first, followed by its disadvantages.
-
-{\bfseries{Advantages}}
-
-Unlike the Monte Carlo method, the discrete ordinates method is deterministic and
-does not suffer from statistical noise and the slow $1/\sqrt{N}$ convergence
-rate.
-
-The S$_N$ method also preserves positivity of the angular flux, which moment methods are
-generally not expected to do due to Gibbs-like oscillations. However, this can only be ensured for positive quadrature weights and Cartesian meshes.
-
-The fact that the choice of the underlying quadrature set is up to the user can be considered a double-edged
-sword: Poor choices may reinforce numerical artifacts whereas apt, problem-dependent
-choices can increase the solution quality without an increase in computational cost or memory.
-
-Adaptivity can be used in time and space (due to its relation to advection equations), as well as in angle \cite{SOUCASSE2017215,DARGAVILLE2020109124}.
-For example, in regions with near-vacuum properties, \ie absent scattering, the set of
-ordinates can be aligned with the particles' initial directions of travel.
-
-While the Monte Carlo method is embarrassingly parallel, the discrete ordinates method is
-harder to parallelize. However, parallelization in angle is relatively easy since, given a
-precomputed right-hand side, source iteration has no interdependence between the different
-directions.
-
-{\bfseries{Disadvantages}}
-
-On the other hand, certain disadvantages prevail.
-Space, time, and angle need to be discretized\footnote{Energy, too, is being discretized. We
-	focus on
-	mono-energetic transport throughout this thesis and therefore omit the consequences of
-	discretizing energy.} in the discrete ordinates method, whereas all three variables are
-continuous in the Monte Carlo method. Different from space and time discretization, the
-discretization of angle introduces an error that is not blatantly obvious. So called \textit{ray
-	effects} \cite{lathrop1964discrete} result from restricting transport to a finite set of angular directions, illustrated in
-Figure \ref{fig:rayeffectscomparison} for the line-source test case. Here, particles are
-emitted isotropically in the center of a domain at $t=0$ and move away from the origin as
-time progresses. We will discuss this test case more thoroughly later on and it will serve as
-an important benchmark when analyzing modified S$_N$ methods. In a nutshell, this test
-case examines whether or not a numerical method is able to reproduce a radially symmetric
-solution
-where the scalar flux is a function of the distance to the origin only. Clearly, this is not the
-case for the discrete ordinates method since density fluctuations are undeniable. Refining
-the angular resolution does resolve these fluctuations at the cost of increased run time and
-memory consumption. Two methods that mitigate ray effects without adding
-more directions, called rS$_N$ and
-as-S$_N$, will be discussed in Sections \ref{sec:rSNmethod} and \ref{sec:asSNmethod}, respectively.
-
-Three further problems stem from the usage of source iteration and transport sweeps as the
-solution algorithm.
-Parallelizing transport sweeps by domain decomposition, difficult due to the dependency
-between cells, is a topic of
-current research and becomes especially crucial for highly performant codes on large-scale
-clusters. Furthermore, in addition to the cross sections, the isotropy of the scattering kernel
-influences the convergence of source iteration. A scattering kernel that models predominantly
-forward-peaked scattering requires fewer transport sweeps than an isotropic scattering
-kernel. This is no surprise, however, since forward-peaked scattering means that particle
-mostly advect through the spatial domain without change of direction.
-Lastly, source iteration might be too slow for typical reactor physics problems and acceleration strategies need to be used to overcome the slow convergence.
-
-
-
-
-
-\begin{figure}
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rayeffects/REF.pdf}
-		\caption{Reference solution for the scalar flux of the line-source problem. The solution
-			solely depends upon the distance to the origin, not the angle. The scalar flux is bounded from above by (approximately) $0.4$.}
-		\label{fig:linesourceref}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rayeffects/SN.pdf}
-		\caption{Solution for the scalar flux of the line-source problem using the discrete
-			ordinates method. Symmetry is clearly broken. Violations of the upper bound are masked in gray.}
-		\label{fig:linesourcesn}
-	\end{subfigure}
-	\caption{Ray effects for the line-source problem occur due to the finite set of angular
-		directions. }
-	\label{fig:rayeffectscomparison}
-\end{figure}
-
-
-
-
-\section{Moment methods}
-The P$_N$ method is a Galerkin-type method that expands  the angular dependency in the
-transport equation in terms of spherical harmonics.
-%\chapter{Spherical harmonics}
-The spherical harmonics are a complete set of orthogonal functions on
-the unit sphere.
-There exist different definitions of the spherical harmonics that vary in the respective
-normalization constants.
-One possible definition is
-\begin{align}
-Y_n^m(\theta,\phi) := \sqrt{\frac{2n+1}{4\pi} \, \frac{(n-m)!}{(n+m)!}}e^{i m
-\theta}P_n^m\left(\cos(\phi)\right),
-\end{align}
-with $|m|\leq n$, the azimuthal angle $\theta\in [0,2\pi)$, the polar angle $\phi\in [0,\pi]$, and
-$P_n^m$ as the associated Legendre functions.
-This choice ensures
-\begin{align}
-\langle Y_n^m,Y_{n'}^{m'}\rangle_{\mathbb{S}^2} \defas \int_0^{2\pi} \int_0^\pi  Y_n^m(\theta,\phi) \overline{Y_{n'}^{m'} (\theta,\phi)} \, \sin(\phi)\,d\phi \,
-d\theta
-%&\int_{\mathcal{S}^2}Y_n^m  \, \bar{Y}_{n'}^{m'} \, d\bOmega
-= \delta_{n,n'}\delta_{m,m'},
-\end{align}
-\ie orthonormality with respect to integration over the unit sphere.
-Since the azimuthal angle $\theta$ and the polar angle $\phi$ uniquely define a point
-$\bOmega$ on the unit sphere via the relation $\bOmega = (\cos(\theta)\sin(\phi) , \sin(\theta)\sin(\phi), \cos(\phi))^T,$ we abbreviate $Y_n^m(\theta,\phi) = Y_n^m(\bOmega)$.
-The real and imaginary parts of the spherical harmonics up to $m=3$ are visualized in
-Figure \ref{fig:sphericalharmonics} and Figure \ref{fig:sphericalharmonics_imag}, respectively.
-
-The spherical harmonics relate to the Legendre polynomials via the \textit{addition theorem}.
-For $\bOmega,\bOmega'\in \mathbb{S}^2$ and $l\in \Ngeqz$ the equality
-\begin{align}
-P_n(\bOmega\cdot \bOmega') = \frac{4\pi}{2n+1} \sum_{|m|\leq n}Y_n^m(\bOmega)
-\overline{Y_n^m(\bOmega')}
-\end{align}
-allows to express the Legendre polynomials in form of the spherical harmonics, given an
-argument that is the dot product of two vectors living on the unit sphere.
-Since the scattering kernel is frequently evaluated at the dot product between the in- and
-out-scattering directions, the \textit{addition theorem} can be applied to write
-\begin{align}
-s(\bOmega \cdot \bOmega') = \sum_{n=0}^\infty s_n \sum_{|m|\leq n}Y_n^m(\bOmega)
-\overline{Y_n^m(\bOmega')},
-\label{eq:scatteringkernelexpansion}
-\end{align}
-with expansion coefficients  $s_n$.
-%\todo{check the factor in front of the expansion}
-
-
-
-
-\label{appendix:sphericalharmonics}
-\begin{landscape}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Appendix1/figs/sphericalharmonics_redo2/REAL.pdf}
-		\caption{Real parts of the spherical harmonics for different orders.}
-		\label{fig:sphericalharmonics}
-	\end{figure}
-\end{landscape}
-\begin{landscape}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Appendix1/figs/sphericalharmonics_redo2/IMAG.pdf}
-		\caption{Imaginary parts of the spherical harmonics for different orders.}
-		\label{fig:sphericalharmonics_imag}
-	\end{figure}
-\end{landscape}
-
-\subsection{P$_N$ method}
-Other terms of the transport equation can be expressed similarly to the scattering kernel in \eqref{eq:scatteringkernelexpansion}, \ie
-\begin{align}
-\psi(t,\bx,\bOmega) =
-\sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n} \psi_n^m(t,\bx) Y_n^m(\bOmega)
-\label{eq:expansionpsi}
-\end{align}
-for the angular flux, and
-\begin{align}
-q(t,\bx,\bOmega) = \sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n} q_n^m(t,\bx) Y_n^m(\bOmega)
-\label{eq:expansionq}
-\end{align}
-for the source term. Time- and space-dependent moments are denoted by $\psi_n^m(t,\bx)$. The expression for in-scattering, using orthogonality and the addition theorem, reduces to
-\begin{equation}
-\begin{split}
-\int_{\mathbb{S}^2} s&(\bOmega \cdot \bOmega') \psi(t,\bx,\bOmega') \, d\bOmega' \\
-&=
-\int_{\mathbb{S}^2} \left(\sum_{n=0}^\infty s_n \sum_{|m|\leq n}Y_n^m(\bOmega)
-\overline{Y_n^m(\bOmega')}\right)\left(
-\sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n} \psi_n^m(t,\bx) Y_n^m(\bOmega')
-\right)\, d\bOmega' \\
-&=
-\sum_{n=0}^\infty s_n \sum_{|m|\leq n}
-\sum_{n'=0}^\infty \frac{2n'+1}{4\pi}\sum_{|m'|\leq n'}
-Y_n^m(\bOmega)
- \psi_{n'}^{m'}(t,\bx) \int_{\mathbb{S}^2} \overline{Y_n^m(\bOmega')}
-   Y_{n'}^{m'}(\bOmega')\, d\bOmega' \\
-&=\sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n}
-s_n\,
-\psi_{n}^{m}(t,\bx)
-Y_n^m(\bOmega).
- \end{split}
-\end{equation}
-Unsurprisingly, convolving scattering kernel and angular flux corresponds to multiplication of the respective expansion coefficients in moment space. No approximations have been made up until now.
-We define $\sigma_{t,n} \defas \sigma_t - s_n$ and rewrite the transport equation as
-\begin{align}
-\sum_{n=0}^\infty\sum_{|m |\leq n}
- \frac{2n+1}{4\pi}
-Y_n^m(\bOmega)\left[
-\partial_t \psi_n^m(t,\bx)  + \bOmega \cdot \nabla_{\bx} \psi_n^m(t,\bx) +
-\sigma_{t,n}\psi_n^m(t,\bx) -q_n^m(t,\bx)
-\right] = 0.
-\label{eq:writtenoutexpansion}
- \end{align}
-If we truncate the expansions \eqref{eq:scatteringkernelexpansion}, \eqref{eq:expansionpsi}, and \eqref{eq:expansionq} at a finite value $N$, the equality in \eqref{eq:writtenoutexpansion} no longer holds true.
-However, equality is recovered when the residual is projected onto any basis function of the ansatz space $\{\sum_{n=0}^N\sum_{|m|\leq n} c_n^m Y_n^m(\bOmega) \, | \, c_n^m \in \mathbb{R} \text{ for all feasible tuples } (n,m)\}$, \ie
-\begin{equation}
-\begin{split}
-\partial_t \psi_{n'}^{m'}(t,\bx)  +\sum_{n=0}^\infty\sum_{|m |\leq n}
-\frac{2n+1}{2n'+1}\left\langle  \bOmega Y_n^m ,Y_{n'}^{m'}\right\rangle_{\mathbb{S}^2} \cdot \nabla_{\bx} \psi_n^m(t,\bx) +
-\sigma_{t,n}\psi_{n'}^{m'}(t,\bx) -q_{n'}^{m'}(t,\bx)
- = 0,
- \label{eq:componentwisepn}
- \end{split}
-\end{equation}
-for all  $0\leq n' \leq N$ and $|m'|\leq n'$. At first glance, the term $\langle \bOmega Y_n^m,Y_{n'}^{m'} \rangle$ looks troublesome as it implies a potentially dense tensor. However, we can use the relation
-\begin{align}
-2\bOmega Y_n^m = \begin{pmatrix}
--c_{n-1}^{m-1}&d_{n+1}^{m-1} &0 & 0& e_{n-1}^{m+1} & -f_{n+1}^{m+1} \\[1em]
-ic_{n-1}^{m-1}& -id_{n+1}^{m-1} &0 & 0 &  ie_{n-1}^{m+1} &- i f_{n+1}^{m+1} \\[1em]
-0 & 0 & 2a_{n-1}^m &2 b_{n+1}^m & 0 & 0
-\end{pmatrix}
-\begin{pmatrix}
-\overline{Y_{n-1}^{m-1}} \\[1em]
-\overline{Y_{n+1}^{m-1}} \\[1em]
-\overline{Y_{n-1}^{m}} \\[1em]
-\overline{Y_{n+1}^{m}} \\[1em]
-\overline{Y_{n-1}^{m+1}}\\[1em]
-\overline{Y_{n+1}^{m+1}}
-\end{pmatrix},
-\label{eq:matrixcoeffs}
-\end{align}
-which ultimately reduces \eqref{eq:componentwisepn} to the complex-valued P$_N$ equations
-\begin{equation}
-\begin{split}
-\partial_t \bm{\psi}(t,\bx)  +\sum_{i=1}^3 A_i \left(\nabla_{\bx}\right)_i \bm{\psi}(t,\bx) +
-\Sigma_{t} \bm{\psi}(t,\bx) -\bm{q}(t,\bx)
-= 0,
-\label{eq:pneq}
-\end{split}
-\end{equation}
-where the $A_i$ are sparse matrices, dependent on the coefficients from \eqref{eq:matrixcoeffs}. These  coefficients and more details on the real-valued version of \eqref{eq:pneq} are provided in the appendix of Küpper's thesis \cite{kupper2016models}. The expansion coefficients of \eqref{eq:expansionpsi}
-are stored in vector format in $\bm{\psi}(t,\bx)$.
-
-
-\subsection{Advantages and disadvantages of moment methods}
-Again, we discuss advantages and disadvantages.
-
-{\bfseries{Advantages}}
-
-For smooth solutions, moment methods produce accurate solutions, even for a small number of expansion coefficients. Here, smoothness especially refers  to the dependency on the angular variable $\bOmega$, since this is the dependency that we approximate through the moment expansion.
-
-Ray effects do not occur and moment methods yield symmetrical approximate solutions when the true solution is symmetric.
-
-
-
-
-
-{\bfseries{Disadvantages}}
-
-A major drawback of the P$_N$ method is its tendency to produce oscillatory solutions. In regions of low densities, these oscillations may cause the density to become negative, sometimes resulting in a breakdown of the solution algorithm. However, ways exist to circumvent or at least mitigate these oscillations \cite{mcclarren2010robust}.
-
-Other moment methods, like the minimal entropy (M$_N$) method, make a different ansatz for the representation of the solution in terms of its moments. At each time step, a constrained optimization problem is solved to ensure that a certain  entropy $\eta$ is minimized \cite{levermore1996moment,alldredge2012high,alldredge2014adaptive}.
-
-If the solution depends strongly on $\bOmega$, \ie it is highly anisotropic, more and more moments are necessary to accurately approximate the angular flux. This is true for any Galerkin-type method and relates to the slow decay of expansion coefficients in this case.
-
-
-%\todo{Write more here}
-
-
-\endinput
+  The convergence order of Monte Carlo is \textit{only} $N^{-1/2}$,
+  regardless of the dimensionality of the problem.
+  Listed as an advantage in the case of many dimensions, convergence
+  order $1/2$ is slow for a small to moderate number of dimensions.
+
+  Moreover, even though the \textit{order} of the error is
+  independent of the dimension, the error itself is not. Due to
+  subregions of the domain that particles are unlikely to reach, the
+  variance of the dose might be significant and is certainly not
+  independent of the problem's dimensionality \cite{trefethen2017cubature}.
+  Almost always, variance reduction techniques need to be used to
+  reduce the variance in domains with strong material heterogeneities.
+
+  \section{Discrete ordinates method}
+  The discrete ordinates (S$_N$) method is usually ascribed to  Chandrasekhar
+  \cite{chandrasekhar1944radiative} and work by Wick
+  \cite{wick1943ebene}, dating back to the mid 1940s.
+  Carlson and Lee discussed numerical quadratures for the transport
+  equation in 1961 \cite{carlson1961mechanical}.
+  Noteworthy, too, is Chandrasekhar's 1969 book \textit{Radiative
+  Transfer} \cite{chandrasekhar2013radiative}.
+  In the preface of this book, he writes that the motivation and
+  historic relevance of radiative transfer stems from astrophysics and
+  investigations performed  by Rayleigh in 1871.
+  Nevertheless, his work impacts nuclear engineers and mathematicians as well.
+  Convergence properties (under mild assumptions) were derived by
+  Madsen in 1971 \cite{madsen1971pointwise} and  Anselone and Gibbs
+  in 1974 \cite{anselone1974convergence}.
+
+  At its core, the S$_N$ method restricts the movements of particles
+  to a fixed set of directions. The angular-dependent transport
+  equation reduces to a set of angular-independent transport
+  equations, coupled via scattering. The left-hand side of each
+  equation is a simple advection equation that can be solved forward in time.
+
+  Ultimately, the spherical quadrature's job is to make the approximation
+  \begin{align}
+    \int_{\mathbb{S}^2} \psi(t,\bx,\bOmega') \, d\bOmega' \approx
+    \sum_{q'=1}^{n_q} w_{q'} \, \psi(t,\bx,\bOmega_{q'})
+    \label{eq:montecarlointegration}
+  \end{align}
+  as accurate as possible. For example, using isotropic scattering,
+  this is the scattering operator on the transport equation's
+  right-hand side. Henceforth, we will first discuss spherical
+  quadratures before analyzing how the resulting system of coupled
+  equations can be time-integrated.
+
+  \subsection{Angular discretization}
+  The fundamental idea of the S$_N$ method is to approximate a
+  high-dimensional equation by
+  a lower-dimensional system of equations via discretization of the
+  angular variable. This
+  avoids solving the full linear transport equation
+  \eqref{eq:lineartransport} that reads
+  \begin{equation*}
+    \begin{split}
+      \partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx
+      \psi(t,\bx,\bOmega) +\sigma_a
+      \psi(t,\bx,\bOmega) \\
+      &= {\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot
+      \bOmega')\left(\psi(t,\bx,\bOmega') -
+      \psi(t,\bx,\bOmega)\right)\, d\bOmega'+ q(t,\bx,\bOmega).
+    \end{split}
+  \end{equation*}
+  Since we are discussing a discretization in angle, the energy
+  dependency is omitted. A
+  spherical quadrature consists of a finite set of ordinates
+  $\{\bOmega_1,\ldots,\bOmega_{n_q}\}\subset \mathbb{S}^2$ and
+  quadrature weights
+  $\{w_1,\ldots,w_{n_q}\}$, such
+  that \eqref{eq:montecarlointegration} is as accurate as possible.
+
+  The discrete ordinates method demands \eqref{eq:lineartransport} to
+  be satisfied only at the
+  set
+  of ordinates $\{\bOmega_1,\ldots,\bOmega_{n_q}\}$ and deploys
+  \eqref{eq:montecarlointegration} to circumvent the spherical
+  integral on the right-hand side. The
+  S$_N$ approximation to the linear transport equation is then
+  \begin{equation}
+    \begin{split}
+      \partial_t \psi_q(t,\bx) +& \bOmega_q \cdot \nabla_\bx
+      \psi_q(t,\bx) +\sigma_a
+      \psi_q(t,\bx) \\
+      &= {\sigma_s}\sum_{q'=1}^{n_q}w_{q'} s(\bOmega_q \cdot
+      \bOmega_{q'})\left(\psi_{q'}(t,\bx) -
+      \psi_q(t,\bx)\right)+ q(t,\bx,\bOmega_q),
+    \end{split}
+    \label{eq:SN}
+  \end{equation}
+  for $q=1,\ldots,n_q$ and with $\psi_q(t,\bx) \defas \psi(t,\bx,\bOmega_q)$.
+  %Because we have
+  %defined
+  %the spherical integral in a way that it satisfies
+  % $\int_{\mathbb{S}^2} 1\, d\bOmega=1$, the
+  %quadrature weights fulfill $\sum_{q=1}^{n_q} w_q = 1$.
+  The left-hand side of \eqref{eq:SN} is a set of $n_q$ linear
+  advection equations that could be
+  solved independently if it were not for the right-hand side. The
+  coupling is a result
+  of the discretized scattering operator. We can rewrite
+  \eqref{eq:SN} more compactly as
+  \begin{equation}
+    \begin{split}
+      L\bm{\psi} (t,\bx) +  \sigma_a
+      \bm{\psi}(t,\bx)
+      &= {\sigma_s}(S^+-S^-)\bm{\psi}(t,\bx)+ \bm{q}(t,\bx),
+    \end{split}
+    \label{eq:SNmatrix}
+  \end{equation}
+  with $\bm{\psi}(t,\bx) =
+  (\psi_1(t,\bx),\ldots,\psi_{n_q}(t,\bx))^T$, the linear transport operator
+  $L:\mathbb{R}^{n_q} \to \mathbb{R}^{n_q}$ that satisfies $L_{q,q'}
+  = \delta_{q,q'}\left(
+    \partial_t
+  + \bOmega_q \cdot \nabla_\bx\right)$, and the linear in- and
+  out-scattering operators
+  $S^+:\mathbb{R}^{n_q}
+  \to \mathbb{R}^{n_q}$ satisfying $S^+_{q,q'} = w_{q'}\,s(\bOmega_q
+  \cdot \bOmega_{q'}) $ and
+  $S^-:\mathbb{R}^{n_q}
+  \to \mathbb{R}^{n_q}$ with $S^-_{q,q'} = \delta_{q,q'}
+  \sum_{p=1}^{n_q}w_{p}s(\bOmega_q
+  \cdot \bOmega_{p})$, respectively. The source $\bm{q}(t,\bx)$ is
+  defined analogously to the
+  angular flux vector $\bm{\psi}(t,\bx)$.
+  Since the spherical quadrature does not necessarily guarantee
+  $\sum_{q'=1}^{n_q} w_{q'}
+  s(\bOmega_q \cdot \bOmega_{q'})=1$ (which is the case for the exact
+  spherical integration), we
+  can move out-scattering to the left-hand side before applying the
+  S$_N$ discretization to
+  obtain
+  %\todo{in this paragraph I first used vec instead of bm, check this again}
+  \begin{equation}
+    \begin{split}
+      L\bm{\psi}(t,\bx) +  \sigma_t
+      \bm{\psi}(t,\bx)
+      &= {\sigma_s}S^+\bm{\psi}(t,\bx)+ \bm{q}(t,\bx).
+    \end{split}
+    \label{eq:SNmatrixV2}
+  \end{equation}
+
+  Recalling \eqref{eq:HGkernelexpansion}, in the case of the
+  Henyey-Greenstein scattering
+  kernel, we can expand $s_g$ in terms of spherical harmonics as
+
+  \begin{equation*}
+    \begin{split}
+      s_g(\bOmega' \cdot \bOmega) =\frac{1-g^2}{4\pi\left(1-2g \,\bOmega' \cdot
+      \bOmega+g^2\right)^{3/2}} = \sum_{n=0}^\infty  g^n
+      \sum_{m=-n}^nY_n^m(\bOmega) \,
+      \overline{Y_n^m(\bOmega')}.
+    \end{split}
+  \end{equation*}
+  Truncating the first sum at $N$, we get an approximation to the
+  Henyey-Greenstein
+  scattering kernel with a finite number of expansion coefficients
+  \begin{equation}
+    \begin{split}
+      s_g(\bOmega' \cdot \bOmega) \approx s_g^N(\bOmega' \cdot
+      \bOmega) \defas \sum_{n=0}^N
+      g^n \sum_{m=-n}^nY_n^m(\bOmega) \,
+      \overline{Y_n^m(\bOmega')}.
+    \end{split}
+    \label{eq:HGkernelapprox}
+  \end{equation}
+  For a fixed value of $N$, this approximation is more accurate when
+  $|g|$ is close to zero
+  (scattering is almost isotropic) and less accurate when $|g|$ is
+  close to one (scattering is
+  peaked forward or backward).
+  If we substitute the approximation \eqref{eq:HGkernelapprox} into
+  \eqref{eq:SNmatrixV2}, the
+  in-scattering matrix $S^+$ has entries
+  \begin{align}
+    S^+_{q,q'} =  w_{q'}  \sum_{n=0}^N
+    g^n \sum_{m=-n}^nY_n^m(\bOmega_q) \,
+    \overline{Y_n^m(\bOmega_{q'})}.
+    \label{eq:truncatedscatteringmatrixindices}
+  \end{align}
+  Define the matrices
+  \begin{subequations}
+    \begin{align}
+      O \in \mathbb{R}^{n_q \times N^2}     & ,\quad
+      O_{q,\text{idx}(n,m)} = Y_{n}^m(\bOmega_q),        \\
+      \Sigma\in \mathbb{R}^{N^2 \times N^2} & , \quad
+      \Sigma_{\text{idx}(n,m),\text{idx}(n,m)} =
+      g^n,
+      \\
+      M \in \mathbb{R}^{N^2 \times n_q}     & ,\quad
+      M_{\text{idx}(n,m),q'} = \overline{Y_n^m(\bOmega_{q'})},
+    \end{align}
+  \end{subequations}
+  with $\text{idx}(n,m) = n\cdot(N+1)+m+1$, $0\leq n\leq N$, and
+  $-n\leq m \leq n$. Then the
+  approximated
+  in-scattering matrix $S^+$ with entries given by
+  \eqref{eq:truncatedscatteringmatrixindices}
+  can be decomposed into $S^+ = O\Sigma M$.
+
+  We will discuss two methods to solve the coupled system of
+  equations in Sections
+  \ref{sec:finitevolume} and \ref{sec:sweeps}. Additionally, we will
+  elaborate how the
+  decomposition $S^+ = O\Sigma M$ can be used to speed up the
+  computation. The choice of
+  the quadrature is crucial for the S$_N$ method to work and will be
+  discussed in the next
+  section.
+
+  \begin{remark}
+    The truncation order $N$ has to be high when scattering is highly
+    peaked to have an
+    accurate approximation. Thus, the
+    decomposition is usually only used when the scattering is close
+    to isotropic, since then the
+    expansion coefficients $g^n$ decay sufficiently fast.
+  \end{remark}
+
+  \begin{remark}
+    The expansion  $S^+ = O\Sigma M$ can similarly be formulated for
+    different choices of the
+    scattering kernel $s$. However, in the case of the
+    Henyey-Greenstein phase function, the
+    decomposition is easy to derive  analytically. This is one of the
+    arguments for choosing the
+    Henyey-Greenstein phase function to model scattering.
+  \end{remark}
+
+  \subsection{Quadrature rules in one dimension}
+  Because several quadrature rules are based upon one-dimensional
+  quadrature rules, we will
+  start by summarizing some of the classical results regarding
+  numerical integration in one
+  spatial dimension before continuing
+  with spherical integration. Additionally, one-dimensional
+  quadrature rules are necessary for applying
+  the S$_N$ method to the transport equation in slab geometry.
+
+  In general, one-dimensional quadratures try to approximate the
+  bounded integral
+  \begin{align}
+    \int_a^b f(x) w(x)\, dx, \label{eq:definitionoffiniteintegral}
+  \end{align}
+  using  a sum of $n_q$ finite terms via
+  \begin{align}
+    \sum_{q=1}^{n_q} w_q f(x_q).
+  \end{align}
+  To do this as accurately as possible, both the quadrature points
+  and the quadrature weights
+  need to be chosen carefully. While it is obvious that a quadrature
+  with $n_q$ quadrature
+  points can integrate \eqref{eq:definitionoffiniteintegral} for $f$
+  being a polynomial up to
+  degree $n_q-1$, Gaussian quadratures are special in the sense that
+  they correctly integrate
+  polynomials up to degree $2n_q-1$.
+  Gaussian quadratures use orthogonal polynomials that, for a given
+  weight function $w$, are
+  defined by the relation
+  \begin{align}
+    \langle P_i,P_j\rangle_w \defas \int_a^b P_i(x) P_j(x) w(x) \, dx
+    = \delta_{i,j}. \label{eq:defortho}
+  \end{align}
+  For different weight functions $w$, some orthogonal polynomials are
+  given in Table
+  \ref{tab:orthopolys}.
+
+  \begin{table}
+    \centering
+    \begin{tabular}{lcr}
+      \toprule
+      \hfill Weight function \hfill & Interval           & \hfill
+      Orthogonal polynomials \hfill \\
+      \midrule
+      $w(x) = 1$                    & $[-1,1]$           & Legendre
+      \\ \addlinespace
+      $w(x) = 1/\sqrt{1-x^2}$       & $(-1,1)$           & Chebyshev
+      ($1^{\text{st}}$ kind)     \\
+      \addlinespace
+      $w(x) = \sqrt{1-x^2}$         & $[-1,1]$           & Chebyshev
+      ($2^{\text{nd}}$ kind)    \\
+      \addlinespace
+      $w(x) = e^{-x}$               & $[0,\infty)$       & Laguerre
+      \\ \addlinespace
+      $w(x) = e^{-x^2}$             & $(-\infty,\infty)$ & Hermite
+      \\ \addlinespace
+      \bottomrule
+    \end{tabular}
+    \caption{Table of weight functions and corresponding orthogonal
+    polynomials.}
+    \label{tab:orthopolys}
+  \end{table}
+
+  \begin{definition}[Gaussian quadratures]
+    A Gaussian quadrature is a quadrature rule that approximates the integral
+    $\int_a^b f(x) w(x)\, dx$
+    by the finite sum
+    $\sum_{q=1}^{n_q} w_q f(x_q)$.
+    The quadrature points $x_1,\ldots,x_{n_q}$ are the roots of the
+    $n_q$-th orthogonal
+    polynomial $P_{n_q}$, defined via \eqref{eq:defortho}. The
+    corresponding quadrature weights
+    are
+    defined by
+    \begin{align}
+      w_q =\frac{1}{F'(x_q) }\int_a^b  \frac{F(x) w(x)}{x-x_q} \, dx,
+    \end{align}
+    with
+    \begin{align}
+      F(x)  = \prod_{q=1}^{n_q} (x-x_q).
+    \end{align}
+  \end{definition}
+
+  \begin{theorem}[Optimality of Gaussian quadratures]
+    A Gaussian quadrature is optimal in the sense that it
+    approximates $\int_a^b \pi(x) w(x) \, dx$
+    for polynomials $\pi(x)$ up to including degree $2n_q-1$ (but
+    generally not higher) exactly,
+    using only $n_q$ quadrature
+    points and $n_q$ quadrature weights.
+  \end{theorem}
+  \begin{proof}
+    See, \eg Chandrasekhar \cite{chandrasekhar2013radiative}.
+  \end{proof}
+
+  \begin{remark}
+    Although Gaussian quadratures are optimal, other quadratures
+    might be superior in certain applications \cite{doi:10.1137/060659831}.
+  \end{remark}
+
+  \subsection{Spherical quadrature rules}
+
+  All quadrature sets try to achieve \eqref{eq:montecarlointegration}
+  sufficiently well. However, not all of them are
+  necessarily suitable for the S$_N$ method. Several properties are desirable:
+  \begin{enumerate}
+    \item In the limit of $n_q \rightarrow \infty$,
+      \eqref{eq:montecarlointegration} should become
+      an equality.
+    \item Quadrature weights and nodes should be easily computable;
+      even up to a high
+      number.
+    \item Quadrature points should be spaced equidistantly on the
+      sphere for the method to be
+      invariant under rotation. (At least for 90° rotations around
+      the $x$-, $y$-, and $z$-axis this is often a desirable property.)
+    \item Quadrature weights should have a small variance. This is a
+      result of the quadrature
+      points being spaced equidistantly.
+    \item It is often demanded that the quadrature correctly
+      integrates spherical harmonics or
+      Legendre polynomials up
+      to a certain degree. This potentially contradicts the third
+      point. For example, we can use specific knowledge about the
+      first $N$ spherical harmonics that we want to integrate
+      correctly to \textit{intelligently} place quadrature points,
+      sacrificing rotational invariance.
+    \item The quadrature should allow for (possibly adaptive)
+      refinement strategies.
+    \item Quadrature weights should be positive. This might be in
+      conflict with property five, but is desirable to ensure
+      positivity of the S$_N$ method.
+  \end{enumerate}
+
+  The first two properties are self-evident. The third property can
+  be explained when
+  considering, to name only a simple example, an anisotropic, highly
+  forward-peaked source in
+  an almost void domain. In this advective setting, particles will
+  predominantly move along
+  straight lines in accordance with the source. If, however, the
+  dominant direction is unknown a
+  priori, no direction should be preferred by the quadrature set. The
+  best (and sometimes
+  only) guess is to space quadrature points equidistantly. Point four
+  relates to the previous point
+  since a lack of preference in direction immediately dictates a lack
+  of preference in the weight
+  associated to that direction. The fifth point is closely related to
+  \eqref{eq:truncatedscatteringmatrixindices}. Finally, (adaptive)
+  refinement in the angular
+  discretization allows to leverage multi-level strategies or to
+  dynamically increase
+  the angular accuracy in regions of interest
+  \cite{SOUCASSE2017215,DARGAVILLE2020109124}.
+
+  Next, we are going to provide examples of common spherical
+  quadrature sets and investigate both their
+  theoretical and practical properties.
+
+  \begin{exmp}[Level-symmetric quadrature]
+    The level-symmetric quadrature set dates back to the early and mid 1960s
+    \cite{carlson1961mechanical,lathrop1964discrete,carlson1965transport}.
+    It is a spherical
+    quadrature set that is invariant under 90° rotations around the
+    $x$-, $y$-, and
+    $z$-axis\footnote{This property is common and allows us to only
+      provide quadrature points for
+      one of the eight octants since all other quadrature points and
+      weights follow from
+    symmetry.}. For a fixed, even number $N$, we pick $N/2$ points
+    along the $x$-axis
+    $x_1,\ldots,x_{N/2}$. These points are replicated along the other
+    two axes, \ie $x_i=y_i=z_i$ for
+    $i=1,\ldots,N/2$.
+    The set of quadrature points is then $\{ (x_i,y_j,z_k)^T \, |
+    \,i+j+k = N/2+2\}$.
+    If $p_1 \defas (x_i,y_j,z_k)^T \in \mathbb{S}^2$ is a point of
+    the level-symmetric
+    quadrature, then for $p_2 \defas (x_i,y_{j+1},z_{k'})^T$ to be a
+    point of the level-symmetric
+    quadrature as well, we have to require $k' = k-1$ due to
+    symmetry. From $||p_1||_2 =
+    ||p_2||_2 = 1$ follows
+    \begin{subequations}
+      \begin{align}
+        & y_{j+1}^2-y_j^2 = z_{k+1}^2-z_k^2 \\
+        \Rightarrow & x_{j+1}^2-x_j^2 = x_{k+1}^2-x_k^2,
+      \end{align}
+    \end{subequations}
+    for all feasible values of $j$ and $k$, implying $x_{j+1}^2 =
+    x_{j}^2+C$ for $j=1,...,N/2-1$.
+    The variable $C$ is determined by enforcing that
+    $x_1^2+y_1^2+z_{N/2}^2=1$ which
+    follows from the fact that $(x_1,y_1,z_{N/2})$ is part of the
+    quadrature set. Lastly, we choose
+    the quadrature weights in such a way that they correctly
+    integrate the Legendre polynomials
+    in each of the variables \cite{lewis1984computational}.
+    Following through with this requirement, individual quadrature
+    weights turn negative for
+    $N \geq 22$. Figures \ref{fig:levelsymmetric_fixedorder} and
+    \ref{fig:fixeddegreenq} demonstrate that $\int_0^\pi
+    \int_0^{2\pi} Y_j^i(\theta,\phi)
+    \overline{Y_l^k(\theta,\phi)} \sin(\phi) \, d\theta \, d\phi =
+    \delta_{i=k} \delta_{j=l}$ is integrated
+    correctly (with machine precision) up to a certain degree.
+    %In Figure \ref{fig:level-symmetric-weightvar}, we see the
+    %variance of the quadrature weights for different orders,
+    % indicating a more constant value of
+    %the variance when compared with other quadratures (some of which
+    % tend to have diverging
+    %variances).
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/level-symmetric_fixedorder.pdf}
+      \caption{For a fixed quadrature order $N$, the level-symmetric
+        quadrature computes the
+      integral  exactly (up to machine precision) if $i+k \leq N$.}
+      \label{fig:levelsymmetric_fixedorder}
+    \end{figure}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/level-symmetric_fixeddegreenq.pdf}
+      \caption{The level-symmetric quadrature becomes more accurate
+        the higher the number of
+        quadrature points gets. Eventually, the integral is computed
+        exactly (up to machine precision). The
+      number of quadrature points grows quadratically with the order.}
+      \label{fig:fixeddegreenq}
+    \end{figure}
+
+    %\begin{figure}
+    %\centering%
+    %
+    %\includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/level-symmetric-weightvar}
+    %  \caption{Distribution of quadrature weights for the
+    % level-symmetric quadrature.}%
+    %  \label{fig:level-symmetric-weightvar}
+    %\end{figure}
+
+  \end{exmp}
+
+  \begin{exmp}[Tensorized Gauss-Legendre]
+
+    The tensorized (or product) Gauss-Legendre quadrature stems from
+    the idea of rewriting a spherical
+    integral in spherical coordinates, \ie
+    \begin{align}
+      \int_{\mathbb{S}^2} f(\bOmega) \, d\bOmega = \int_0^{2\pi}
+      \int_0^\pi \hat{f}(\theta,\phi)
+      \sin(\theta)\,
+      d\theta \, d\phi.
+    \end{align}
+
+    Abusing notation, we drop the superscript hat in the integrand
+    from now onward. The
+    integral can then be approximated via
+    \begin{align}
+      Q^{n_q}[f] \defas \frac{\pi}{n_q} \sum_{j=1}^{2n_q}
+      \sum_{i=1}^{n_q/2} w_i f(\theta_i, \phi_j),
+    \end{align}
+    where the $\phi_j$ are spaced equidistantly along the unit
+    circle, and the $\theta_i$ and $w_i$
+    are, respectively, the quadrature points and weights of the
+    one-dimensional Gauss-Legendre
+    quadrature. The degree of the aforementioned quadrature is $2n_q-1$
+    \cite{atkinson1982numerical}, demonstrated in Figure
+    \ref{fig:gauss-legendrefixedorder}. The
+    quadrature is \textit{tensorized} in the sense that the
+    spherical quadrature points are products of two one-dimensional
+    quadratures---and so are
+    the quadrature weights. That the Gauss-Legendre quadrature is not
+    designed under
+    consideration of uniform quadrature weights is exemplified in Figure
+    \ref{fig:gauss-legendreweightvar} where we see that the ratio
+    between the maximal quadrature
+    weight and the minimal quadrature weight diverges.
+    A more detailed discussion of the Gauss-Legendre quadrature can
+    be found in the work by Atkinson
+    \cite{atkinson1982numerical} and the literature therein.
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/Gauss-Legendre_fixedorder.pdf}
+      \caption{For a fixed quadrature order $N$, the level-symmetric
+        quadrature computes the
+      integral  exactly (up to machine precision) if $i+k \leq 2N-1$.}
+      \label{fig:gauss-legendrefixedorder}
+    \end{figure}
+
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/quadratures/Gauss-Legendre_weightratio.pdf}
+      \caption{The spread of the quadrature weights, \ie the ratio
+        between the maximal weight
+        and the minimal weight, diverges for the Gauss-Legendre
+        quadrature. This also holds true in the three-dimensional case,
+        when using a tensorized quadrature that is based on the
+        Gauss-Legendre points and weights. Nevertheless, the
+        Gauss-Legendre quadrature's capability to satisfy the fifth
+        point on the list of desirable properties makes it one of the
+      most commonly used quadratures. }
+      \label{fig:gauss-legendreweightvar}
+    \end{figure}
+  \end{exmp}
+
+  \begin{exmp}[Octahedron-  and icosahedron-based quadratures with connectivity]
+    \label{exmp:octaico}
+    In Camminady et al. \cite{camminady2019highly},
+    we present highly uniform quadratures that are purely geometric
+    and result from a
+    triangulation of an octahedron or, alternatively, an
+    icosahedron---the Platonic solids with eight
+    or twenty triangular faces, respectively. Platonic solids are regular,
+    convex polyhedra with identical faces, all having the same area.
+    Projecting from these
+    platonic solids onto the unit sphere yields highly uniformly
+    distributed points. This idea has been used within climate
+    forecasting \cite{rieger2015icon} where a
+    uniform discretization of the earth's atmosphere is desirable.
+
+    \begin{figure}
+      \centering
+      \begin{subfigure}{0.50\textwidth}
+        \centering
+        \includegraphics[width=0.99\textwidth]{Chapters/Chapter2/figs/mc/oct}
+        \caption{Octahedron within the unit sphere, \\ used to
+        generate the O$_N^l$ quadrature.}
+        \label{fig:oct}
+      \end{subfigure}\hfill
+      \begin{subfigure}{0.50\textwidth}
+        \centering
+        \includegraphics[width=0.99\textwidth]{Chapters/Chapter2/figs/mc/ico}
+        % second figure
+        %itself
+        \caption{Icosahedron within the unit sphere, \\ used to
+        generate the I$_N^l$ quadrature}
+        \label{fig:icos}
+      \end{subfigure}\hfill
+      \caption{Generation of the quadrature sets. One face of the
+        octahedron and icosahedron
+        have been further refined. Vertices will be projected onto
+        the unit sphere and taken as
+      quadrature points.} \label{fig:icoocta}
+    \end{figure}
+
+    \begin{figure}[h]
+      \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesredo/planar.pdf}
+        \caption{For the lerp version, the triangulation happens in
+        planar geometry.}
+        \label{fig:screenshot20200707143206a}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesredo/projected.pdf}
+        \caption{Quadrature points result from projecting the planar
+        points onto the unit sphere.}
+        \label{fig:screenshot20200707143206b}
+      \end{subfigure}
+      \caption{Triangulation for $\text{order}=4$ with the
+        corresponding quadrature
+        points in the plane and on the surface of the unit sphere, together
+        with the connectivity and the quadrature weight for the center point in
+        green. Quadrature points and weights for the seven other octants result
+        from symmetry. Figure \ref{fig:screenshot20200707143206a}
+        demonstrates the lerp procedure. For the slerp quadratures, the
+        points in Figure \ref{fig:screenshot20200707143206b} would have
+      to be spaced equally.}
+      \label{fig:screenshot20200707143206}
+    \end{figure}
+
+    %\begin{figure}[h!]
+    %  \centering
+    %  \includegraphics[width=0.6\linewidth]{Figures/test3}
+    %  \caption{Construction of the quadrature set O$^l_N$. Vertices
+    % on the sphere correspond to
+    %quadrature points and the area of the red hexagon corresponds to
+    % the quadrature weight of
+    %the centered point.}
+    %  \label{fig:octahedronquadrature}
+    %\end{figure}
+
+    The triangulation can be performed by \textbf{l}inear
+    int\textbf{erp}olation (lerp) or
+    \textbf{s}pherical \textbf{l}inear int\textbf{erp}olation
+    (slerp), demonstrated for the lerp
+    version in Fig.~\ref{fig:oct} for the octahedron, and in
+    Fig.~\ref{fig:icos} for the icosahedron.
+    Linear interpolation places points with equidistant spacing in
+    planar geometry, whereas
+    spherical linear interpolation places the points equidistantly on
+    the sphere.
+    Given two points $p_0,p_1 \in \mathbb{R}^3$, we perform spherical
+    linear interpolation via
+    % \begin{align}
+    %   \text{lerp}(p_0,p_1,t) = (1-t)p_0 + tp_1
+    % \end{align}
+    % and spherical linear interpolation via
+    \begin{align*}
+      \text{slerp}(p_0,p_1,t) = \frac{\sin((1-t)\Omega)}{\sin(\Omega)}p_0 +
+      \frac{\sin(t\Omega)}{\sin(\Omega)}p_1,
+    \end{align*}
+    where $\cos(\Omega) = p_0 \cdot p_1$.
+    Consequently, we obtain a total of four quadrature sets: O$^l_N$,
+    O$^s_N$, I$^{l}_N$, and
+    I$^{s}_N$. Here, O and I distinguish between the octahedron and
+    the icosahedron version, and
+    $l$ and $s$ between the lerp and slerp version, respectively.
+    Since the difference in the
+    construction between the octahedron and the icosahedron version
+    is minor, we focus on the
+    octahedron version.
+    Similar to the T$_N$ quadrature \cite{thurgood1995tn}, the planar
+    area is the equilateral
+    triangle in three dimension with  vertices $(1,0,0)$, $(0,1,0)$
+    and $(0,0,1)$, presented in
+    Figure \ref{fig:screenshot20200707143206a}.
+    Refining the triangulation in the planar setting and then
+    projecting each vertex onto the
+    sphere yields the quadrature points for one of the eight octants,
+    shown in Figure \ref{fig:screenshot20200707143206b}.
+
+    The quadrature weights correspond to the area associated with
+    each quadrature point. This
+    area is the hexagon that is defined by connecting the midpoints
+    of the six triangles that every
+    vertex is associated with.
+    As an example, the quadrature weight for the centered point in
+    Figure \ref{fig:screenshot20200707143206b} is given by the area of the green
+    hexagon on the unit sphere.
+    %In general, we can compute quadrature weights by computing the
+    % spherical area of the
+    %hexagon that is defined by the midpoints of the six surrounding triangles.
+    %Since the quadrature points at the poles are associated to only
+    % four triangles, the resulting
+    %shape is a quadrilateral.
+    In contrast, the T$_N$ method takes the triangle midpoints as the
+    quadrature points and the
+    associated triangle area as the quadrature weight.
+    The slerp version of the quadrature can be constructed
+    analogously by performing the linear interpolation, i.e. the
+    refinement of the triangulation, on the sphere
+    instead of in the planar geometry.
+
+    To obtain the icosahedron versions of the quadratures, the planar
+    geometry is replaced by
+    one face of an icosahedron.
+    %, defined by e.g. the vertices\footnote{The three points still
+    % have to be normalized to live on
+    %the unit sphere.} $(0,1,\phi)$, $(0,-1,\phi)$ and $(\phi,0,1)$
+    % with $\phi=(1+\sqrt{5})/2$ as the
+    %golden ratio. The full list of vertices and faces for the
+    % regular icosahedron can also be found
+    %in
+    %the appendix.
+    %For the octahedron quadratures, the number of quadrature points
+    % is given by $4N^2-8N+6$
+    %and for the icosahedron quadratures by $10N^2-20N+12$, where $N$
+    % is the number of
+    %points
+    %on one of the edges of the planar area.
+
+    %Since we do not place the quadrature points inside the triangles
+    % as it is the case for the
+    %T$_N$ quadrature, interpolating function values at unknown
+    % points on the sphere becomes
+    %easy: After determining the spherical triangle that a new point
+    % falls into, we can use
+    %barycentric interpolation to prescribe a new function value at
+    % that point that is guaranteed
+    %to
+    %be positive.
+    %This property will be beneficial in different ray-effect
+    % mitigation techniques.
+
+    For the aforementioned quadratures, properties of the quadrature
+    weights are presented in
+    Figure \ref{fig:weightsstat}. As expected, the I$_N$ versions
+    have lower variance
+    in the quadrature weights and smaller ratios between the maximal
+    and minimal quadrature
+    weights. Additionally, the slerp versions have smaller ratios and
+    variance than the lerp
+    versions. Combining these two effects, the I$_N^l$ quadrature
+    behaves similar to the O$_N^s$
+    quadrature, whereas the O$_N^l$ has the highest ratios and
+    variance and the I$_N^s$
+    quadrature the lowest ratios and variance.
+
+    Finally, Figure \ref{fig:icooctaoverview} shows the distribution
+    of quadrature weights on the unit sphere for all four quadrature
+    sets. Notably, the slerp versions are less symmetric than their
+    lerp counterparts. This is due to the fact that the slerp
+    interpolation does not treat all three sides of an equilateral
+    triangle in the same way, resulting in a loss of perfect
+    symmetry. Furthermore, since the quadrature points at the
+    vertices of the platonic solid only neighbor four (in the
+    octahedron case) or five (in the icosahedron case) triangles as
+    opposed to six triangles for every other quadrature point, their
+    quadrature weight is significantly lower.
+
+    \begin{figure}
+      \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/octl326}
+        \caption{Octahedron quadrature (lerp) with number of
+        quadrature points $n_q=326$.}
+        \label{fig:octl326}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/octs326}
+        \caption{Octahedron quadrature (slerp) with number of
+        quadrature points  $n_q=326$.}
+        \label{fig:octs326}
+      \end{subfigure}
+      \vfill
+      \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/icol812}
+        \caption{Icosahedron quadrature (lerp) with number of
+        quadrature points  $n_q=812$.}
+        \label{fig:icol812}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotationcompressed/icos812}
+        \caption{Icosahedron quadrature (slerp) with number of
+        quadrature points $n_q=812$.}
+        \label{fig:icol812}
+      \end{subfigure}
+      \caption{Octahedron and icosahedron quadrature. Due to the
+        implementation of the spherical linear interpolation, the slerp
+        versions of the quadratures have less symmetry than the lerp
+        versions. They are, however, not as spread in their weight
+        distribution. The smallest quadrature weights are associated
+        with the vertices of the respective platonic solids. Since
+        their quadrature weights are significantly lower, they are
+      excluded from the colorbar and highlighted in white to avoid distortion.}
+      \label{fig:icooctaoverview}
+    \end{figure}
+
+    \begin{figure}[t]
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/visrotation/octaico.pdf}
+      \caption{The spread of the quadrature weights, \ie the ratio
+        between the maximal weight
+        and the minimal weight, diverges for the octahedron and
+        icosahedron quadratures. Note the gap in the $y$-axis, inserted
+      to make it possible to include all four graphs.}
+      \label{fig:weightsstat}
+    \end{figure}
+
+  \end{exmp}
+
+  \newpage
+
+  \subsubsection{Comparison and source code}
+
+  Various spherical quadratures are implemented in the Python package
+  \texttt{SphericalQuadpy}, available at
+  \url{https://github.com/camminady/sphericalquadpy} under the MIT
+  license. The library provides quadrature points and weights for
+  different orders and different quadrature types.
+  A comparison to other state of the art quadratures has been
+  published \cite{camminady2019highly}, indicating the octahedron and
+  icosahedron quadratures' high degree of uniformity (with respect to
+  the distribution of quadrature points in the sphere).
+  However, different from other quadratures, the icosahedron and
+  octahedron quadratures were not generated with the goal to
+  integrate certain types of functions exactly.
+  The comparison includes quadratures that were generated with the
+  idea to ensure positivity of quadrature weights
+  \cite{thurgood1995tn}. Other, more advanced ideas additionally
+  emphasize high order convergence when integrating spherical
+  harmonics and are based on finite elements
+  \cite{doi:10.13182/NSE75-A26752} or discontinuous finite elements
+  \cite{jarrell2011discrete,doi:10.13182/NSE16-28}.
+
+  \newpage
+
+  \subsection{Finite volume schemes}
+  \label{sec:finitevolume}
+  Spherical quadrature sets are used for the angular discretization
+  of the transport equation. It
+  remains to discretize the space and time dimension. Let us recall
+  the S$_N$ discretization
+  \eqref{eq:SN}, given by
+  \begin{equation*}
+    \begin{split}
+      \partial_t \psi_q(t,\bx) +& \bOmega_q \cdot \nabla_\bx
+      \psi_q(t,\bx) +\sigma_a
+      \psi_q(t,\bx) \\
+      &= {\sigma_s}\sum_{q'=1}^{n_q}w_{q'} s(\bOmega_q \cdot
+      \bOmega_{q'})\left(\psi_{q'}(t,\bx) -
+      \psi_q(t,\bx)\right)+ q(t,\bx,\bOmega_q).
+    \end{split}
+  \end{equation*}
+  Besides the coupling term on the right-hand side, this is a simple
+  linear advection equation
+  which we can solve using the finite volume method, explained in the
+  following for order one.
+  For a Cartesian mesh, define $C_{i,j,k} \defas [x_i,x_{i+1}] \times
+  [y_j,y_{j+1}] \times
+  [z_k,z_{k+1}]$
+  with volume $|C_{i,j,k}| \defas \Delta x_i \cdot \Delta y_j \cdot
+  \Delta z_k $, where $\Delta
+  \xi_i \defas \xi_{i+1}-\xi_i$ for $\xi \in \{x,y,z\}$. The indices
+  $i$, $j$, and $k$ run from $1$ to
+  $n_x$, $n_y$, and $n_z$, respectively. Time is discretized
+  equidistantly such that $t^n\defas
+  \Delta t \cdot n$ for some $\Delta t>0$ with $n=0,\ldots,n_t$.
+  Quintessentially, the finite volume method
+  approximates
+  the solution of the transport equation by cell-averaged quantities
+  for which an update rule is
+  based on the fluxes over the cell edges. These cell-averaged quantities are
+  \begin{align}
+    \psi_{q;i,j,k}^n \approx \frac{1}{|C_{i,j,k}|}\int_{C_{i,j,k}}
+    \psi_q(t^n,\bx) \, d\bx,
+  \end{align}
+  and the update rule for Cartesian grids can be written as
+  \begin{equation}
+    \begin{split}
+      \psi_{q;i,j,k}^{n+1} = \psi_{q;i,j,k}^n & - \frac{\Delta
+      t}{|C_{i,j,k}|} \left(
+        f_{q;i+1/2,j,k} -f_{q;i-1/2,j,k} +
+        f_{q;i,j+1/2,k}-f_{q;i,j-1/2,k}+ f_{q;i,j,k+1/2}-f_{q;i,j,k-1/2}
+      \right) \\
+      &-\Delta t \left( \sigma_a \psi_{q;i,j,k}^n - \sigma_s
+        \sum_{q'=1}^{n_q}w_{q'} s(\bOmega_q \cdot
+        \bOmega_{q'})\left(\psi^n_{q';i,j,k} -
+      \psi^n_{q;i,j,k}\right)- q^n_{q;i,j,k} \right),
+      \label{eq:updaterulefvm}
+    \end{split}
+  \end{equation}
+  where $f_{q;i+1/2,j,k}$ represents the flux between cells
+  $C_{i,j,k}$ and $C_{i+1,j,k}$, given a
+  fixed direction $\bOmega_q$. All other
+  terms in \eqref{eq:updaterulefvm} can be interpreted analogously.
+  If the outward facing normal vector for cell $C_{i,j,k}$ at the
+  edge touching cell $C_{i+1,j,k}$ is
+  denoted by $\bn$, the upwind flux formulation for a fixed direction
+  $\bOmega_q$ is given by
+  \begin{align}
+    f_{q;i+1/2,j,k} = \Delta x_i  \, \langle \bn ,\bOmega_q  \rangle \cdot
+    \begin{cases}
+      \psi^n_{q;i,j,k}   & \text{ if }   \langle \bn ,
+      \bOmega_q\rangle \geq 0, \\
+      \psi^n_{q;i+1,j,k} & \text{ if }   \langle \bn , \bOmega_q\rangle < 0.
+    \end{cases}
+  \end{align}
+  Since this method is explicit, the time steps can become so small
+  that the associated computational costs render this time-stepping
+  scheme inapplicable.
+
+  \subsection{Source iteration and transport sweeps}
+  \label{sec:sweeps}
+  Iterative methods for the numerical solution of transport processes often
+  make use of source iteration to solve the transport equation.
+  To illustrate the core idea of source iteration and transport
+  sweeps, we restrict
+  ourselves to mono-energetic, time-independent, and isotropic
+  transport. The equation we
+  wish to solve---in angularly discretized form---is then
+  \begin{equation}
+    \begin{split}
+      \bOmega_q \cdot \nabla_\bx \psi_q(\bx) +\sigma_t
+      \psi_q(\bx) =
+      {\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi_{q'}(\bx) +
+      q(\bx,\bOmega_q),
+    \end{split}
+    \label{eq:SN_steadystate}
+  \end{equation}
+  for all $q=1,...,n_q$, abbreviated as
+  \begin{align}
+    L_q \psi_q = S^+({\bm{\psi}}  )+q_q,
+    \label{eq:sscompactORIG}
+  \end{align}
+  with the streaming operator $L_q =  \bOmega_q \cdot \nabla_\bx  +\sigma_t$,
+  in-scattering
+  $S^+(\bm{\psi})={\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi_{q'}(\bx),$
+  and source $q_q = q(\bx,\bOmega_q)$. We may also write $L\bm{\psi}
+  = \bm{S}^+(\bm{\psi}) +
+  \bm{q}$ to group the $n_q$ equations of type
+  \eqref{eq:sscompactORIG} together.
+  Source iteration then iterates on
+  \begin{align}
+    L\bm{\psi}^{(l+1)} = \bm{S}^+(\bm{\psi}^{(l)}) +
+    \bm{q}, \quad l\geq 0,
+    \label{eq:sourceiterationvec}
+  \end{align}
+  with some initial $\bm{\psi}^{(0)}$. This fixed-point iteration is
+  repeated until the solution is approximated reasonably well, \ie
+  $||\bm{\psi}^{(l)}-\bm{\psi}^\text{exact}|| \leq \varepsilon/(1-C)$
+  for some norm $||\cdot ||$, Lipschitz-constant $C$, and
+  prescribed tolerance $\varepsilon$. Physically, $\bm{\psi}^{(l)}$
+  represents the contributions
+  of particles that have scattered at most $l$ times, which
+  consequently outlines the problem of
+  source iteration in regions of marginal absorption and high
+  scattering: Convergence
+  will be relatively slow. A comprehensive overview of the possible
+  acceleration strategies is
+  summarized in the review paper of Adams and Larsen
+  \cite{ADAMS20023}. However, instead of
+  discussing ways to accelerate the convergence of
+  \eqref{eq:sscompactORIG}, we will discuss how to
+  actually solve one iteration of \eqref{eq:sscompactORIG}. For a
+  fixed $l$, \eqref{eq:sscompactORIG}
+  becomes a system of $n_q$ equations with a given right-hand side, given by
+  \begin{align}
+    L_q \psi^{(l+1)}_q = S^+({\bm{\psi}}^{(l)}  )+q_q =: r_q^{(l)}.
+    \label{eq:sscompact}
+  \end{align}
+  It remains to show how to solve this equation, which can be rewritten for
+  the
+  two-dimensional case as
+  \begin{align}
+    \Omega_x \partial_x \psi(\bx) + \Omega_y \partial_y \psi(\bx) + \sigma_t
+    \psi(\bx) = r(\bx).
+    \label{eq:writtenouteq}
+  \end{align}
+
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.48\textwidth}
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping/tri1pdf}
+      \caption{Two inflow edges (green) and one outflow edge (blue)
+        since $\bm{n}_1\, \cdot \, \bOmega< 0$ and
+      $\bm{n}_3 \, \cdot \, \bOmega< 0$.}
+      \label{fig:triangle1_secondsituation}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping/tri2pdf}
+      \caption{One inflow edge (green) and two outflow edges (blue)
+      since only $\bm{n}_2\cdot \bOmega<0 $.}
+      \label{fig:triangle2_secondsituation}
+    \end{subfigure}
+    \caption{Two possible situations for sweeping through a domain of
+      triangles: There are
+      either
+      two inflow edges (green) and one outflow edge (blue), or one
+      inflow edge and two outflow
+    edges.}
+    \label{fig:trianglebothcasessweeping_secondsituation}
+  \end{figure}
+
+  We omitted the direction-index $q$ because  we assume fixed values
+  for $\Omega_x$ and
+  $\Omega_y$ and follow the analysis from Lewis and Miller
+  \cite{lewis1984computational}.
+  Introducing a triangulation of the spatial domain that consists of
+  triangular cells $C_i$ with
+  boundary
+  $\partial C_i$ and outward pointing normal vector $\bm{n}$, we can integrate
+  \eqref{eq:writtenouteq} over $C_i$ and use the divergence theorem
+  to obtain the equality
+  \begin{align}
+    \oint_{\partial C_i} \bOmega \cdot \bm{n}(\bm{s}) \psi(\bm{s}) \,
+    d\bm{s} + \sigma_t \int_{C_i}
+    \psi(\bm{x})\, d\bm{x} =  \int_{C_i} r(\bm{x})\, d\bm{x}.
+  \end{align}
+  Acknowledging that the normal vectors are constant along the three
+  edges and using cell-, as
+  well
+  as
+  boundary-averaged quantities, we can rewrite the above equation as
+  \begin{align}
+    \sum_{j=1}^3 \bOmega \cdot \bm{n}_j  \,
+    \frac{|C_{i,j}|}{|C_i|}\psi_{i,\bm{n}_j} + \sigma_t
+    \psi_i =   r_i,
+    \label{eq:splittriangles}
+  \end{align}
+  where $\bm{n}_j$ are the three normal vectors of cell $C_i$ with
+  area $|C_i|$. The
+  boundary-averaged fluxes are
+  given
+  by
+  \begin{align}
+    \psi_{i,\bm{n}_j}\defas
+    \frac{1}{|C_{i,j}|}\oint_{C_{i,j}}\psi(\bm{s}) \, d\bm{s}
+  \end{align}
+  for each side of the triangle $C_{i,j}$ with
+  length $|C_{i,j}|$.
+  Lastly, $\psi_i$ and
+  $r_i$ are the
+  respective averaged cell integrals. There has been no spatial
+  approximation made so far. Thus,
+  \eqref{eq:splittriangles} is exact.
+  As discussed by Lewis and Miller \cite{lewis1984computational} and
+  visualized in Figure
+  \ref{fig:trianglebothcasessweeping}, two cases need to be
+  distinguished: There are either two
+  inflow edges and one outflow edge, or one inflow edge  two outflow
+  edges. We also assume
+  the triangles to be equilateral ($C_{i,j}=L$) since we can simply
+  map the equilateral triangle to
+  an
+  arbitrary
+  triangle via a linear transformation (and vice versa).
+  In Figure \ref{fig:triangle1},
+  the ansatz $\psi_i = \frac{1}{3} \sum_{j=1}^3 \psi_{i,\bm{n}_j}$
+  then allows to uniquely solve
+  \eqref{eq:splittriangles} for the only unknown $\psi_i$ via
+  elimination of $\psi_{i,\bm{n}_2}$
+  since
+  values for $\psi_{i,\bm{n}_1}$ and $\psi_{i,\bm{n}_3}$ are known
+  from the cells that proceed
+  cell
+  $i$ in the sweeping order. This is not possible for the second
+  scenario, where, as shown in
+  Figure \ref{fig:triangle2}, only $\psi_{i,\bm{n}_2}$ is known and
+  the system is therefore
+  underdetermined.
+
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping_secondsituation/tri1pdf}
+      \caption{Values at the two green edges are known and we wish to
+        solve for values at the
+      blue vertices.}
+      \label{fig:triangle1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/trianglesweeping_secondsituation/tri2pdf}
+      \caption{Values at the two green vertices are known and we wish
+        to solve for values at the
+      blue edges.}
+      \label{fig:triangle2}
+    \end{subfigure}
+    \caption{We augment the situation by one additional variable. For
+      triangles with two inflow
+      edges, we solve for flux values at the two outflow vertices.
+      These two outflow vertices are
+      inflow vertices for the adjacent triangle. Known variables are
+    green, unknown variables blue.}
+    \label{fig:trianglebothcasessweeping}
+  \end{figure}
+
+  Counterintuitive at first, we can overcome this problem when
+  augmenting the situation by an
+  additional variable, illustrated in Figure
+  \ref{fig:trianglebothcasessweeping_secondsituation}.
+  We again distinguish two different situations. In Figure
+  \ref{fig:triangle1_secondsituation}, two
+  edges are inflow edges and we know the respective averaged flux
+  values. In this situation, the
+  two unknowns are the flux values at the two vertices of the outflow
+  edge, which are taken as
+  known inputs for the situation in Figure
+  \ref{fig:triangle2_secondsituation}. This situation's
+  unknowns are the averaged flux values along the two outflow edges.
+  Due to the way that the
+  triangles are connected, the two known variables are always given
+  from a proceeding triangle.
+
+  Since we have an additional variable, we also need an additional
+  equation. If we assume the
+  flux to be linear in a given triangle, we can write the averaged fluxes as
+  \begin{subequations}
+    \begin{align}
+      \psi_{i,\bm{n}_1} & = \frac{1}{2} \left(
+      \tilde{\psi}_{i,\bm{n}_2} +\tilde{\psi}_{i,\bm{n}_3} \right), \\
+      \psi_{i,\bm{n}_2} & = \frac{1}{2} \left(
+      \tilde{\psi}_{i,\bm{n}_1} +\tilde{\psi}_{i,\bm{n}_3} \right),
+      \\
+      \psi_{i,\bm{n}_3} & = \frac{1}{2} \left(
+      \tilde{\psi}_{i,\bm{n}_1} +\tilde{\psi}_{i,\bm{n}_2} \right),
+    \end{align}
+  \end{subequations}
+  where the flux at the vertex opposite of edge $j$ is denoted by
+  $\tilde{\psi}_{i,\bm{n}_j}$.
+  Together with  \newline $\psi_i = \frac{1}{3} \sum_{j=1}^3
+  \psi_{i,\bm{n}_j}$, fluxes along edges and at
+  vertices
+  relate to the cell average via
+  \begin{align}
+    2 \psi_{i,\bm{n}_j} = 3\psi_i- \tilde{\psi}_{i,\bm{n}_j}.
+    \label{eq:relateallthree}
+  \end{align}
+  Finally, we are able to write out the update rule for both cases.
+  For two inflow edges and one
+  outflow edge we can solve \eqref{eq:splittriangles} for $\psi_n$
+  via elimination of
+  $\psi_{i,\bm{n}_2}$ and obtain
+  \begin{align}
+    \psi_i = \frac{1}{3w_2 + \sigma_t} \left (
+      \psi_{i,\bm{n}_1}(w_2-w_1) + \psi_{i,\bm{n}_3}(w_2-w_3)
+    +r_i \right),
+    \label{eq:updaterule}
+  \end{align}
+  where $w_j \defas \bOmega \cdot \bm{n}_j \frac{|C_{i,j}|}{|C_i|}$.
+  The fluxes at the two
+  outflow vertices $\psi_{i,\bm{n}_1}$ and $\psi_{i,\bm{n}_3}$ are
+  then computed by means of
+  \eqref{eq:relateallthree}.
+  Similarly, for the case of two outflow edges and one inflow edge we substitute
+  $\psi_{i,\bm{n}_1} = \frac{3}{2}\psi_i
+  -\frac{1}{2}\tilde{\psi}_{i,\bm{n}_1}$ and
+  $\psi_{i,\bm{n}_3} = \frac{3}{2}\psi_i
+  -\frac{1}{2}\tilde{\psi}_{i,\bm{n}_3}$ in
+  \eqref{eq:updaterule} and rearrange terms to get
+  \begin{equation}
+    \begin{split}
+      %\psi_i &= \frac{1}{3w_2 + \sigma_t} \left (  \psi_{i,\bm{n}_1}(w_2-w_1) +
+      %\psi_{i,\bm{n}_3}(w_2-w_3)
+      %+r_i \right) \\
+      %\Leftrightarrow %
+      %\psi_i &= \frac{1}{6w_2 + 2\sigma_t} \left ( \left(3\psi_i
+      % -\tilde{\psi}_{i,\bm{n}_1}\right)
+      %(w_2-w_1) + \left ( 3\psi_i -\tilde{\psi}_{i,\bm{n}_3}\right)(w_2-w_3)
+      %+2r_i \right) \\
+      %\Leftrightarrow
+      \psi_i &= \frac{1}{ 3(w_1+w_3) +2\sigma_t}
+      \left(\tilde{\psi}_{i,\bm{n}_1} (w_1-w_2)
+      + \tilde{\psi}_{i,\bm{n}_1}(w_3-w_2) +2r_i\right).
+    \end{split}
+  \end{equation}
+  Fluxes of outflow edges can again be computed by means of
+  \eqref{eq:relateallthree}.
+
+  So far we have implicitly assumed that we can iterate through the
+  spatial domain in a way that
+  obeys the dependency between cells. Phrased more precisely: If two
+  connected cells $C_i$ and
+  $C_j$ share edge $e_{i,j}$, and $e_{i,j}$ is an outflow edge for
+  $C_i$ and an inflow edge for
+  $C_j$, we  have to perform computations in $C_i$ prior to
+  computations in $C_j$. It remains to
+  prove that this ordering does indeed exist for a regular,
+  triangular mesh. We use the following
+  theorem and two definitions from graph theory.
+
+  \begin{definition}[Topological sorting]
+    A topological sorting of a directed graph $G=(V,E)$
+    is a linear ordering of vertices where  $V_i$
+    precedes
+    $V_j$ whenever there exists a directed edge $(V_i,V_j) \in E$.
+  \end{definition}
+
+  \begin{definition}[Directed acyclic graph]
+    A graph $G=(V,E)$ is called a directed acyclic graph (DAG), if
+    there exists no sequence of
+    vertices $V_{1},V_2,...,V_N,V_1$ where all two consecutive
+    vertices $V_i$ and $V_{i+1}$ are
+    connected by a directed
+    edge
+    $(V_i,V_{i+1})\in E$.
+  \end{definition}
+
+  \begin{theorem}[Topological sorting for DAGs]
+    Every directed acyclic graph  has at least one topological sorting.
+  \end{theorem}
+
+  \begin{proof}
+    See the algorithm by Kahn \cite{kahntopo} that creates a
+    topological sorting  with an asymptotic runtime in $\mathcal{O}(|V|+|E|)$.
+
+  \end{proof}
+
+  \begin{figure}
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1\linewidth]{Chapters/Chapter2/figs/sweeping/sweep1.pdf}
+      \caption{A computational domain, subdivided into spatial cells.}
+      \label{fig:sweep1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1\linewidth]{Chapters/Chapter2/figs/sweeping/sweep4.pdf}
+      \caption{Given a fixed direction $\bOmega$, we can translate
+        the spatial domain into a
+      graph.}
+      \label{fig:sweep2}
+    \end{subfigure}
+    \caption{For a given spatial discretization, a direction
+      $\bOmega$ induces a directed
+      dependency graph $G=(V,E)$. A directed edge $e_{i,j} \in E$
+      from $V_i$ to $V_j$ implies that
+      for
+      computations to start in cell $C_j$, we must have finished
+    computations in cell $C_i$.}
+    \label{fig:sweepingbothpictures}
+  \end{figure}
+
+  Sweeping is therefore possible, if---given a fixed direction
+  $\bOmega$---the induced
+  dependency graph $G=(V,E)$ is acyclic.
+
+  \begin{theorem}[Sweeping is possible for a triangular mesh]
+    \label{thm:sweeping}
+    Consider a domain that is discretized by a set of cells
+    $\{C_i\}_{i=1,\dots,I}$ where each cell $C_i$ is a triangle and
+    we do not allow
+    for hanging nodes, exemplified  in Figure \ref{fig:sweep1}.
+    Furthermore, we have a
+    fixed direction $\bOmega$ that
+    prescribes the flow of
+    information. Under these conditions, sweeping is possible.
+  \end{theorem}
+
+  \newpage
+
+  \begin{proof}
+    We know that sweeping is possible, if and only if the induced dependency
+    graph
+    $G=(V,E)$ is acyclic.
+    Now assume the dependency graph is not acyclic and provoke a
+    contradiction.
+
+    If the dependency graph $G$ is not acyclic, there exists an
+    ordered sequence of
+    cells \\
+    $\{C_{i_1},C_{i_2}, \dots,C_{i_M},C_{i_1}\}$, such that two consecutive
+    cells
+    share an edge
+    $e_{{i_j},{i_{j+1}}}$ and $ \bm{n}_{i_j}\cdot \bOmega>0, \forall
+    j=1,\dots,M$. Without loss of generality, let $i_j=j$ and assume that we
+    pass
+    through the cells in a counterclockwise manner as shown in Figure
+    \ref{fig:cycle_nocolor} for the spatial domain of Figure \ref{fig:cycle}.
+
+    \begin{figure}
+      \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/1}
+        \caption{A spatial domain that is discretized by triangles.}
+        \label{fig:cycle}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/2c}
+        \caption{A possible sequence of cells that form a circle.}
+        \label{fig:cycle_nocolor}
+      \end{subfigure}
+      \caption{For sweeping to work, there can not be a circular
+      dependency in the mesh.}
+    \end{figure}
+
+    Now label the angles between $\bn_i$ and $\bn_{i+1}$ by
+    $\alpha_{i}$, shown in Figure \ref{fig:cellci}. A counterclockwise turn
+    corresponds to $\alpha_{i}>0$ and
+    a
+    clockwise turn to $\alpha_{i}<0$.
+    We know that $-\pi<\alpha_{i}<\pi$, because we
+    consider regular triangles. Since we perform a full counterclockwise turn,
+    $\sum_{i=1}^M \alpha_i=2\pi$.
+    Denote the angle between $\bm{n}_1$ and $\bOmega^\perp$ by
+    $\theta$ as sketched
+    in
+    Figure \ref{fig:vectors2}, with $0<\theta<\pi$ and
+    $\bOmega^\perp$ the vector normal to
+    $\bOmega$.
+    Let $R_{\alpha_i}$ be the rotation matrix that encodes rotating with
+    magnitude $\alpha_i$ around the $z$-axis.
+    Then
+    \begin{align*}
+      \bm{n}_{i+1} =R_{\alpha_{i}}\bm{n}_i = \prod_{k=1}^{i} R_{\alpha_{k}}
+      \bm{n}_1= R_{\sum_{k=1}^{i} \alpha_k} \bm{n}_1.
+    \end{align*}
+    If we turn $\bm{n}_1$ (counterclockwise) by more than $\theta$ but less than
+    $\theta+\pi$, then $ \bm{n}_1 \cdot \bOmega<0$.
+    However, there exist $i^*$ such that
+    $\sum_{k=1}^{i^*-1} \alpha_k \leq \theta$, but $\theta<\sum_{k=1}^{{i^*}}
+    \alpha_k <
+    \theta+\pi<2\pi$, as $-\pi<\alpha_{i^*}<\pi$.
+    Then $\bm{n}_{i^*+1}$ is $\bm{n}_1$ turned (counterclockwise) by
+    more than $\theta$,
+    but
+    less
+    than $\theta+\pi$.
+    Therefore $ \bm{n}_{i^*+1}\cdot  \bOmega<0$ which contradicts the
+    assumption
+    and finishes
+    the proof. This proof is available as a preprint \cite{camminady2018short}.
+
+  \end{proof}
+
+  \begin{figure}
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/vectors}
+      \caption{Nomenclature for inflow and outflow edges. }
+      \label{fig:cellci}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=0.8\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/vectors2}
+      \caption{The normal $\bm{n}_1$, with $\bOmega$ and
+        $\bOmega^\perp$, as well as the
+      angle $\theta$ between $\bm{n}_1$ and $\bOmega^\perp$.}
+      \label{fig:vectors2}
+    \end{subfigure}
+    \caption{Sketches for the proof of Theorem \ref{thm:sweeping}.}
+  \end{figure}
+
+  \newpage
+
+  %The analogue setup for the three-dimensional case would be a
+  % triangulation with
+  %tetrahedra, again with no hanging nodes.
+  % Here, the previously described chain
+  %of arguments does no longer hold, since we have rotations around different
+  %axes
+  %(always the edge that three consecutive tetrahedra share). Rewriting the
+  %product
+  %of rotation matrices as the rotation matrix of the sum of the angles is
+  %therefore
+  %no longer possible.
+  In general, allowing arbitrary convex quadrilaterals for the
+  triangulation of a
+  computational domain does not imply the absence of circular dependencies. This
+  is sketched in Figure \ref{fig:parallelogram}. Quadrilaterals can
+  be arranged in
+  a plane, perpendicular to the $z$-axis such that they form a circular
+  dependency for a direction of flow along the $z$-axis.
+
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Chapters/Chapter2/figs/2018_Sweeping/parallelogram}
+    \caption{Quadrilaterals can be arranged in a circle such that no
+      topological
+    ordering can be obtained for $\bOmega=(0,0,-1)^T$. }
+    \label{fig:parallelogram}
+  \end{figure}
+
+  \subsubsection{Source iteration for time dependent problems}
+  It is straightforward to include time in \eqref{eq:SN_steadystate},
+  resulting in
+  \begin{equation}
+    \begin{split}
+      \partial_t \psi_q(t,\bx) + \bOmega_q \cdot \nabla_\bx
+      \psi_q(t,\bx) +\sigma_t
+      \psi_q(t,\bx) =
+      {\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi_{q'}(t,\bx) +
+      q(t,\bx,\bOmega_q),
+    \end{split}
+    \label{eq:SN_time}
+  \end{equation}
+  or---when time is discretized implicitly---in
+  \begin{equation}
+    \begin{split}
+      \bOmega_q \cdot \nabla_\bx \psi^{n+1}_q(\bx) +\left(\sigma_t +
+      \frac{1}{\Delta t}\right)
+      \psi^{n+1}_q(\bx) =
+      {\sigma_s}\sum_{q'=1}^{n_q}w_{q'}\frac{1}{4\pi}\psi^{n+1}_{q'}(\bx) +
+      q^{n+1}(\bx,\bOmega_q)+\frac{1}{\Delta t}\psi^{n}_q(\bx).
+    \end{split}
+    \label{eq:SN_time_discr}
+  \end{equation}
+  The superscript $n+1$ denotes the unknown quantities evaluated at
+  time $t^{n+1} = (n+1)\cdot
+  \Delta t$ and $\psi^{n}_q(\bx)$ is known from the previous time
+  step. We can again abbreviate
+  this formulation, this time via
+  \begin{align}
+    \tilde{L}_q \psi^{n+1}_q = S^+({\bm{\psi}^{n+1}}  )+q^{n+1}_q,
+    \label{eq:sscompact_impli}
+  \end{align}
+  where $\tilde{L}_q \defas  \bOmega_q \cdot \nabla_\bx
+  +\left(\sigma_t+ \frac{1}{\Delta
+  t}\right)$
+  and
+  $q^{n+1}_q \defas q^{n+1}(\bx,\bOmega_q) + \frac{1}{\Delta t}
+  \psi_q^n(\bx)$. In-scattering is
+  again denoted by $S^+$.
+  This formulation is equivalent to \eqref{eq:sscompact} with
+  different cross section and source.
+  We can therefore use source iteration and transport sweeps in the
+  exact same manner,
+  just repeatedly to march forward in time. Source iteration at time
+  step $n+1$ can be initialized
+  with the angular flux of the previous step, \ie
+  $\psi^{n+1\,(0)}\defas \psi^{n\, (l)}$ where $l$
+  denotes the number of transport sweeps at time step $n$.
+
+  %ut convergence rates}
+
+  \subsection{Advantages and disadvantages of the discrete  ordinates method}
+  We start by discussing the advantages of the S$_N$ method first,
+  followed by its disadvantages.
+
+  {\bfseries{Advantages}}
+
+  Unlike the Monte Carlo method, the discrete ordinates method is
+  deterministic and
+  does not suffer from statistical noise and the slow $1/\sqrt{N}$ convergence
+  rate.
+
+  The S$_N$ method also preserves positivity of the angular flux,
+  which moment methods are
+  generally not expected to do due to Gibbs-like oscillations.
+  However, this can only be ensured for positive quadrature weights
+  and Cartesian meshes.
+
+  The fact that the choice of the underlying quadrature set is up to
+  the user can be considered a double-edged
+  sword: Poor choices may reinforce numerical artifacts whereas apt,
+  problem-dependent
+  choices can increase the solution quality without an increase in
+  computational cost or memory.
+
+  Adaptivity can be used in time and space (due to its relation to
+  advection equations), as well as in angle
+  \cite{SOUCASSE2017215,DARGAVILLE2020109124}.
+  For example, in regions with near-vacuum properties, \ie absent
+  scattering, the set of
+  ordinates can be aligned with the particles' initial directions of travel.
+
+  While the Monte Carlo method is embarrassingly parallel, the
+  discrete ordinates method is
+  harder to parallelize. However, parallelization in angle is
+  relatively easy since, given a
+  precomputed right-hand side, source iteration has no
+  interdependence between the different
+  directions.
+
+  {\bfseries{Disadvantages}}
+
+  On the other hand, certain disadvantages prevail.
+  Space, time, and angle need to be discretized\footnote{Energy, too,
+    is being discretized. We
+    focus on
+    mono-energetic transport throughout this thesis and therefore
+    omit the consequences of
+  discretizing energy.} in the discrete ordinates method, whereas all
+  three variables are
+  continuous in the Monte Carlo method. Different from space and time
+  discretization, the
+  discretization of angle introduces an error that is not blatantly
+  obvious. So called \textit{ray
+  effects} \cite{lathrop1964discrete} result from restricting
+  transport to a finite set of angular directions, illustrated in
+  Figure \ref{fig:rayeffectscomparison} for the line-source test
+  case. Here, particles are
+  emitted isotropically in the center of a domain at $t=0$ and move
+  away from the origin as
+  time progresses. We will discuss this test case more thoroughly
+  later on and it will serve as
+  an important benchmark when analyzing modified S$_N$ methods. In a
+  nutshell, this test
+  case examines whether or not a numerical method is able to
+  reproduce a radially symmetric
+  solution
+  where the scalar flux is a function of the distance to the origin
+  only. Clearly, this is not the
+  case for the discrete ordinates method since density fluctuations
+  are undeniable. Refining
+  the angular resolution does resolve these fluctuations at the cost
+  of increased run time and
+  memory consumption. Two methods that mitigate ray effects without adding
+  more directions, called rS$_N$ and
+  as-S$_N$, will be discussed in Sections \ref{sec:rSNmethod} and
+  \ref{sec:asSNmethod}, respectively.
+
+  Three further problems stem from the usage of source iteration and
+  transport sweeps as the
+  solution algorithm.
+  Parallelizing transport sweeps by domain decomposition, difficult
+  due to the dependency
+  between cells, is a topic of
+  current research and becomes especially crucial for highly
+  performant codes on large-scale
+  clusters. Furthermore, in addition to the cross sections, the
+  isotropy of the scattering kernel
+  influences the convergence of source iteration. A scattering kernel
+  that models predominantly
+  forward-peaked scattering requires fewer transport sweeps than an
+  isotropic scattering
+  kernel. This is no surprise, however, since forward-peaked
+  scattering means that particle
+  mostly advect through the spatial domain without change of direction.
+  Lastly, source iteration might be too slow for typical reactor
+  physics problems and acceleration strategies need to be used to
+  overcome the slow convergence.
+
+  \begin{figure}
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rayeffects/REF.pdf}
+      \caption{Reference solution for the scalar flux of the
+        line-source problem. The solution
+        solely depends upon the distance to the origin, not the angle.
+      The scalar flux is bounded from above by (approximately) $0.4$.}
+      \label{fig:linesourceref}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=1.0\linewidth]{Chapters/Chapter2/figs/rayeffects/SN.pdf}
+      \caption{Solution for the scalar flux of the line-source
+        problem using the discrete
+        ordinates method. Symmetry is clearly broken. Violations of the
+      upper bound are masked in gray.}
+      \label{fig:linesourcesn}
+    \end{subfigure}
+    \caption{Ray effects for the line-source problem occur due to the
+      finite set of angular
+    directions. }
+    \label{fig:rayeffectscomparison}
+  \end{figure}
+
+  \section{Moment methods}
+  The P$_N$ method is a Galerkin-type method that expands  the
+  angular dependency in the
+  transport equation in terms of spherical harmonics.
+  %\chapter{Spherical harmonics}
+  The spherical harmonics are a complete set of orthogonal functions on
+  the unit sphere.
+  There exist different definitions of the spherical harmonics that
+  vary in the respective
+  normalization constants.
+  One possible definition is
+  \begin{align}
+    Y_n^m(\theta,\phi) := \sqrt{\frac{2n+1}{4\pi} \,
+    \frac{(n-m)!}{(n+m)!}}e^{i m
+    \theta}P_n^m\left(\cos(\phi)\right),
+  \end{align}
+  with $|m|\leq n$, the azimuthal angle $\theta\in [0,2\pi)$, the
+  polar angle $\phi\in [0,\pi]$, and
+  $P_n^m$ as the associated Legendre functions.
+  This choice ensures
+  \begin{align}
+    \langle Y_n^m,Y_{n'}^{m'}\rangle_{\mathbb{S}^2} \defas
+    \int_0^{2\pi} \int_0^\pi  Y_n^m(\theta,\phi)
+    \overline{Y_{n'}^{m'} (\theta,\phi)} \, \sin(\phi)\,d\phi \,
+    d\theta
+    %&\int_{\mathcal{S}^2}Y_n^m  \, \bar{Y}_{n'}^{m'} \, d\bOmega
+    = \delta_{n,n'}\delta_{m,m'},
+  \end{align}
+  \ie orthonormality with respect to integration over the unit sphere.
+  Since the azimuthal angle $\theta$ and the polar angle $\phi$
+  uniquely define a point
+  $\bOmega$ on the unit sphere via the relation $\bOmega =
+  (\cos(\theta)\sin(\phi) , \sin(\theta)\sin(\phi), \cos(\phi))^T,$
+  we abbreviate $Y_n^m(\theta,\phi) = Y_n^m(\bOmega)$.
+  The real and imaginary parts of the spherical harmonics up to $m=3$
+  are visualized in
+  Figure \ref{fig:sphericalharmonics} and Figure
+  \ref{fig:sphericalharmonics_imag}, respectively.
+
+  The spherical harmonics relate to the Legendre polynomials via the
+  \textit{addition theorem}.
+  For $\bOmega,\bOmega'\in \mathbb{S}^2$ and $l\in \Ngeqz$ the equality
+  \begin{align}
+    P_n(\bOmega\cdot \bOmega') = \frac{4\pi}{2n+1} \sum_{|m|\leq
+    n}Y_n^m(\bOmega)
+    \overline{Y_n^m(\bOmega')}
+  \end{align}
+  allows to express the Legendre polynomials in form of the spherical
+  harmonics, given an
+  argument that is the dot product of two vectors living on the unit sphere.
+  Since the scattering kernel is frequently evaluated at the dot
+  product between the in- and
+  out-scattering directions, the \textit{addition theorem} can be
+  applied to write
+  \begin{align}
+    s(\bOmega \cdot \bOmega') = \sum_{n=0}^\infty s_n \sum_{|m|\leq
+    n}Y_n^m(\bOmega)
+    \overline{Y_n^m(\bOmega')},
+    \label{eq:scatteringkernelexpansion}
+  \end{align}
+  with expansion coefficients  $s_n$.
+  %\todo{check the factor in front of the expansion}
+
+  \label{appendix:sphericalharmonics}
+  \begin{landscape}
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Appendix1/figs/sphericalharmonics_redo2/REAL.pdf}
+      \caption{Real parts of the spherical harmonics for different orders.}
+      \label{fig:sphericalharmonics}
+    \end{figure}
+  \end{landscape}
+  \begin{landscape}
+    \begin{figure}
+      \centering
+      \includegraphics[width=1.0\linewidth]{Chapters/Appendix1/figs/sphericalharmonics_redo2/IMAG.pdf}
+      \caption{Imaginary parts of the spherical harmonics for different orders.}
+      \label{fig:sphericalharmonics_imag}
+    \end{figure}
+  \end{landscape}
+
+  \subsection{P$_N$ method}
+  Other terms of the transport equation can be expressed similarly to
+  the scattering kernel in \eqref{eq:scatteringkernelexpansion}, \ie
+  \begin{align}
+    \psi(t,\bx,\bOmega) =
+    \sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n}
+    \psi_n^m(t,\bx) Y_n^m(\bOmega)
+    \label{eq:expansionpsi}
+  \end{align}
+  for the angular flux, and
+  \begin{align}
+    q(t,\bx,\bOmega) = \sum_{n=0}^\infty
+    \frac{2n+1}{4\pi}\sum_{|m|\leq n} q_n^m(t,\bx) Y_n^m(\bOmega)
+    \label{eq:expansionq}
+  \end{align}
+  for the source term. Time- and space-dependent moments are denoted
+  by $\psi_n^m(t,\bx)$. The expression for in-scattering, using
+  orthogonality and the addition theorem, reduces to
+  \begin{equation}
+    \begin{split}
+      \int_{\mathbb{S}^2} s&(\bOmega \cdot \bOmega')
+      \psi(t,\bx,\bOmega') \, d\bOmega' \\
+      &=
+      \int_{\mathbb{S}^2} \left(\sum_{n=0}^\infty s_n \sum_{|m|\leq
+        n}Y_n^m(\bOmega)
+      \overline{Y_n^m(\bOmega')}\right)\left(
+        \sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n}
+        \psi_n^m(t,\bx) Y_n^m(\bOmega')
+      \right)\, d\bOmega' \\
+      &=
+      \sum_{n=0}^\infty s_n \sum_{|m|\leq n}
+      \sum_{n'=0}^\infty \frac{2n'+1}{4\pi}\sum_{|m'|\leq n'}
+      Y_n^m(\bOmega)
+      \psi_{n'}^{m'}(t,\bx) \int_{\mathbb{S}^2} \overline{Y_n^m(\bOmega')}
+      Y_{n'}^{m'}(\bOmega')\, d\bOmega' \\
+      &=\sum_{n=0}^\infty \frac{2n+1}{4\pi}\sum_{|m|\leq n}
+      s_n\,
+      \psi_{n}^{m}(t,\bx)
+      Y_n^m(\bOmega).
+    \end{split}
+  \end{equation}
+  Unsurprisingly, convolving scattering kernel and angular flux
+  corresponds to multiplication of the respective expansion
+  coefficients in moment space. No approximations have been made up until now.
+  We define $\sigma_{t,n} \defas \sigma_t - s_n$ and rewrite the
+  transport equation as
+  \begin{align}
+    \sum_{n=0}^\infty\sum_{|m |\leq n}
+    \frac{2n+1}{4\pi}
+    Y_n^m(\bOmega)\left[
+      \partial_t \psi_n^m(t,\bx)  + \bOmega \cdot \nabla_{\bx} \psi_n^m(t,\bx) +
+      \sigma_{t,n}\psi_n^m(t,\bx) -q_n^m(t,\bx)
+    \right] = 0.
+    \label{eq:writtenoutexpansion}
+  \end{align}
+  If we truncate the expansions \eqref{eq:scatteringkernelexpansion},
+  \eqref{eq:expansionpsi}, and \eqref{eq:expansionq} at a finite
+  value $N$, the equality in \eqref{eq:writtenoutexpansion} no longer
+  holds true.
+  However, equality is recovered when the residual is projected onto
+  any basis function of the ansatz space $\{\sum_{n=0}^N\sum_{|m|\leq
+    n} c_n^m Y_n^m(\bOmega) \, | \, c_n^m \in \mathbb{R} \text{ for all
+  feasible tuples } (n,m)\}$, \ie
+  \begin{equation}
+    \begin{split}
+      \partial_t \psi_{n'}^{m'}(t,\bx)  +\sum_{n=0}^\infty\sum_{|m |\leq n}
+      \frac{2n+1}{2n'+1}\left\langle  \bOmega Y_n^m
+      ,Y_{n'}^{m'}\right\rangle_{\mathbb{S}^2} \cdot \nabla_{\bx}
+      \psi_n^m(t,\bx) +
+      \sigma_{t,n}\psi_{n'}^{m'}(t,\bx) -q_{n'}^{m'}(t,\bx)
+      = 0,
+      \label{eq:componentwisepn}
+    \end{split}
+  \end{equation}
+  for all  $0\leq n' \leq N$ and $|m'|\leq n'$. At first glance, the
+  term $\langle \bOmega Y_n^m,Y_{n'}^{m'} \rangle$ looks troublesome
+  as it implies a potentially dense tensor. However, we can use the relation
+  \begin{align}
+    2\bOmega Y_n^m =
+    \begin{pmatrix}
+      -c_{n-1}^{m-1}&d_{n+1}^{m-1} &0 & 0& e_{n-1}^{m+1} &
+      -f_{n+1}^{m+1} \\[1em]
+      ic_{n-1}^{m-1}& -id_{n+1}^{m-1} &0 & 0 &  ie_{n-1}^{m+1} &- i
+      f_{n+1}^{m+1} \\[1em]
+      0 & 0 & 2a_{n-1}^m &2 b_{n+1}^m & 0 & 0
+    \end{pmatrix}
+    \begin{pmatrix}
+      \overline{Y_{n-1}^{m-1}} \\[1em]
+      \overline{Y_{n+1}^{m-1}} \\[1em]
+      \overline{Y_{n-1}^{m}} \\[1em]
+      \overline{Y_{n+1}^{m}} \\[1em]
+      \overline{Y_{n-1}^{m+1}}\\[1em]
+      \overline{Y_{n+1}^{m+1}}
+    \end{pmatrix},
+    \label{eq:matrixcoeffs}
+  \end{align}
+  which ultimately reduces \eqref{eq:componentwisepn} to the
+  complex-valued P$_N$ equations
+  \begin{equation}
+    \begin{split}
+      \partial_t \bm{\psi}(t,\bx)  +\sum_{i=1}^3 A_i
+      \left(\nabla_{\bx}\right)_i \bm{\psi}(t,\bx) +
+      \Sigma_{t} \bm{\psi}(t,\bx) -\bm{q}(t,\bx)
+      = 0,
+      \label{eq:pneq}
+    \end{split}
+  \end{equation}
+  where the $A_i$ are sparse matrices, dependent on the coefficients
+  from \eqref{eq:matrixcoeffs}. These  coefficients and more details
+  on the real-valued version of \eqref{eq:pneq} are provided in the
+  appendix of Küpper's thesis \cite{kupper2016models}. The expansion
+  coefficients of \eqref{eq:expansionpsi}
+  are stored in vector format in $\bm{\psi}(t,\bx)$.
+
+  \subsection{Advantages and disadvantages of moment methods}
+  Again, we discuss advantages and disadvantages.
+
+  {\bfseries{Advantages}}
+
+  For smooth solutions, moment methods produce accurate solutions,
+  even for a small number of expansion coefficients. Here, smoothness
+  especially refers  to the dependency on the angular variable
+  $\bOmega$, since this is the dependency that we approximate through
+  the moment expansion.
+
+  Ray effects do not occur and moment methods yield symmetrical
+  approximate solutions when the true solution is symmetric.
+
+  {\bfseries{Disadvantages}}
+
+  A major drawback of the P$_N$ method is its tendency to produce
+  oscillatory solutions. In regions of low densities, these
+  oscillations may cause the density to become negative, sometimes
+  resulting in a breakdown of the solution algorithm. However, ways
+  exist to circumvent or at least mitigate these oscillations
+  \cite{mcclarren2010robust}.
+
+  Other moment methods, like the minimal entropy (M$_N$) method, make
+  a different ansatz for the representation of the solution in terms
+  of its moments. At each time step, a constrained optimization
+  problem is solved to ensure that a certain  entropy $\eta$ is
+  minimized \cite{levermore1996moment,alldredge2012high,alldredge2014adaptive}.
+
+  If the solution depends strongly on $\bOmega$, \ie it is highly
+  anisotropic, more and more moments are necessary to accurately
+  approximate the angular flux. This is true for any Galerkin-type
+  method and relates to the slow decay of expansion coefficients in this case.
+
+  %\todo{Write more here}
+
+  \endinput

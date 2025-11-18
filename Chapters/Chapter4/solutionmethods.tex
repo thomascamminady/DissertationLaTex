@@ -2,16 +2,38 @@
 
 \section{Solution methods}
 \label{sec:Solution methods}
-We will now shortly comment on numerical solution methods. The forward formulation seems favorable for Monte Carlo method and the backward formulation suggests time-dependent deterministic solver. However, existing solvers in both scenarios will have to be adapted to treat heterogeneous non-classical transport.
+We will now shortly comment on numerical solution methods. The
+forward formulation seems favorable for Monte Carlo method and the
+backward formulation suggests time-dependent deterministic solver.
+However, existing solvers in both scenarios will have to be adapted
+to treat heterogeneous non-classical transport.
 \subsection{Monte Carlo method}
 \label{sec:SolutionMC}
-Modifying existing Monte Carlo solver to use the forward formulation should be straight forward. In addition to new sampling routines, we only require a ray-tracing routine that tracks whether particles cross interfaces. Given the probability density functions for the distance to the next collision $P_c^i(s)$ and $P_u^i(s)$, particles can be tracked inside a homogeneous domain. When these particles cross a domain interface, the distance to the next collision simply gets re-sampled from the domain's probability density functions that these particles enter.
-This however assumes the presence of efficient sampling routines for non-exponential distributions. If these sampling routines are not efficiently implementable, a performance loss is to be expected when comparing classical with non-classical transport.
-
+Modifying existing Monte Carlo solver to use the forward formulation
+should be straight forward. In addition to new sampling routines, we
+only require a ray-tracing routine that tracks whether particles
+cross interfaces. Given the probability density functions for the
+distance to the next collision $P_c^i(s)$ and $P_u^i(s)$, particles
+can be tracked inside a homogeneous domain. When these particles
+cross a domain interface, the distance to the next collision simply
+gets re-sampled from the domain's probability density functions that
+these particles enter.
+This however assumes the presence of efficient sampling routines for
+non-exponential distributions. If these sampling routines are not
+efficiently implementable, a performance loss is to be expected when
+comparing classical with non-classical transport.
 
 \subsection{Deterministic methods}
-Due to the similarity between stationary non-classical transport and time-dependent classical transport, it seems natural to use classical time-dependent solver.
-However, time-independent non-classical heterogeneous transport differs from time-dependent classical (heterogeneous) transport: Whereas the time $t$ is only increasing, the distance since the last event $s$ is reset at an interface. Consequently, time-dependent solver that march forward in time have to be modified.
+Due to the similarity between stationary non-classical transport and
+time-dependent classical transport, it seems natural to use classical
+time-dependent solver.
+However, time-independent non-classical heterogeneous transport
+differs from time-dependent classical (heterogeneous) transport:
+Whereas the time $t$ is only increasing, the distance since the last
+event $s$ is reset at an interface. Consequently, time-dependent
+solver that march forward in time have to be modified.
 
-One possibility to overcome this problem might be an iterative approach. For every iteration, we take the angular flux from the previous iteration for the evaluation of the interface conditions.
+One possibility to overcome this problem might be an iterative
+approach. For every iteration, we take the angular flux from the
+previous iteration for the evaluation of the interface conditions.
 {\color{red} Does this converge? Probably?}

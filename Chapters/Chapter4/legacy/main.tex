@@ -1,136 +1,188 @@
 \documentclass[letterpaper]{template/mandc2019}
 \input{commands.tex}
- \input{packages.tex}
+\input{packages.tex}
 
- \title{Heterogeneous non-classical transport}
- \author{
- 		Thomas Camminady\footnote{Corresponding author},\, Martin Frank\\
- 		\texttt{firstname.lastname@kit.edu}
- }
+\title{Heterogeneous non-classical transport}
+\author{
+  Thomas Camminady\footnote{Corresponding author},\, Martin Frank\\
+  \texttt{firstname.lastname@kit.edu}
+}
 
- \begin{document}
+\begin{document}
 \maketitle
 \justify
 \begin{abstract}
 \end{abstract}
- 	
- 	
- \FloatBarrier
+
+
+\FloatBarrier
 \section{Introduction}
 \section{A dictionary for non-classical transport}
-Non-classical transport is inherently more subtle than classical transport; these subtleties  are amplified in the case of heterogeneous non-classical transport. We require a clear definition of words and concepts that are used interchangeably in classical transport but have to be treated more carefully in the non-classical counterpart. Consequently, this section can be considered a dictionary that gathers notions and concepts that need further clarification.
+Non-classical transport is inherently more subtle than classical
+transport; these subtleties  are amplified in the case of
+heterogeneous non-classical transport. We require a clear definition
+of words and concepts that are used interchangeably in classical
+transport but have to be treated more carefully in the non-classical
+counterpart. Consequently, this section can be considered a
+dictionary that gathers notions and concepts that need further clarification.
 
-\subsection{Heterogeneity} 
-Already the word \textit{heterogeneous} requires a precise definition which is not trivial. 
-Consider Figures \ref{fig:hetnonclassical1colors}, \ref{fig:2hetnonclassical1colors2}, and \ref{fig:2hetnonclassical1colors}. 
-All three examples show a heterogeneous material. 
-However, the type of heterogeneity is different in each single one of them. 
-In Figure \ref{fig:hetnonclassical1colors}, we see two instances of the periodic Lorentz gas \cite{marklof2010distribution}. 
-They differ in the value of $\sigma_{\text{left}} = N_\text{left}\cdot r_\text{left}$ and $\sigma_{\text{right}} = N_\text{right}\cdot r_\text{right}$, with $N_{\text{side}}$ the number of obstacles and $r_{\text{side}}$ their respective radii on either side. 
-The underlying arrangement of obstacles is the same. 
-We will refer to the situation depicted in Figure \ref{fig:hetnonclassical1colors} as a \textit{false} heterogeneous material since our focus lies on the discussion of the situation depicted in Figure \ref{fig:2hetnonclassical1colors2} and  \ref{fig:2hetnonclassical1colors}, respectively.
- 
-Both of them are \textit{true} heterogeneous in the sense that the arrangement of obstacles differ not only in different sized obstacles or their respective number, but are arranged in an inherently different way---randomly on the left and aligned with a lattice on the right.
+\subsection{Heterogeneity}
+Already the word \textit{heterogeneous} requires a precise definition
+which is not trivial.
+Consider Figures \ref{fig:hetnonclassical1colors},
+\ref{fig:2hetnonclassical1colors2}, and \ref{fig:2hetnonclassical1colors}.
+All three examples show a heterogeneous material.
+However, the type of heterogeneity is different in each single one of them.
+In Figure \ref{fig:hetnonclassical1colors}, we see two instances of
+the periodic Lorentz gas \cite{marklof2010distribution}.
+They differ in the value of $\sigma_{\text{left}} =
+N_\text{left}\cdot r_\text{left}$ and $\sigma_{\text{right}} =
+N_\text{right}\cdot r_\text{right}$, with $N_{\text{side}}$ the
+number of obstacles and $r_{\text{side}}$ their respective radii on either side.
+The underlying arrangement of obstacles is the same.
+We will refer to the situation depicted in Figure
+\ref{fig:hetnonclassical1colors} as a \textit{false} heterogeneous
+material since our focus lies on the discussion of the situation
+depicted in Figure \ref{fig:2hetnonclassical1colors2} and
+\ref{fig:2hetnonclassical1colors}, respectively.
 
-We do not further distinguish between the situations in Figure \ref{fig:2hetnonclassical1colors2} and  \ref{fig:2hetnonclassical1colors} since in both cases, the left arrangement of obstacles is not a scaled version of the right arrangement of obstacles in any way. 
+Both of them are \textit{true} heterogeneous in the sense that the
+arrangement of obstacles differ not only in different sized obstacles
+or their respective number, but are arranged in an inherently
+different way---randomly on the left and aligned with a lattice on the right.
 
-The framework of \textit{true} heterogeneity is more general than the one of \textit{false} heterogeneity. 
-Moreover, \textit{false} heterogeneity is included in \textit{true} heterogeneity.
+We do not further distinguish between the situations in Figure
+\ref{fig:2hetnonclassical1colors2} and
+\ref{fig:2hetnonclassical1colors} since in both cases, the left
+arrangement of obstacles is not a scaled version of the right
+arrangement of obstacles in any way.
 
+The framework of \textit{true} heterogeneity is more general than the
+one of \textit{false} heterogeneity.
+Moreover, \textit{false} heterogeneity is included in \textit{true}
+heterogeneity.
 
 \begin{figure}
-	\centering
-	\begin{subfigure}[b]{0.32\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{figures/false_hetero}
-		\caption{The material is heterogeneous due to a variation in density.}
-		\label{fig:hetnonclassical1colors}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.32\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{figures/true_hetero1}
-		\caption{The material is heterogeneous due to the different materials.}
-		\label{fig:2hetnonclassical1colors2}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.32\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{figures/true_hetero2}
-		\caption{The material changes in material and varies in density.}
-		\label{fig:2hetnonclassical1colors}
-	\end{subfigure}
-	\caption{Three types of heterogeneity.}
-	\label{fig:three graphs}
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/false_hetero}
+    \caption{The material is heterogeneous due to a variation in density.}
+    \label{fig:hetnonclassical1colors}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/true_hetero1}
+    \caption{The material is heterogeneous due to the different materials.}
+    \label{fig:2hetnonclassical1colors2}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/true_hetero2}
+    \caption{The material changes in material and varies in density.}
+    \label{fig:2hetnonclassical1colors}
+  \end{subfigure}
+  \caption{Three types of heterogeneity.}
+  \label{fig:three graphs}
 \end{figure}
 
 \subsection{Correlation}
 
-Additionally to the definition of heterogeneity, the discussion of correlated and uncorrelated materials is important. 
-Correlation in this subsection refers to the correlation between two parts of a heterogeneous material---i.e. inter-correlation---not to the correlation of obstacles within each of these materials---i.e. intra-correlation. This distinction has recently been investigated in the computer graphics community as well \cite{jarabo2018radiative}.
+Additionally to the definition of heterogeneity, the discussion of
+correlated and uncorrelated materials is important.
+Correlation in this subsection refers to the correlation between two
+parts of a heterogeneous material---i.e. inter-correlation---not to
+the correlation of obstacles within each of these materials---i.e.
+intra-correlation. This distinction has recently been investigated in
+the computer graphics community as well \cite{jarabo2018radiative}.
 
-Let us start with the periodic Lorentz gas---where obstacles are clearly inter-correlated---and perform the Boltzmann-Grad limit to obtain a distribution function $q_L(s)$ (the $L$ stands for lattice) as illustrated in Figure \ref{figure:simplelattice}.
-Next, we color both halves of the material differently and pretend to be in a heterogeneous situation, shown in Figure \ref{figure:simplelattice2colors}. 
-In each of the two halves the respective Boltzmann-Grad limit for that material is possible and yields the same distribution $q_L(s)$. 
-If we now combine the two distributions to find a combined distribution,  we have to end up with the original distribution $q_L(s)$ since we did not change anything but the color of the obstacles.
-Thus in this case, two materials with the same underlying path-lengths distribution can be combined into one material with the same distribution.
+Let us start with the periodic Lorentz gas---where obstacles are
+clearly inter-correlated---and perform the Boltzmann-Grad limit to
+obtain a distribution function $q_L(s)$ (the $L$ stands for lattice)
+as illustrated in Figure \ref{figure:simplelattice}.
+Next, we color both halves of the material differently and pretend to
+be in a heterogeneous situation, shown in Figure
+\ref{figure:simplelattice2colors}.
+In each of the two halves the respective Boltzmann-Grad limit for
+that material is possible and yields the same distribution $q_L(s)$.
+If we now combine the two distributions to find a combined
+distribution,  we have to end up with the original distribution
+$q_L(s)$ since we did not change anything but the color of the obstacles.
+Thus in this case, two materials with the same underlying
+path-lengths distribution can be combined into one material with the
+same distribution.
 
-Alternatively, we could also randomly rotate the lattice of one of the two halves, seen in Figure \ref{figure:simplelattice2colors}. 
-Again, each individual lattice yields the same distribution in the Boltzmann-Grad limit if performed separately, since the orientation of the lattice vanishes in the limit. 
-Despite the lack of orientation of the lattice in the limit, there seems to be no compelling evidence for why the combined distribution should be equivalent to the one obtained in the previous case. Instead the resulting distribution $p_L(s)$ might differ from $q_L(s)$.
-Instead of rotating one side of the lattice, we might shift it by half the obstacle distance in vertical direction. This places obstacles in the corridors which allowed particles to move from the left to the right and consequently has to have some effect on the way particles move.
+Alternatively, we could also randomly rotate the lattice of one of
+the two halves, seen in Figure \ref{figure:simplelattice2colors}.
+Again, each individual lattice yields the same distribution in the
+Boltzmann-Grad limit if performed separately, since the orientation
+of the lattice vanishes in the limit.
+Despite the lack of orientation of the lattice in the limit, there
+seems to be no compelling evidence for why the combined distribution
+should be equivalent to the one obtained in the previous case.
+Instead the resulting distribution $p_L(s)$ might differ from $q_L(s)$.
+Instead of rotating one side of the lattice, we might shift it by
+half the obstacle distance in vertical direction. This places
+obstacles in the corridors which allowed particles to move from the
+left to the right and consequently has to have some effect on the way
+particles move.
 
-Moreover, another problem arises when acknowledging this situation: On the mesoscopic level we can not distinguish between the two situations since we exclusively know the material by its distribution function. 
-If the combined distribution function resulting from the thought experiment of Figure \ref{figure:simplelattice2colors} is indeed different from the one in Figure \ref{figure:simplelattice}, then describing a material solely by its distribution function is inaccurate.
+Moreover, another problem arises when acknowledging this situation:
+On the mesoscopic level we can not distinguish between the two
+situations since we exclusively know the material by its distribution function.
+If the combined distribution function resulting from the thought
+experiment of Figure \ref{figure:simplelattice2colors} is indeed
+different from the one in Figure \ref{figure:simplelattice}, then
+describing a material solely by its distribution function is inaccurate.
 
-We only discussed the correlation between materials with the periodic Lorentz gas as an example. 
-However, similar problems may arise in any arrangement of obstacles that are not independent of another. One other example would be an obstacle arrangement where a certain minimal distance is present between obstacles. This minimal distance possibly falls short at the interface when combining two separate obstacle arrangements.
-
-
-
-
+We only discussed the correlation between materials with the periodic
+Lorentz gas as an example.
+However, similar problems may arise in any arrangement of obstacles
+that are not independent of another. One other example would be an
+obstacle arrangement where a certain minimal distance is present
+between obstacles. This minimal distance possibly falls short at the
+interface when combining two separate obstacle arrangements.
 
 \begin{figure}[h]
-	\centering
-	\includegraphics[width=0.99\linewidth]{figures/large_small_ext_single}
-	\caption{Boltzmann-Grad limit in a homogeneous and non-classical material. This situation and the one in Figure \ref{figure:simplelattice2colors} have to be equivalent.}
-	\label{figure:simplelattice}
+  \centering
+  \includegraphics[width=0.99\linewidth]{figures/large_small_ext_single}
+  \caption{Boltzmann-Grad limit in a homogeneous and non-classical
+    material. This situation and the one in Figure
+  \ref{figure:simplelattice2colors} have to be equivalent.}
+  \label{figure:simplelattice}
 \end{figure}
-
 
 \begin{figure}[h]
-	\centering
-	\includegraphics[width=0.99\linewidth]{figures/ext_correlated}
-	\caption{Boltzmann-Grad limit in a heterogeneous and non-classical material. Both sides of the material are correlated due to the alignment of lattices}
-	\label{figure:simplelattice2colors}
+  \centering
+  \includegraphics[width=0.99\linewidth]{figures/ext_correlated}
+  \caption{Boltzmann-Grad limit in a heterogeneous and non-classical
+    material. Both sides of the material are correlated due to the
+  alignment of lattices}
+  \label{figure:simplelattice2colors}
 \end{figure}
-
-
-
 
 \begin{figure}[h]
-	\centering
-	\includegraphics[width=0.99\linewidth]{figures/ext_uncorrelated}
-	\caption{Boltzmann-Grad limit in a heterogeneous and non-classical material. Both sides of the material are uncorrelated. This case does not have to be equivalent to the case considered in Figure \ref{figure:simplelattice}.}
+  \centering
+  \includegraphics[width=0.99\linewidth]{figures/ext_uncorrelated}
+  \caption{Boltzmann-Grad limit in a heterogeneous and non-classical
+    material. Both sides of the material are uncorrelated. This case
+    does not have to be equivalent to the case considered in Figure
+  \ref{figure:simplelattice}.}
 \end{figure}
 
-
-
-
-
-
-
-\subsection{Path-lengths distribution} 	
- \cite{bitterli2018radiative, d2018reciprocal}
+\subsection{Path-lengths distribution}
+\cite{bitterli2018radiative, d2018reciprocal}
 \section{Path-lengths distribution for the heterogeneous non-classical case}
- 
-\section{A negative result for reciprocity in heterogeneous non-classical transport}
- 
-\section{Discussion} 
+
+\section{A negative result for reciprocity in heterogeneous
+non-classical transport}
+
+\section{Discussion}
 
 \newpage
-\bibliographystyle{siamplain}
+\bibliographystyle{siamplain}
 \bibliography{bib.bib}
 
- \end{document}
- 
+\end{document}

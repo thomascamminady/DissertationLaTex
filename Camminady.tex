@@ -1,7 +1,6 @@
- \documentclass[english,phd]{Aux/KITthesis}
- %\usepackage[inner=4cm,outer=2cm]{geometry} %left=4cm,right=2cm would be equivalent
-
-
+\documentclass[english,phd]{Aux/KITthesis}
+%\usepackage[inner=4cm,outer=2cm]{geometry} %left=4cm,right=2cm would
+% be equivalent
 
 \input{Aux/myheader}
 \input{Aux/mycommands}
@@ -10,38 +9,28 @@
 %\mathtoolsset{showonlyrefs=true}
 %\usepackage{draftwatermark}
 
-\makeatletter \renewcommand\thealgorithm{\thechapter.\arabic{algorithm}} \@addtoreset{algorithm}{chapter} \makeatother
-
-
-
-
-
+\makeatletter
+\renewcommand\thealgorithm{\thechapter.\arabic{algorithm}}
+\@addtoreset{algorithm}{chapter} \makeatother
 
 \settitle
 \begin{document}
 \setpdf
 
-
-
 \includetitle
-%\includelistoftodos		%%   COMMENT LATER
-\includeepigraph		%% UNCOMMENT LATER
+%\includelistoftodos    %%   COMMENT LATER
+\includeepigraph    %% UNCOMMENT LATER
 
+\includeacknowledgments  %% UNCOMMENT LATER
 
-
-
-\includeacknowledgments	%% UNCOMMENT LATER
-
-\includeabstract		%% UNCOMMENT LATER
+\includeabstract    %% UNCOMMENT LATER
 \addcontentsline{toc}{chapter}{Preface}
 
 \inculdetableofcontents
 
-
 \renewcommand{\listfigurename}{List of figures}
 \renewcommand{\listtablename}{List of tables}
 \renewcommand{\listalgorithmname}{List of algorithms}
-
 
 \cleardoublepage
 \begingroup
@@ -56,8 +45,6 @@
 \addcontentsline{toc}{chapter}{List of algorithms}
 \cleardoublepage
 \endgroup
-
-
 
 \setmainpart
 \include{Chapters/Chapter1/Chapter1}
@@ -75,9 +62,9 @@
 \bibliography{Bibliography/bibliomerged.bib}
 \includeglossary
 %\begin{appendices}
-%	\input{Chapters/Appendix1/SphericalHarmonics}
+%  \input{Chapters/Appendix1/SphericalHarmonics}
 %\end{appendices}
 
 %\addmybibentry
-%\includehowtouse		%%   COMMENT LATER
+%\includehowtouse    %%   COMMENT LATER
 \end{document}

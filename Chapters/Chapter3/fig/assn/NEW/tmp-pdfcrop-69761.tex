@@ -22,30 +22,30 @@
 \def\IfUndefined#1#2#3{%
   \begingroup\expandafter\expandafter\expandafter\endgroup
   \expandafter\ifx\csname#1\endcsname\relax
-    #2%
+  #2%
   \else
-    #3%
+  #3%
   \fi
 }
 \def\pdffilehex{2F686F6D652F7164343331342F576F726B2F50726F6A656374732F72534E2F636F64652F6F75742F323032302D30372D32345432303A33303A32362E3833392F323030723053346E78323030696D61676573636C617267652E706466}
 \IfUndefined{pdfunescapehex}{%
   \begingroup
-    \gdef\pdffile{}%
-    \def\do#1#2{%
-      \ifx\relax#2\relax
-        \ifx\relax#1\relax
-        \else
-          \errmessage{Invalid hex string, should not happen!}%
-        \fi
-      \else
-        \lccode`0="#1#2\relax
-        \lowercase{%
-          \xdef\pdffile{\pdffile0}%
-        }%
-        \expandafter\do
-      \fi
+  \gdef\pdffile{}%
+  \def\do#1#2{%
+    \ifx\relax#2\relax
+    \ifx\relax#1\relax
+    \else
+    \errmessage{Invalid hex string, should not happen!}%
+    \fi
+    \else
+    \lccode`0="#1#2\relax
+    \lowercase{%
+      \xdef\pdffile{\pdffile0}%
     }%
-    \expandafter\do\pdffilehex\relax\relax
+    \expandafter\do
+    \fi
+  }%
+  \expandafter\do\pdffilehex\relax\relax
   \endgroup
 }{%
   \edef\pdffile{\pdfunescapehex{\pdffilehex}}%
@@ -58,9 +58,9 @@
   \IfUndefined{pdfobjcompresslevel}{%
   }{%
     \ifnum#1<5 %
-      \pdfobjcompresslevel=0 %
+    \pdfobjcompresslevel=0 %
     \else
-      \pdfobjcompresslevel=2 %
+    \pdfobjcompresslevel=2 %
     \fi
   }%
   \IfUndefined{pdfminorversion}{%

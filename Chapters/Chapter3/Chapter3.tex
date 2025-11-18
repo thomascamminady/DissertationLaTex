@@ -1,436 +1,758 @@
 
 \chapter{Ray effects and their mitigation}
 \label{chap:3}
-It was not until the S$_N$ method was applicable in two and three spatial dimensions that the problem of ray effects became fully eminent \cite{lathrop1992early}. To this day, ray effects  impede the quest for accurate and reliable, yet efficient transport calculations. The S$_N$ method's raison d'être---restricting the propagation of the angular flux to a finite and therefore computationally manageable set of directions---inevitably destroys rotational invariance and causes oscillatory solution approximations. If undetected, these oscillations can cause the neutron flux to be significantly over- or underestimated; especially troublesome in source-detector problems with only little to no scattering \cite{lathrop1964discrete}.
-Increasing the number of directions tends to reduce the oscillations' magnitude while simultaneously increasing their frequency, but, even for a large number of directions, ray effects remain present \cite{lathrop1971remedies}.
+It was not until the S$_N$ method was applicable in two and three
+spatial dimensions that the problem of ray effects became fully
+eminent \cite{lathrop1992early}. To this day, ray effects  impede the
+quest for accurate and reliable, yet efficient transport
+calculations. The S$_N$ method's raison d'être---restricting the
+propagation of the angular flux to a finite and therefore
+computationally manageable set of directions---inevitably destroys
+rotational invariance and causes oscillatory solution approximations.
+If undetected, these oscillations can cause the neutron flux to be
+significantly over- or underestimated; especially troublesome in
+source-detector problems with only little to no scattering
+\cite{lathrop1964discrete}.
+Increasing the number of directions tends to reduce the oscillations'
+magnitude while simultaneously increasing their frequency, but, even
+for a large number of directions, ray effects remain present
+\cite{lathrop1971remedies}.
 
-More sophisticated strategies to mitigate ray effects make use of biased quadrature sets, which reflect the importance of
-certain ordinates \cite{abu2001angular}. 
-Tencer computed the angular flux for several, differently oriented quadrature sets and ray effects
-are then mitigated by averaging over all solutions \cite{tencer2016ray}. Moreover, a method combining S$_N$ and P$_N$ to reduce ray effects has been
-introduced by Lathrop \cite{lathrop1971remedies}, with further refinements developed subsequently \cite{jung1972discrete,reed1972spherical,doi:10.13182/NSE62-391}. The idea is to use a mixture of collocation points as well as
-basis functions to represent the solution’s angular dependency. Consequently, a system for the angular expansion coefficients
-with an increased coupling of the individual equations needs to be solved. The accuracy of these methods has been studied
-in a review paper \cite{doi:10.13182/NSE01-48} and it turns out that all methods still suffer from ray effects for a line-source inside void.
-
-
+More sophisticated strategies to mitigate ray effects make use of
+biased quadrature sets, which reflect the importance of
+certain ordinates \cite{abu2001angular}.
+Tencer computed the angular flux for several, differently oriented
+quadrature sets and ray effects
+are then mitigated by averaging over all solutions
+\cite{tencer2016ray}. Moreover, a method combining S$_N$ and P$_N$ to
+reduce ray effects has been
+introduced by Lathrop \cite{lathrop1971remedies}, with further
+refinements developed subsequently
+\cite{jung1972discrete,reed1972spherical,doi:10.13182/NSE62-391}. The
+idea is to use a mixture of collocation points as well as
+basis functions to represent the solution’s angular dependency.
+Consequently, a system for the angular expansion coefficients
+with an increased coupling of the individual equations needs to be
+solved. The accuracy of these methods has been studied
+in a review paper \cite{doi:10.13182/NSE01-48} and it turns out that
+all methods still suffer from ray effects for a line-source inside void.
 
 \section{Understanding ray effects}
 \label{sec:understanding}
-Before discussing the two novel ray effect mitigation techniques in Sections \ref{sec:rSNmethod} and \ref{sec:asSNmethod}, it is worth discussing the origin of ray effects more thoroughly. Assuming that we can solve both equations exactly, the transport equation
+Before discussing the two novel ray effect mitigation techniques in
+Sections \ref{sec:rSNmethod} and \ref{sec:asSNmethod}, it is worth
+discussing the origin of ray effects more thoroughly. Assuming that
+we can solve both equations exactly, the transport equation
 \begin{align}
-\partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) + \sigma_a \psi(t,\bx,\bOmega) = Q(t,\bx,\bOmega)
+  \partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx
+  \psi(t,\bx,\bOmega) + \sigma_a \psi(t,\bx,\bOmega) = Q(t,\bx,\bOmega)
 \end{align}
 and its S$_N$ counterpart
 \begin{align}
-\partial_t \psi_q(t,\bx) + \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx) + \sigma_a \psi_q(t,\bx) = Q(t,\bx,\bOmega_q)
+  \partial_t \psi_q(t,\bx) + \bOmega_q \cdot \nabla_\bx \psi_q(t,\bx)
+  + \sigma_a \psi_q(t,\bx) = Q(t,\bx,\bOmega_q)
 \end{align}
-will return the same values for the angular flux along directions $\bOmega = \bOmega_q$, \ie $\psi(t,\bx,\bOmega_q) = \psi_q(t,\bx)$. (Note the absence of scattering in the two equations above.)
-
+will return the same values for the angular flux along directions
+$\bOmega = \bOmega_q$, \ie $\psi(t,\bx,\bOmega_q) = \psi_q(t,\bx)$.
+(Note the absence of scattering in the two equations above.)
 
 \begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.3 \textwidth]{Chapters/Chapter3/fig/rayeffects3columns/Setup.pdf}
-	\caption{Infinite medium test case with a circular source of radius $r=0.4$ at $(0,0)$. The domain is purely absorbing with $\sigma_a=1$. We evaluate the angular and scalar flux along the black line at $x=1$ and take a closer look at the three points $(1,0.3)$, $(1,0.15)$, and $(1,0)$ in orange, purple, and blue, respectively.  Scene drawn to scale.}
-	\label{fig:setup}
+  \centering
+  \includegraphics[width=0.3
+  \textwidth]{Chapters/Chapter3/fig/rayeffects3columns/Setup.pdf}
+  \caption{Infinite medium test case with a circular source of radius
+    $r=0.4$ at $(0,0)$. The domain is purely absorbing with
+    $\sigma_a=1$. We evaluate the angular and scalar flux along the
+    black line at $x=1$ and take a closer look at the three points
+    $(1,0.3)$, $(1,0.15)$, and $(1,0)$ in orange, purple, and blue,
+  respectively.  Scene drawn to scale.}
+  \label{fig:setup}
 \end{figure}
 
-Consider now the situation depicted in Figure \ref{fig:setup}. A circular, isotropic source (green) is placed at $(0,0)$ with radius $r=0.4$. The domain is purely absorbing with $\sigma_a = 1$ and $\sigma_s=0$ throughout the full domain. The solution will be evaluated along the black line at $x=1$ for different directions $\bOmega = \left(\cos(\alpha),\sin(\alpha)\right)^T$, denoted by $\psi(y,\alpha)$. Additionally, we pay attention to the angular fluxes at the points  $(1,0.3)$, $(1,0.15)$, and $(1,0)$. Figures \ref{fig:figure20} and \ref{fig:figure100} show both the angular and scalar flux along the line and the three points, evaluated with $n_q=11$ and $n_q=21$ ordinates for the half-space $\alpha \in \left[-\pi/2,\pi/2\right]$. Values for the angular flux are exact (up to machine precision). The scalar flux, however, oscillates significantly despite the high number of ordinates and the rather large spatial extend of the isotropic source.
-
+Consider now the situation depicted in Figure \ref{fig:setup}. A
+circular, isotropic source (green) is placed at $(0,0)$ with radius
+$r=0.4$. The domain is purely absorbing with $\sigma_a = 1$ and
+$\sigma_s=0$ throughout the full domain. The solution will be
+evaluated along the black line at $x=1$ for different directions
+$\bOmega = \left(\cos(\alpha),\sin(\alpha)\right)^T$, denoted by
+$\psi(y,\alpha)$. Additionally, we pay attention to the angular
+fluxes at the points  $(1,0.3)$, $(1,0.15)$, and $(1,0)$. Figures
+\ref{fig:figure20} and \ref{fig:figure100} show both the angular and
+scalar flux along the line and the three points, evaluated with
+$n_q=11$ and $n_q=21$ ordinates for the half-space $\alpha \in
+\left[-\pi/2,\pi/2\right]$. Values for the angular flux are exact (up
+to machine precision). The scalar flux, however, oscillates
+significantly despite the high number of ordinates and the rather
+large spatial extend of the isotropic source.
 
 \begin{figure}[!ht]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rayeffects3columns/figure11_100_4.pdf}
-	\caption{Angular and scalar flux with $n_q=11$ for the test case presented in Figure \ref{fig:setup}.}
-	\label{fig:figure20}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rayeffects3columns/figure11_100_4.pdf}
+  \caption{Angular and scalar flux with $n_q=11$ for the test case
+  presented in Figure \ref{fig:setup}.}
+  \label{fig:figure20}
 \end{figure}
 \begin{figure}[!ht]
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rayeffects3columns/figure21_100_4.pdf}
-	\caption{Angular and scalar flux with $n_q=21$ for the test case presented in Figure \ref{fig:setup}.}
-	\label{fig:figure100}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rayeffects3columns/figure21_100_4.pdf}
+  \caption{Angular and scalar flux with $n_q=21$ for the test case
+  presented in Figure \ref{fig:setup}.}
+  \label{fig:figure100}
 \end{figure}
 
-The rightmost column in Figures \ref{fig:figure20} and \ref{fig:figure100} then spotlights the origin of ray effects in this experiment: Though isotropic at the source, the angular flux is highly anisotropic at the measurement points. As a consequence, (i) the number of ordinates with non-zero angular flux that contribute to the scalar flux is small, and (ii) this number oscillates as we move along the black line. In Figure \ref{fig:figure20}, for example, the number of ordinates with non-zero flux for $y=0$ and $y=0.3$ is three, whereas only two ordinates are non-zero for the intermediate point at $y=0.15$, resulting in significant differences in the scalar flux as shown in the middle column.
+The rightmost column in Figures \ref{fig:figure20} and
+\ref{fig:figure100} then spotlights the origin of ray effects in this
+experiment: Though isotropic at the source, the angular flux is
+highly anisotropic at the measurement points. As a consequence, (i)
+the number of ordinates with non-zero angular flux that contribute to
+the scalar flux is small, and (ii) this number oscillates as we move
+along the black line. In Figure \ref{fig:figure20}, for example, the
+number of ordinates with non-zero flux for $y=0$ and $y=0.3$ is
+three, whereas only two ordinates are non-zero for the intermediate
+point at $y=0.15$, resulting in significant differences in the scalar
+flux as shown in the middle column.
 
-A similar observation can be made for the line-source test case \cite{ganapol1977generation}, which asks for the solution to the three-dimensional, time-dependent transport equation
+A similar observation can be made for the line-source test case
+\cite{ganapol1977generation}, which asks for the solution to the
+three-dimensional, time-dependent transport equation
 \begin{align}
-\partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +  \psi(t,\bx,\bOmega) = \frac{1}{4\pi}\int_{\mathbb{S}^2}  \psi(t,\bx,\bOmega') \, d\bOmega',
-\label{eq:linesourcequation}
+  \partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx
+  \psi(t,\bx,\bOmega) +  \psi(t,\bx,\bOmega) =
+  \frac{1}{4\pi}\int_{\mathbb{S}^2}  \psi(t,\bx,\bOmega') \, d\bOmega',
+  \label{eq:linesourcequation}
 \end{align}
 
 subject to initial condition
 \begin{align}
-\psi(0,\bx,\bOmega) = \psi_0(\bx) \defas \delta(x,y).
+  \psi(0,\bx,\bOmega) = \psi_0(\bx) \defas \delta(x,y).
 \end{align}
 
-
-The setup is depicted in Figure \ref{fig:sketchls}, with the isotropic initial condition illustrated as balls centered around the $z$-axis.
-Due to the nature of the initial condition, the three-dimensional problem yields the same results for every value of $z$, effectively rendering it a two-dimensional simulation which allows to redefine $\bx =(x,y)^T$. An exact (up to evaluation of a double integral) solution for the scalar flux $\phi(t,r)=\phi(t,||\bx||_2)$ exists and was already visualized in the last section in Figure \ref{fig:linesourceref} for $t=1$. Computed beforehand, the scalar flux can replace the integral on the right-hand side of \eqref{eq:linesourcequation}, yielding
+The setup is depicted in Figure \ref{fig:sketchls}, with the
+isotropic initial condition illustrated as balls centered around the $z$-axis.
+Due to the nature of the initial condition, the three-dimensional
+problem yields the same results for every value of $z$, effectively
+rendering it a two-dimensional simulation which allows to redefine
+$\bx =(x,y)^T$. An exact (up to evaluation of a double integral)
+solution for the scalar flux $\phi(t,r)=\phi(t,||\bx||_2)$ exists and
+was already visualized in the last section in Figure
+\ref{fig:linesourceref} for $t=1$. Computed beforehand, the scalar
+flux can replace the integral on the right-hand side of
+\eqref{eq:linesourcequation}, yielding
 \begin{align}
-\partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +  \psi(t,\bx,\bOmega) = Q(t,\bx) \defas \frac{1}{4\pi}\phi\left (t,||\bx||_2\right).
-\label{eq:linesourcequationsource}
+  \partial_t \psi(t,\bx,\bOmega) + \bOmega \cdot \nabla_\bx
+  \psi(t,\bx,\bOmega) +  \psi(t,\bx,\bOmega) = Q(t,\bx) \defas
+  \frac{1}{4\pi}\phi\left (t,||\bx||_2\right).
+  \label{eq:linesourcequationsource}
 \end{align}
-Similar to the previous experiment, we obtain the exact angular flux via integration, \ie
+Similar to the previous experiment, we obtain the exact angular flux
+via integration, \ie
 \begin{align}
- \psi(t,\bx,\bOmega)  =  e^{-t} \,\psi_0(\bx - t\bOmega ) + \int_0^t e^{-(t-\tau)}\,  Q(t-\tau, ||\bx - \tau \bOmega||_2) \, d\tau.
+  \psi(t,\bx,\bOmega)  =  e^{-t} \,\psi_0(\bx - t\bOmega ) + \int_0^t
+  e^{-(t-\tau)}\,  Q(t-\tau, ||\bx - \tau \bOmega||_2) \, d\tau.
 \end{align}
 
 \begin{figure}
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/linesourcesketch/sketch}
-	\caption{For the line-source test case,  particles are released isotropically at $t=0$ along every point on the $z$-axis (depicted here for a finite number of points).}
-	\label{fig:sketchls}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/linesourcesketch/sketch}
+  \caption{For the line-source test case,  particles are released
+    isotropically at $t=0$ along every point on the $z$-axis (depicted
+  here for a finite number of points).}
+  \label{fig:sketchls}
 \end{figure}
 
-It is infeasible to integrate the Dirac-pulse numerically. Instead, we replace $\psi_0(\bx)$ with $\psi_0^G(\bx)$, a narrow Gaussian that is centered at the origin with variance $\sigma^2=0.03^2$, similar to the simulations by McClarren and Hauck \cite{mcclarren2010robust}. Thus,
+It is infeasible to integrate the Dirac-pulse numerically. Instead,
+we replace $\psi_0(\bx)$ with $\psi_0^G(\bx)$, a narrow Gaussian that
+is centered at the origin with variance $\sigma^2=0.03^2$, similar to
+the simulations by McClarren and Hauck \cite{mcclarren2010robust}. Thus,
 \begin{align}
- \psi^G(t,\bx,\bOmega)  =  e^{-t} \,\psi^G_0(\bx - t\bOmega ) + \int_0^t e^{-(t-\tau)}\,  Q(t-\tau, ||\bx - \tau \bOmega||_2) \, d\tau
-\label{eq:linesourcequationsourceinexact}
+  \psi^G(t,\bx,\bOmega)  =  e^{-t} \,\psi^G_0(\bx - t\bOmega ) +
+  \int_0^t e^{-(t-\tau)}\,  Q(t-\tau, ||\bx - \tau \bOmega||_2) \, d\tau
+  \label{eq:linesourcequationsourceinexact}
 \end{align}
-approximates $\psi(t,\bx,\bOmega)$, which seems reasonable since the numerical S$_N$ simulations for the line-source problem resolve the initial condition in the same manner. The two terms of the right-hand side of \eqref{eq:linesourcequationsourceinexact} are abbreviated as $A(t,\bx,\bOmega)$ and $B(t,\bx,\bOmega)$, denoting the contribution of the initial condition and the source term, respectively. For a fixed set of quadrature points and weights, we compute
+approximates $\psi(t,\bx,\bOmega)$, which seems reasonable since the
+numerical S$_N$ simulations for the line-source problem resolve the
+initial condition in the same manner. The two terms of the right-hand
+side of \eqref{eq:linesourcequationsourceinexact} are abbreviated as
+$A(t,\bx,\bOmega)$ and $B(t,\bx,\bOmega)$, denoting the contribution
+of the initial condition and the source term, respectively. For a
+fixed set of quadrature points and weights, we compute
 \begin{subequations}
-\begin{align}
-	\phi^A(t,\bx) &=\sum_{q'=1}^{n_q}w_{q'} A(t,\bx,\bOmega_{q'}),\\
-	\phi^B(t,\bx) &=\sum_{q'=1}^{n_q}w_{q'} B(t,\bx,\bOmega_{q'}),\\
-	\phi^G(t,\bx) &=\phi^A(t,\bx)  + 	\phi^B(t,\bx) .
-\end{align}
+  \begin{align}
+    \phi^A(t,\bx) &=\sum_{q'=1}^{n_q}w_{q'} A(t,\bx,\bOmega_{q'}),\\
+    \phi^B(t,\bx) &=\sum_{q'=1}^{n_q}w_{q'} B(t,\bx,\bOmega_{q'}),\\
+    \phi^G(t,\bx) &=\phi^A(t,\bx)  +   \phi^B(t,\bx) .
+  \end{align}
 \end{subequations}
-Computing $\phi^A(t,\bx)$ is trivial; computing $\phi^B(t,\bx)$ is not. It involves numerical integration of the source term, which itself requires the numerical evaluation of a double integral. Moreover, this process has to be repeated for $n_x \cdot n_y$ spatial cells and $n_q$ ordinates, restricting the accuracy with which the integral in \eqref{eq:linesourcequationsourceinexact} can be evaluated.
-The component of the scalar flux that is due to the initial condition ($\phi^A$) is visualized in Figure \ref{fig:contributionic}. For an, admittedly low, accuracy of $\varepsilon_\text{abs}=10^{-2}$, we see the contribution of the source ($\phi^B$) in Figure \ref{fig:contributionrhs}. Both images are created using $n_x=n_y=200$ cells in space (though the four-fold symmetry is exploited)  and $n_q=36$ ordinates. The ordinates result from a tensorized quadrature that discretizes the azimuthal angle equidistantly ($2n_q$ points) and uses Gauss-Legendre roots for the polar direction ($n_q/2$ points). Numerical integrals are computed with the \texttt{Cubature.jl}\footnote{Source code available at \url{https://github.com/JuliaMath/Cubature.jl} and authored by Steven G. Johnson.} package that implements \enquote{one- and multi-dimensional adaptive integration routines for the Julia language, including support for vector-valued integrands and facilitation of parallel evaluation of integrands, based on the Cubature Package by Steven G. Johnson.}
+Computing $\phi^A(t,\bx)$ is trivial; computing $\phi^B(t,\bx)$ is
+not. It involves numerical integration of the source term, which
+itself requires the numerical evaluation of a double integral.
+Moreover, this process has to be repeated for $n_x \cdot n_y$ spatial
+cells and $n_q$ ordinates, restricting the accuracy with which the
+integral in \eqref{eq:linesourcequationsourceinexact} can be evaluated.
+The component of the scalar flux that is due to the initial condition
+($\phi^A$) is visualized in Figure \ref{fig:contributionic}. For an,
+admittedly low, accuracy of $\varepsilon_\text{abs}=10^{-2}$, we see
+the contribution of the source ($\phi^B$) in Figure
+\ref{fig:contributionrhs}. Both images are created using
+$n_x=n_y=200$ cells in space (though the four-fold symmetry is
+exploited)  and $n_q=36$ ordinates. The ordinates result from a
+tensorized quadrature that discretizes the azimuthal angle
+equidistantly ($2n_q$ points) and uses Gauss-Legendre roots for the
+polar direction ($n_q/2$ points). Numerical integrals are computed
+with the \texttt{Cubature.jl}\footnote{Source code available at
+  \url{https://github.com/JuliaMath/Cubature.jl} and authored by Steven
+G. Johnson.} package that implements \enquote{one- and
+  multi-dimensional adaptive integration routines for the Julia
+  language, including support for vector-valued integrands and
+  facilitation of parallel evaluation of integrands, based on the
+Cubature Package by Steven G. Johnson.}
 \begin{figure}[t!]
-\begin{subfigure}{0.45\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/ContributionIC}
-	\caption{Scalar flux contribution $\phi^A(1,\bx)$ that is due to the initial condition.}
-	\label{fig:contributionic}
-\end{subfigure}
-\hfill
-\begin{subfigure}{0.45\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/ContributionRHS}
-	\caption{Scalar flux contribution  $\phi^B(1,\bx)$ that is due to the right-hand side.}
-	\label{fig:contributionrhs}
-\end{subfigure}
-\caption{The two contributions that make up the scalar flux $\phi^G(1,\bx)$ for the line-source test case using the exact (up to numerical integration) angular flux and $36$ ordinates.}
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/ContributionIC}
+    \caption{Scalar flux contribution $\phi^A(1,\bx)$ that is due to
+    the initial condition.}
+    \label{fig:contributionic}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/ContributionRHS}
+    \caption{Scalar flux contribution  $\phi^B(1,\bx)$ that is due to
+    the right-hand side.}
+    \label{fig:contributionrhs}
+  \end{subfigure}
+  \caption{The two contributions that make up the scalar flux
+    $\phi^G(1,\bx)$ for the line-source test case using the exact (up
+  to numerical integration) angular flux and $36$ ordinates.}
 \end{figure}
 
-Adding both terms, we obtain the scalar flux $\phi^G(1,\bx)$ that uses the exact angular flux but performs the spherical integration with $36$ ordinates. The result is shown in Figure \ref{fig:ContributionCombined}, together with the scalar flux for a full S$_6$ computation that uses the exact same ordinates in Figure \ref{fig:SN36}. The two results look fairly similar, both in a quantitative and qualitative way. The only two visually noticeable differences are (i) a larger spike in the center of the domain for the S$_6$ computation and (ii) a concave curvature at the outermost region of the scalar flux for the S$_6$ computation as opposed to a convex curvature for $\phi^G(1,\bx)$.
-
+Adding both terms, we obtain the scalar flux $\phi^G(1,\bx)$ that
+uses the exact angular flux but performs the spherical integration
+with $36$ ordinates. The result is shown in Figure
+\ref{fig:ContributionCombined}, together with the scalar flux for a
+full S$_6$ computation that uses the exact same ordinates in Figure
+\ref{fig:SN36}. The two results look fairly similar, both in a
+quantitative and qualitative way. The only two visually noticeable
+differences are (i) a larger spike in the center of the domain for
+the S$_6$ computation and (ii) a concave curvature at the outermost
+region of the scalar flux for the S$_6$ computation as opposed to a
+convex curvature for $\phi^G(1,\bx)$.
 
 \begin{figure}[h!]
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/ContributionCombined}
-		\caption{Scalar flux $\phi^G(1,\bx)$, computed with $36$ ordinates.}
-		\label{fig:ContributionCombined}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/SN36}
-		\caption{Scalar flux of an S$_6$ computation that uses the same $36$ ordinates.}
-		\label{fig:SN36}
-	\end{subfigure}
-\caption{Comparison between the scalar flux $\phi^G(1,\bx)$, based upon the exact angular flux, and the scalar flux that is the result of an  S$_6$ computation.}
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/ContributionCombined}
+    \caption{Scalar flux $\phi^G(1,\bx)$, computed with $36$ ordinates.}
+    \label{fig:ContributionCombined}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/groupmeeting/SN36}
+    \caption{Scalar flux of an S$_6$ computation that uses the same
+    $36$ ordinates.}
+    \label{fig:SN36}
+  \end{subfigure}
+  \caption{Comparison between the scalar flux $\phi^G(1,\bx)$, based
+    upon the exact angular flux, and the scalar flux that is the result
+  of an  S$_6$ computation.}
 \end{figure}
 
-These findings validate the conclusions that we drew in the first experiment: Since the angular flux is exact (up to errors due to the numerical integration) the sole origin of ray effects in the scalar flux is the inexact spherical integration. Ray effect mitigation techniques that reduce oscillations in the scalar flux therefore inevitably have to do so by circumventing the error that is due to the aggregation of the scalar flux from the angular flux.
+These findings validate the conclusions that we drew in the first
+experiment: Since the angular flux is exact (up to errors due to the
+numerical integration) the sole origin of ray effects in the scalar
+flux is the inexact spherical integration. Ray effect mitigation
+techniques that reduce oscillations in the scalar flux therefore
+inevitably have to do so by circumventing the error that is due to
+the aggregation of the scalar flux from the angular flux.
 We have already seen that various methods exist that do exactly this.
-In the following, two new ray effect mitigation techniques---the rS$_N$ and as-S$_N$ method---are presented.
+In the following, two new ray effect mitigation techniques---the
+rS$_N$ and as-S$_N$ method---are presented.
 
 \FloatBarrier
 \section{rS$_N$ method}
 \label{sec:rSNmethod}
-Section \ref{sec:rSNmethod} is, at parts, based upon the results published in Camminady et al. \cite{camminady2019ray}.
-Findings therein have subsequently contributed to the thesis of Kusch  \cite{10.5445/IR/1000121168}, coauthor of Camminady et al.  \cite{camminady2019ray}.
+Section \ref{sec:rSNmethod} is, at parts, based upon the results
+published in Camminady et al. \cite{camminady2019ray}.
+Findings therein have subsequently contributed to the thesis of Kusch
+\cite{10.5445/IR/1000121168}, coauthor of Camminady et al.
+\cite{camminady2019ray}.
 
-The rotated S$_N$ (rS$_N$) method finds a solution for the following dilemma: While we have seen that an increase in the number of ordinates reduces the magnitude of oscillations, it inevitably increases both runtime and memory consumption.
-To overcome this problem, the rS$_N$ method only \textit{effectively} increases the number of ordinates, while simultaneously adding angular diffusion to smoothen the angular flux.
-It does so by rotating existing ordinates after each time step to obtain a new set of directions.
+The rotated S$_N$ (rS$_N$) method finds a solution for the following
+dilemma: While we have seen that an increase in the number of
+ordinates reduces the magnitude of oscillations, it inevitably
+increases both runtime and memory consumption.
+To overcome this problem, the rS$_N$ method only \textit{effectively}
+increases the number of ordinates, while simultaneously adding
+angular diffusion to smoothen the angular flux.
+It does so by rotating existing ordinates after each time step to
+obtain a new set of directions.
 An interpolation step then yields the angular flux at these new ordinates.
-Both components---rotation and interpolation---can be implemented efficiently (increasing the runtime by roughly five to ten percent), while the simulation results are
+Both components---rotation and interpolation---can be implemented
+efficiently (increasing the runtime by roughly five to ten percent),
+while the simulation results are
 on par with S$_N$ simulations of much larger $N$.
 Quintessentially,
 the rotation-and-interpolation steps add angular diffusion.
 
-
-
-Recapitulating the S$_N$ method in Algorithm \ref{alg:SN}, the minimally invasive nature of the rS$_N$ method becomes clear when put alongside in Algorithm \ref{alg:rSN}---both written in pseudo-code with differences highlighted in green.
-Arguably the most complex and time-consuming building block within the S$_N$ method, the computation of the angular flux remains, unaltered.
-To allow for a faster interpolation of the angular flux, we require specific quadrature points and weights.
+Recapitulating the S$_N$ method in Algorithm \ref{alg:SN}, the
+minimally invasive nature of the rS$_N$ method becomes clear when put
+alongside in Algorithm \ref{alg:rSN}---both written in pseudo-code
+with differences highlighted in green.
+Arguably the most complex and time-consuming building block within
+the S$_N$ method, the computation of the angular flux remains, unaltered.
+To allow for a faster interpolation of the angular flux, we require
+specific quadrature points and weights.
 Additionally, the rotation-and-interpolation step needs to be implemented.
-We will now discuss these modifications and analyze their effect on the S$_N$ method later on, together with the discussion of numerical experiments.
+We will now discuss these modifications and analyze their effect on
+the S$_N$ method later on, together with the discussion of numerical
+experiments.
 
-
-
-\renewcommand{\highlight}[1]{\setlength{\fboxsep}{2pt}\colorbox{kitgreen100!0}{{\color{kitgreen100}$\displaystyle #1$}}}
-\newcommand{\fakehighlight}[1]{\setlength{\fboxsep}{2pt}\colorbox{kitgreen100!0}{{$\displaystyle #1$}}}
+\renewcommand{\highlight}[1]{\setlength{\fboxsep}{2pt}\colorbox{kitgreen100!0}{{\color{kitgreen100}$\displaystyle
+#1$}}}
+\newcommand{\fakehighlight}[1]{\setlength{\fboxsep}{2pt}\colorbox{kitgreen100!0}{{$\displaystyle
+#1$}}}
 
 \begin{minipage}{0.49\textwidth}
-	\begin{algorithm}[H]
-		\centering
-		\caption{The S$_N$ method.}\label{algorithm1}
-		\begin{algorithmic}[1]
-			\Function{S$_N$}{$\Delta t, t_{\text{end}},\text{order},n_x,\fakehighlight{n_y},\psi_0$ }$\fakehighlight{\color{white}{\delta}}$
-		 	\State $t \gets 0$
-			\State $n_q \gets \fakehighlight{\text{order}^2 {\color{white}48}}$ $\fakehighlight{\color{white}{\text{New}}}$
-			\State $P \gets\fakehighlight{\text{QPoints}(n_q)$ $\in \mathbb{R}^{3 \times n_q}}$$\fakehighlight{\color{white}{\text{New}}}$
-			\State $W\gets\fakehighlight{\text{QWeights}(n_q)$ $\in \mathbb{R}^{n_q}}$
-			\State $\psi \gets\psi_0$ $\in \mathbb{R}^{n_q \times n_x \times n_y}$
-			\While{$t< t_\text{end}$}
-				\State $F \gets \text{ComputeFlux}(\psi,P,W)$
-			    \State $\psi \gets \psi + \Delta t \cdot F$
-			\State $\fakehighlight{\color{white}{\psi,Q \gets \text{RotateInterpolate}(\psi,Q,\delta\cdot \delta t /n_q)}}$
-			\State $\fakehighlight{\color{white}{\psi,Q \gets \text{RotateInterpolate}(\psi,Q,\delta\cdot \delta t /n_q)}}$
-			    \State $t\gets t + \Delta t$
-			\EndWhile
-			\State \textbf{return} $\psi$
-			\EndFunction
-		\end{algorithmic}
-			\label{alg:SN}
-	\end{algorithm}
+  \begin{algorithm}[H]
+    \centering
+    \caption{The S$_N$ method.}\label{algorithm1}
+    \begin{algorithmic}[1]
+      \Function{S$_N$}{$\Delta t,
+        t_{\text{end}},\text{order},n_x,\fakehighlight{n_y},\psi_0$
+      }$\fakehighlight{\color{white}{\delta}}$
+      \State $t \gets 0$
+      \State $n_q \gets \fakehighlight{\text{order}^2
+      {\color{white}48}}$ $\fakehighlight{\color{white}{\text{New}}}$
+      \State $P \gets\fakehighlight{\text{QPoints}(n_q)$ $\in
+      \mathbb{R}^{3 \times n_q}}$$\fakehighlight{\color{white}{\text{New}}}$
+      \State $W\gets\fakehighlight{\text{QWeights}(n_q)$ $\in \mathbb{R}^{n_q}}$
+      \State $\psi \gets\psi_0$ $\in \mathbb{R}^{n_q \times n_x \times n_y}$
+      \While{$t< t_\text{end}$}
+      \State $F \gets \text{ComputeFlux}(\psi,P,W)$
+      \State $\psi \gets \psi + \Delta t \cdot F$
+      \State $\fakehighlight{\color{white}{\psi,Q \gets
+      \text{RotateInterpolate}(\psi,Q,\delta\cdot \delta t /n_q)}}$
+      \State $\fakehighlight{\color{white}{\psi,Q \gets
+      \text{RotateInterpolate}(\psi,Q,\delta\cdot \delta t /n_q)}}$
+      \State $t\gets t + \Delta t$
+      \EndWhile
+      \State \textbf{return} $\psi$
+      \EndFunction
+    \end{algorithmic}
+    \label{alg:SN}
+  \end{algorithm}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
-	\begin{algorithm}[H]
-		\centering
-		\caption{The rS$_N$ method.}
-		\label{algorithm1}
-		\begin{algorithmic}[1]
-			\Function{${}$rS$_N$}{$\Delta t, t_{\text{end}},\text{order},n_x,n_y,\psi_0 , \highlight{\delta}$}
-			\State $t \gets 0$
-					 	\State $n_q \gets  \highlight{4\cdot\text{order}^2 - 8\cdot\text{order}+6}$
-			\State $P \gets\highlight{\text{NewQPoints}(n_q)$ $\in \mathbb{R}^{3 \times n_q}}$
-			\State $W\gets\highlight{\text{NewQWeights}(n_q)$ $\in \mathbb{R}^{n_q}}$
-			\State $\psi \gets\psi_0$ $\in \mathbb{R}^{n_q \times n_x \times n_y}$
-			\While{$t< t_\text{end}$}
-			\State $F \gets \text{ComputeFlux}(\psi,P,W)$
-			\State $\psi \gets \psi + \Delta t \cdot F$
-			\State $\highlight{\alpha \gets \delta\cdot \Delta t /n_q}$
-			\State $\highlight{\psi,P \gets \text{RotateInterpolate}(\psi,P,\alpha)}$
-			\State $t\gets t + \Delta t$
-			\EndWhile
-			\State \textbf{return} $\psi$
-			\EndFunction
-		\end{algorithmic}
-			\label{alg:rSN}
-	\end{algorithm}
+  \begin{algorithm}[H]
+    \centering
+    \caption{The rS$_N$ method.}
+    \label{algorithm1}
+    \begin{algorithmic}[1]
+      \Function{${}$rS$_N$}{$\Delta t,
+      t_{\text{end}},\text{order},n_x,n_y,\psi_0 , \highlight{\delta}$}
+      \State $t \gets 0$
+      \State $n_q \gets  \highlight{4\cdot\text{order}^2 -
+      8\cdot\text{order}+6}$
+      \State $P \gets\highlight{\text{NewQPoints}(n_q)$ $\in
+      \mathbb{R}^{3 \times n_q}}$
+      \State $W\gets\highlight{\text{NewQWeights}(n_q)$ $\in \mathbb{R}^{n_q}}$
+      \State $\psi \gets\psi_0$ $\in \mathbb{R}^{n_q \times n_x \times n_y}$
+      \While{$t< t_\text{end}$}
+      \State $F \gets \text{ComputeFlux}(\psi,P,W)$
+      \State $\psi \gets \psi + \Delta t \cdot F$
+      \State $\highlight{\alpha \gets \delta\cdot \Delta t /n_q}$
+      \State $\highlight{\psi,P \gets \text{RotateInterpolate}(\psi,P,\alpha)}$
+      \State $t\gets t + \Delta t$
+      \EndWhile
+      \State \textbf{return} $\psi$
+      \EndFunction
+    \end{algorithmic}
+    \label{alg:rSN}
+  \end{algorithm}
 
 \end{minipage}
 
 \vspace{1em}
 
-The rS$_N$ method uses variants of the octahedron- or icosahedron-based quadrature that has been introduced in Example \ref{exmp:octaico}.
-Quadrature points result from triangulating faces of an octahedron or icosahedron and then projecting the vertices onto the unit sphere, depicted in Figure \ref{fig:screenshot20200707143206} for one face of an octahedron.
-The triangulation induces a connectivity that ensures six neighboring triangles and quadrature points (except for the poles, there the number is four) for every quadrature point on the unit sphere.
+The rS$_N$ method uses variants of the octahedron- or
+icosahedron-based quadrature that has been introduced in Example
+\ref{exmp:octaico}.
+Quadrature points result from triangulating faces of an octahedron or
+icosahedron and then projecting the vertices onto the unit sphere,
+depicted in Figure \ref{fig:screenshot20200707143206} for one face of
+an octahedron.
+The triangulation induces a connectivity that ensures six neighboring
+triangles and quadrature points (except for the poles, there the
+number is four) for every quadrature point on the unit sphere.
 
-
-
-If we now rotate a quadrature point $\bOmega_q \in \mathbb{S}^2$ with the rotation matrix
+If we now rotate a quadrature point $\bOmega_q \in \mathbb{S}^2$ with
+the rotation matrix
 \begin{align}
-R_\alpha^\bn = \begin{pmatrix}
-n_x^2\gamma +\cos(\alpha) & n_x n_y \gamma - n_z \sin(\alpha) & n_x n_z\gamma + n_y \sin(\alpha) \\
-n_y n_x\gamma + n_z \sin(\alpha) &   n_y^2\gamma+\cos(\alpha) & n_y n_z \gamma- n_x \sin(\alpha) \\
-n_z n_x\gamma - n_y \sin(\alpha) & n_z n_y\gamma + n_x \sin(\alpha) &   n_z^2\gamma+\cos(\alpha)
-\end{pmatrix}
-\label{eq:rotmatrix}
+  R_\alpha^\bn =
+  \begin{pmatrix}
+    n_x^2\gamma +\cos(\alpha) & n_x n_y \gamma - n_z \sin(\alpha) &
+    n_x n_z\gamma + n_y \sin(\alpha) \\
+    n_y n_x\gamma + n_z \sin(\alpha) &   n_y^2\gamma+\cos(\alpha) &
+    n_y n_z \gamma- n_x \sin(\alpha) \\
+    n_z n_x\gamma - n_y \sin(\alpha) & n_z n_y\gamma + n_x
+    \sin(\alpha) &   n_z^2\gamma+\cos(\alpha)
+  \end{pmatrix}
+  \label{eq:rotmatrix}
 \end{align}
-around the axis $\mathbf{n} =(n_x,n_y,n_z)^T \in \mathbb{S}^2$  by  the amount $\alpha$ and with $ \gamma \defas \left(1-\cos(\alpha)\right)$, we obtain a new quadrature point $\widetilde{\bOmega}_q \in \mathbb{S}^2$.
-Regardless of the axis and the rotation magnitude, a rotated quadrature point will fall into a triangle of the unrotated quadrature.
-Using the spherical version of barycentric interpolation---explained for the planar case in Figure \ref{fig:barycentric}---we obtain the angular flux at the rotated ordinates.
-The rotation-and-interpolation step is implemented in Algorithm \ref{alg:rotandinterp}.
+around the axis $\mathbf{n} =(n_x,n_y,n_z)^T \in \mathbb{S}^2$  by
+the amount $\alpha$ and with $ \gamma \defas
+\left(1-\cos(\alpha)\right)$, we obtain a new quadrature point
+$\widetilde{\bOmega}_q \in \mathbb{S}^2$.
+Regardless of the axis and the rotation magnitude, a rotated
+quadrature point will fall into a triangle of the unrotated quadrature.
+Using the spherical version of barycentric interpolation---explained
+for the planar case in Figure \ref{fig:barycentric}---we obtain the
+angular flux at the rotated ordinates.
+The rotation-and-interpolation step is implemented in Algorithm
+\ref{alg:rotandinterp}.
 
-We make the following remarks: (i) Since the rotation magnitude is usually small, quadrature points mostly fall into neighboring triangles, allowing to rapidly identify the interpolation nodes for the rotated points.
-(ii) The procedure does not guarantee preservation of mass, which is only achieved by scaling the angular flux for each spatial cell individually based upon the scalar flux at the previous time step.
+We make the following remarks: (i) Since the rotation magnitude is
+usually small, quadrature points mostly fall into neighboring
+triangles, allowing to rapidly identify the interpolation nodes for
+the rotated points.
+(ii) The procedure does not guarantee preservation of mass, which is
+only achieved by scaling the angular flux for each spatial cell
+individually based upon the scalar flux at the previous time step.
 (iii) We perform the same rotation in every spatial cell.
-Thus, the interpolation nodes and weights can be precomputed before the actual interpolation is executed in every spatial cell individually---potentially in parallel.
+Thus, the interpolation nodes and weights can be precomputed before
+the actual interpolation is executed in every spatial cell
+individually---potentially in parallel.
 (iv) Quadrature points keep their quadrature weight.
-(v) Lastly, rotating by $\alpha = \delta \cdot \Delta t / n_q$ ensures that the user only needs to choose the dimensionless quantity $\delta$.
+(v) Lastly, rotating by $\alpha = \delta \cdot \Delta t / n_q$
+ensures that the user only needs to choose the dimensionless quantity $\delta$.
 
 \begin{figure}
-	\centering
-	\includegraphics[width=0.6\linewidth]{Chapters/Chapter3/fig/TOBEREPLACED/weights_in_triangle}
-	\caption{Planar barycentric interpolation works by using the areas $A_0$,$A_1$, and $A_2$ as interpolation weights to obtain a new function value at $P_0'$ based upon the function values at $P_0$,$P_1$, and $P_2$.
-In this example, the point $P_0'$ is the result of shifting $P_0$ by $\varepsilon \cdot \bOmega$.
-For the spherical case, the corresponding transformation would be the application of the rotation matrix to point $P_0$.}
-	\label{fig:barycentric}
+  \centering
+  \includegraphics[width=0.6\linewidth]{Chapters/Chapter3/fig/TOBEREPLACED/weights_in_triangle}
+  \caption{Planar barycentric interpolation works by using the areas
+    $A_0$,$A_1$, and $A_2$ as interpolation weights to obtain a new
+    function value at $P_0'$ based upon the function values at
+    $P_0$,$P_1$, and $P_2$.
+    In this example, the point $P_0'$ is the result of shifting $P_0$
+    by $\varepsilon \cdot \bOmega$.
+    For the spherical case, the corresponding transformation would be
+  the application of the rotation matrix to point $P_0$.}
+  \label{fig:barycentric}
 \end{figure}
 
 \begin{figure}
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/0_rotated_ico2786.png}
-		\caption{Before rotating.}
-		\label{fig:ballrotate0}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/5_rotated_ico2786.png}
-		\caption{After 5 rotations.}
-\label{fig:ballrotate5}
-	\end{subfigure}
-\hfill
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/10_rotated_ico2786.png}
-		\caption{After 10 rotations.}
-\label{fig:ballrotate10}
-\end{subfigure}
-\hfill
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/20_rotated_ico2786.png}
-		\caption{After 20 rotations.}
-\label{fig:ballrotate20}
-\end{subfigure}
-	\caption{Each quadrature point is assigned a value of $\psi = 1.0$ if it is positioned in the first octant and $\psi= 0.0$ otherwise.
-The associated area is colored accordingly.
-The rotation and interpolation procedure around a random axis is then applied $5,10,$ and $20$ times, respectively.
-In each time step, we rotate forth and back around the same axis by the same magnitude to keep the orientation of the quadrature points.
-The diffusive behavior is clearly visible.}
-	\label{fig:rotationmany}
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/0_rotated_ico2786.png}
+    \caption{Before rotating.}
+    \label{fig:ballrotate0}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/5_rotated_ico2786.png}
+    \caption{After 5 rotations.}
+    \label{fig:ballrotate5}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/10_rotated_ico2786.png}
+    \caption{After 10 rotations.}
+    \label{fig:ballrotate10}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/visrotation/20_rotated_ico2786.png}
+    \caption{After 20 rotations.}
+    \label{fig:ballrotate20}
+  \end{subfigure}
+  \caption{Each quadrature point is assigned a value of $\psi = 1.0$
+    if it is positioned in the first octant and $\psi= 0.0$ otherwise.
+    The associated area is colored accordingly.
+    The rotation and interpolation procedure around a random axis is
+    then applied $5,10,$ and $20$ times, respectively.
+    In each time step, we rotate forth and back around the same axis
+    by the same magnitude to keep the orientation of the quadrature points.
+  The diffusive behavior is clearly visible.}
+  \label{fig:rotationmany}
 \end{figure}
-
-
-
-
 
 \begin{algorithm}
-	\centering
-	\caption{The rotation-and-interpolation step.}
-	\begin{algorithmic}[1]
-		\Function{RotateInterpolate}{$\psi,P,\alpha$}
-		\State $n_q,n_x,n_y= \text{size}(\psi)$
-		\State $n = \text{getRandomAxis}() \in \mathbb{S}^2$ \hfill \Comment{The axis we are going
-			to rotate around.}
-		\State $R = \text{getRotationMatrix}(n,\alpha) \in \mathbb{R}^3$  \hfill  \Comment{See
-			\eqref{eq:rotmatrix}.}
-		\State $\hat{P} = R \cdot P \in \mathbb{R}^{3 \times n_q}$   \hfill  \Comment{The rotated
-			quadrature
-			points.}
-		\State $W = \text{zeros}(n_q,n_q) \in \mathbb{R}^{n_q \times n_q}$ \hfill
-		\Comment{The matrix
-			$W$ will store interpolation weights.}
-		\State $\hat{\psi} = \text{zeros}(n_q,n_x,n_y) \in \mathbb{R}^{n_q \times n_x
-			\times n_y}$ \hfill  \Comment{The tensor $\hat{\psi}$ will store the
-			interpolated flux.}
-		\State ${}$
-		\For{$q=1,\cdots,n_q$}
-		\State $\hat{p} = \hat{P}[:,q]$  \hfill  \Comment{Store in
-			$\hat{p}$ a quadrature
-			point from the rotated quadrature.}
-		\State $i,j,k = \text{interpolateFrom}(P,\hat{p})$ \hfill  \Comment{Compute the three
-			vertices
-			of the triangle that}
-		\State $ $ \hfill   \Comment{the
-			rotated quadrature point $\hat{p}$ falls into.}
-		\State $w_i,w_j,w_k = \text{interpolationWeights}(P,\hat{p})$ \hfill
-		\Comment{The interpolation weights.}
-		\State $W[q,i] = w_i$,\, $W[q,j] = w_j$,\, $W[q,k] =w_k$ \hfill \Comment{Store the
-			interpolation weights in $W$.}
-		\EndFor
-		\For{$i=1,\cdots,n_x$}
-		\For{$j=1,\cdots,n_y$}
-		\State $\hat{\psi}[:,i,j] = W \cdot \psi[:,i,j]$ \hfill \Comment{Apply interpolation in
-			each spatial cell.}
-		\State $\hat{\psi}[:,i,j] = \hat{\psi}[:,i,j]  / \text{sum}(\hat{\psi}[:,i,j] ) \cdot \text{sum}({\psi}[:,i,j] )$ \hfill \Comment{Preserve mass.}
-		\EndFor
-		\EndFor
-		\State \textbf{return}  $\hat{\psi}$, $\hat{P}$
-		\EndFunction
-	\end{algorithmic}
-	\label{alg:rotandinterp}
+  \centering
+  \caption{The rotation-and-interpolation step.}
+  \begin{algorithmic}[1]
+    \Function{RotateInterpolate}{$\psi,P,\alpha$}
+    \State $n_q,n_x,n_y= \text{size}(\psi)$
+    \State $n = \text{getRandomAxis}() \in \mathbb{S}^2$ \hfill
+    \Comment{The axis we are going
+    to rotate around.}
+    \State $R = \text{getRotationMatrix}(n,\alpha) \in \mathbb{R}^3$
+    \hfill  \Comment{See
+    \eqref{eq:rotmatrix}.}
+    \State $\hat{P} = R \cdot P \in \mathbb{R}^{3 \times n_q}$
+    \hfill  \Comment{The rotated
+      quadrature
+    points.}
+    \State $W = \text{zeros}(n_q,n_q) \in \mathbb{R}^{n_q \times n_q}$ \hfill
+    \Comment{The matrix
+    $W$ will store interpolation weights.}
+    \State $\hat{\psi} = \text{zeros}(n_q,n_x,n_y) \in
+    \mathbb{R}^{n_q \times n_x
+    \times n_y}$ \hfill  \Comment{The tensor $\hat{\psi}$ will store the
+    interpolated flux.}
+    \State ${}$
+    \For{$q=1,\cdots,n_q$}
+    \State $\hat{p} = \hat{P}[:,q]$  \hfill  \Comment{Store in
+      $\hat{p}$ a quadrature
+    point from the rotated quadrature.}
+    \State $i,j,k = \text{interpolateFrom}(P,\hat{p})$ \hfill
+    \Comment{Compute the three
+      vertices
+    of the triangle that}
+    \State $ $ \hfill   \Comment{the
+    rotated quadrature point $\hat{p}$ falls into.}
+    \State $w_i,w_j,w_k = \text{interpolationWeights}(P,\hat{p})$ \hfill
+    \Comment{The interpolation weights.}
+    \State $W[q,i] = w_i$,\, $W[q,j] = w_j$,\, $W[q,k] =w_k$ \hfill
+    \Comment{Store the
+    interpolation weights in $W$.}
+    \EndFor
+    \For{$i=1,\cdots,n_x$}
+    \For{$j=1,\cdots,n_y$}
+    \State $\hat{\psi}[:,i,j] = W \cdot \psi[:,i,j]$ \hfill
+    \Comment{Apply interpolation in
+    each spatial cell.}
+    \State $\hat{\psi}[:,i,j] = \hat{\psi}[:,i,j]  /
+    \text{sum}(\hat{\psi}[:,i,j] ) \cdot \text{sum}({\psi}[:,i,j] )$
+    \hfill \Comment{Preserve mass.}
+    \EndFor
+    \EndFor
+    \State \textbf{return}  $\hat{\psi}$, $\hat{P}$
+    \EndFunction
+  \end{algorithmic}
+  \label{alg:rotandinterp}
 \end{algorithm}
 
-
-
-
-
-
-
-Before discussing the full transport test cases, we can see the diffusive effect that the rotation-and-interpolation step has in a simple experiment.
-For forth-and-back rotations around a random axis, and switching between $\delta$ and $-\delta$ in consecutive time steps, we have shown in Camminady et al. \cite{camminady2019ray} that we add a discrete second-order derivative in the azimuthal angle to the right-hand side of the transport equation.
-Rotating by $\alpha = \delta \cdot \Delta t / n_q$ ensures a reasonable limit: The added diffusion vanishes when the number of ordinates increases, and increasing the number of spatial cells or time steps does not increase the amount of diffusion added to the equation.
+Before discussing the full transport test cases, we can see the
+diffusive effect that the rotation-and-interpolation step has in a
+simple experiment.
+For forth-and-back rotations around a random axis, and switching
+between $\delta$ and $-\delta$ in consecutive time steps, we have
+shown in Camminady et al. \cite{camminady2019ray} that we add a
+discrete second-order derivative in the azimuthal angle to the
+right-hand side of the transport equation.
+Rotating by $\alpha = \delta \cdot \Delta t / n_q$ ensures a
+reasonable limit: The added diffusion vanishes when the number of
+ordinates increases, and increasing the number of spatial cells or
+time steps does not increase the amount of diffusion added to the equation.
 The analysis becomes more complicated for the three-dimensional case.
-This is due to several factors: (i) Not all triangles on the unit sphere have the same size.
-(ii) Though quadrature points are being rotated (mostly) into neighboring triangles, finding out the exact triangle is difficult analytically.
-(iii) Most importantly, we change the axis around which we rotate after each time step randomly.
-Thus the process has a random nature and needs to be interpreted from a statistical viewpoint as well.
-We have, however, observed that due to the large number of time steps, simulation results look almost indistinguishable when being run repeatedly.
-Figure \ref{fig:rotationmany} demonstrates the smearing out effect of an indicator function, applied to the first octant of the quadrature set.
-Rotating forth and back repeatedly causes the imprint of the indicator function to diffuse over the sphere.
-
-
+This is due to several factors: (i) Not all triangles on the unit
+sphere have the same size.
+(ii) Though quadrature points are being rotated (mostly) into
+neighboring triangles, finding out the exact triangle is difficult analytically.
+(iii) Most importantly, we change the axis around which we rotate
+after each time step randomly.
+Thus the process has a random nature and needs to be interpreted from
+a statistical viewpoint as well.
+We have, however, observed that due to the large number of time
+steps, simulation results look almost indistinguishable when being
+run repeatedly.
+Figure \ref{fig:rotationmany} demonstrates the smearing out effect of
+an indicator function, applied to the first octant of the quadrature set.
+Rotating forth and back repeatedly causes the imprint of the
+indicator function to diffuse over the sphere.
 
 \FloatBarrier
 \subsection{rS$_N$ and the line-source test case} \label{sec:linesourceRSN}
-Since the line-source\footnote{The name \textit{line-source test case} is arguably suboptimal since we are dealing with an initial condition rather than a source. We do, however, keep the name for historical reasons.}  test case yields the same angular and scalar flux for every value $z$, the problem can be evaluated in the $x$-$y$-plane, more precisely the domain $[a,b] \times [a,b] = [-1.5\text{ cm},1.5\text{ cm}] \times [-1.5\text{ cm},1.5\text{ cm}]$. The domain is purely scattering with $\sigma_a = 0  \text{ cm}^{-1}$ and $\sigma_t=\sigma_s = 1  \text{ cm}^{-1}$, and we evaluate the solution at a final time $t=1 \text{s}$. For the initial condition 
+Since the line-source\footnote{The name \textit{line-source test
+  case} is arguably suboptimal since we are dealing with an initial
+  condition rather than a source. We do, however, keep the name for
+historical reasons.}  test case yields the same angular and scalar
+flux for every value $z$, the problem can be evaluated in the
+$x$-$y$-plane, more precisely the domain $[a,b] \times [a,b] =
+[-1.5\text{ cm},1.5\text{ cm}] \times [-1.5\text{ cm},1.5\text{
+cm}]$. The domain is purely scattering with $\sigma_a = 0  \text{
+cm}^{-1}$ and $\sigma_t=\sigma_s = 1  \text{ cm}^{-1}$, and we
+evaluate the solution at a final time $t=1 \text{s}$. For the initial condition
 \begin{align}
-\psi(0,\bx,\bOmega) = \frac{1}{4\pi}\delta(\bx),
+  \psi(0,\bx,\bOmega) = \frac{1}{4\pi}\delta(\bx),
 \end{align}
-there exists a semi-analytical solution \cite{ganapol2001homogeneous}. Numerically, we resolve the initial condition as a narrow Gaussian and offset everything from zero, \ie
+there exists a semi-analytical solution
+\cite{ganapol2001homogeneous}. Numerically, we resolve the initial
+condition as a narrow Gaussian and offset everything from zero, \ie
 \begin{align}
-\psi(0,\bx,\bOmega) = \text{max}\left\{0.001,\frac{1}{4\pi \sigma^2} \text{exp}\left(-\frac{||\bx||^2_2}{4\sigma^2}\right) \right\},
+  \psi(0,\bx,\bOmega) = \text{max}\left\{0.001,\frac{1}{4\pi
+  \sigma^2} \text{exp}\left(-\frac{||\bx||^2_2}{4\sigma^2}\right) \right\},
 \end{align}
-with $\sigma^2=0.03^2$. We evaluate the scalar flux rather than the angular flux. Computed exactly, we should see a radially symmetric solution with a wavefront propagating away from the domain's origin. Solutions are identical along cuts in the domain that pass through the origin. Moreover, the solution is constant along circles around the domain's origin. 
+with $\sigma^2=0.03^2$. We evaluate the scalar flux rather than the
+angular flux. Computed exactly, we should see a radially symmetric
+solution with a wavefront propagating away from the domain's origin.
+Solutions are identical along cuts in the domain that pass through
+the origin. Moreover, the solution is constant along circles around
+the domain's origin.
 
-Figures \ref{fig:rsn:ls:overview}, \ref{fig:rsn:ls:cuts}, and \ref{fig:rsn:ls:circles} showcase the results. The quadrature set is the octahedron (lerp) quadrature.
-Orders are taken as $4$, $6$, $8$, or $10$;  resulting in $38$, $102$, $198$, or $326$ quadrature points, respectively. The rotation magnitude $\delta$ varies between $0$, $4$, $8$, and $10$. Consequently, r${}_\delta$S${}_N$ denotes a solution that was computed with the discrete ordinates method of order $N$ and rotation magnitude $\delta$. We used a second-order finite volume scheme with minmod-limiter to evolve the angular flux in time. Throughout all simulations, we use a grid of $100\times100$ spatial cells and a CFL number of $0.95$. The scalar flux is visualized at the final time $t=1$s. 
+Figures \ref{fig:rsn:ls:overview}, \ref{fig:rsn:ls:cuts}, and
+\ref{fig:rsn:ls:circles} showcase the results. The quadrature set is
+the octahedron (lerp) quadrature.
+Orders are taken as $4$, $6$, $8$, or $10$;  resulting in $38$,
+$102$, $198$, or $326$ quadrature points, respectively. The rotation
+magnitude $\delta$ varies between $0$, $4$, $8$, and $10$.
+Consequently, r${}_\delta$S${}_N$ denotes a solution that was
+computed with the discrete ordinates method of order $N$ and rotation
+magnitude $\delta$. We used a second-order finite volume scheme with
+minmod-limiter to evolve the angular flux in time. Throughout all
+simulations, we use a grid of $100\times100$ spatial cells and a CFL
+number of $0.95$. The scalar flux is visualized at the final time $t=1$s.
 
-Figure \ref{fig:rsn:ls:overview} shows---in the \textit{eyeball norm}---that ray effects can be mitigated in two ways; either by an increase of quadrature points, or by an increase of the rotation magnitude. While an increase in the number of quadrature points causes a proportional increase in both memory and runtime, adding rotation increases the runtime by only 10\%, regardless of the magnitude.
-We can also identify pairs with similar ray effects. For example, the r${}_0$S${}_{10}$ method and the r${}_4$S${}_{8}$ method yield similar results even though the number of quadrature points varies significantly.  We can be more precise with the help of Figures \ref{fig:rsn:ls:cuts} and \ref{fig:rsn:ls:circles}. Here we see the solution along cuts through the domain and along concentric circles around the domain's origin. Not only does the magnitude of oscillations along cuts decrease when we add rotation, also the solutions for horizontal and vertical cuts tend to converge to the solution of diagonal cuts. Present in all simulations with rotation is the solution's diffusive character: The reference solution has a sharp decrease in the scalar flux at roughly $x=1$, but the r${}_\delta$S${}_N$ simulations tend to smear out that edge. Looking at the  r${}_{10}$S${}_4$ computation, the solution's propagation speed has arguably decreased when compared with the r${}_{0}$S${}_4$ result. This behavior is less dominant for larger numbers of quadrature points.
-Looking at Figure \ref{fig:rsn:ls:circles}, we see the scalar flux along concentric circles of radii $0.2$, $0.6$, $0.9$, and $1.0$ . Since the reference solution is radially symmetric, we expect a constant value along these circles but see stark oscillations instead. Except for the $r=1.0$ case, adding rotation shifts the scalar flux closer to the reference solution's scalar flux. For the $r=1.0$ case, however, the solution is underestimated due to the aforementioned smearing out.
+Figure \ref{fig:rsn:ls:overview} shows---in the \textit{eyeball
+norm}---that ray effects can be mitigated in two ways; either by an
+increase of quadrature points, or by an increase of the rotation
+magnitude. While an increase in the number of quadrature points
+causes a proportional increase in both memory and runtime, adding
+rotation increases the runtime by only 10\%, regardless of the magnitude.
+We can also identify pairs with similar ray effects. For example, the
+r${}_0$S${}_{10}$ method and the r${}_4$S${}_{8}$ method yield
+similar results even though the number of quadrature points varies
+significantly.  We can be more precise with the help of Figures
+\ref{fig:rsn:ls:cuts} and \ref{fig:rsn:ls:circles}. Here we see the
+solution along cuts through the domain and along concentric circles
+around the domain's origin. Not only does the magnitude of
+oscillations along cuts decrease when we add rotation, also the
+solutions for horizontal and vertical cuts tend to converge to the
+solution of diagonal cuts. Present in all simulations with rotation
+is the solution's diffusive character: The reference solution has a
+sharp decrease in the scalar flux at roughly $x=1$, but the
+r${}_\delta$S${}_N$ simulations tend to smear out that edge. Looking
+at the  r${}_{10}$S${}_4$ computation, the solution's propagation
+speed has arguably decreased when compared with the r${}_{0}$S${}_4$
+result. This behavior is less dominant for larger numbers of quadrature points.
+Looking at Figure \ref{fig:rsn:ls:circles}, we see the scalar flux
+along concentric circles of radii $0.2$, $0.6$, $0.9$, and $1.0$ .
+Since the reference solution is radially symmetric, we expect a
+constant value along these circles but see stark oscillations
+instead. Except for the $r=1.0$ case, adding rotation shifts the
+scalar flux closer to the reference solution's scalar flux. For the
+$r=1.0$ case, however, the solution is underestimated due to the
+aforementioned smearing out.
 
-Acknowledging that the r${}_8$S${}_{8}$ and r${}_4$S${}_{10}$ solutions are on par, the added rotation allows for similar solutions with two thirds the number of quadrature points. This directly translates to a reduction of both memory and runtime by a about $30$\%.
+Acknowledging that the r${}_8$S${}_{8}$ and r${}_4$S${}_{10}$
+solutions are on par, the added rotation allows for similar solutions
+with two thirds the number of quadrature points. This directly
+translates to a reduction of both memory and runtime by a about $30$\%.
 
-To demonstrate that the added rotation is useful in problems that are not radially symmetric---the line-source test case is perhaps the most apt test case to investigate---we consider the lattice test case next.
+To demonstrate that the added rotation is useful in problems that are
+not radially symmetric---the line-source test case is perhaps the
+most apt test case to investigate---we consider the lattice test case next.
 
-
-
-
-\input{Chapters/Chapter3/overview1} 
+\input{Chapters/Chapter3/overview1}
 \input{Chapters/Chapter3/overview2}
 \input{Chapters/Chapter3/overview2b}
 
-
-
 \subsection{rS$_N$ and the lattice test case} \label{sec:latticersn}
-Purpose of the lattice test case \cite{brunner2002forms,brunner2005two} is to model---in a very simplified and idealized way---radiation in a reactor. Depicted in Figure \ref{fig:latticesetup}, the heterogeneous domain consists of a source in the center (green), regions of pure scattering (white), and purely absorbing blocks (black). Cross sections and source strength are given in Table \ref{tab:lattice}. The angular flux is initially zero as the source is the sole driver of the transport dynamics. Two versions of this test case exist; time-dependent and steady-state. We consider the time-dependent case and evaluate the solution after $3.2$ seconds, chosen because particles are bound to reach the domain's (vacuum) boundary by that time. Because the scalar flux spans several orders of magnitude, we consider the log${}_{10}$ scalar flux, visualized in Figure \ref{fig:rsn:cb}, together with three isolines for $\log_{10}(\phi) = -3$, $\log_{10}(\phi) = -4$, and $\log_{10}(\phi) = -5$. The rotation magnitude $\delta$ again varies in the different columns as does the number of quadrature points in the different rows. Numerical parameters match those of the line-source test case, only the spatial resolution is refined as the domain $[0 \text{ cm}, 7 \text{ cm} ]^2$ is discretized with $n_x=n_y=280$ cells.
-
+Purpose of the lattice test case
+\cite{brunner2002forms,brunner2005two} is to model---in a very
+simplified and idealized way---radiation in a reactor. Depicted in
+Figure \ref{fig:latticesetup}, the heterogeneous domain consists of a
+source in the center (green), regions of pure scattering (white), and
+purely absorbing blocks (black). Cross sections and source strength
+are given in Table \ref{tab:lattice}. The angular flux is initially
+zero as the source is the sole driver of the transport dynamics. Two
+versions of this test case exist; time-dependent and steady-state. We
+consider the time-dependent case and evaluate the solution after
+$3.2$ seconds, chosen because particles are bound to reach the
+domain's (vacuum) boundary by that time. Because the scalar flux
+spans several orders of magnitude, we consider the log${}_{10}$
+scalar flux, visualized in Figure \ref{fig:rsn:cb}, together with
+three isolines for $\log_{10}(\phi) = -3$, $\log_{10}(\phi) = -4$,
+and $\log_{10}(\phi) = -5$. The rotation magnitude $\delta$ again
+varies in the different columns as does the number of quadrature
+points in the different rows. Numerical parameters match those of the
+line-source test case, only the spatial resolution is refined as the
+domain $[0 \text{ cm}, 7 \text{ cm} ]^2$ is discretized with
+$n_x=n_y=280$ cells.
 
 \begin{minipage}{\textwidth}
-	\begin{minipage}[t]{0.4\textwidth}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lattice/lattice_layout_green}		
-		\captionof{figure}{Layout of the lattice test case.}
-		\label{fig:latticesetup}
-	\end{minipage}
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
-		\centering
-		\begin{tabular}{cccc}\hline
-			Color & $\sigma_a$ in cm${}^{-1}$ & $\sigma_s$ in cm${}^{-1}$ &  $Q$ in cm${}^{-2}$s${}^{-1} $
-			\\ \hline
-\hline
-			white & $0$ & $1$ & $0$ \\
-			black & $10$ & $0$ & $0$ \\
-			green & $10$ & $0$ & $1$ \\
-			\hline
-		\end{tabular}
-		\captionof{table}{Cross sections and source for the lattice test case.}
-		\label{tab:lattice}
-	\end{minipage}
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lattice/lattice_layout_green}
+    \captionof{figure}{Layout of the lattice test case.}
+    \label{fig:latticesetup}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.5\textwidth}
+    \centering
+    \begin{tabular}{cccc}\hline
+      Color & $\sigma_a$ in cm${}^{-1}$ & $\sigma_s$ in cm${}^{-1}$ &
+      $Q$ in cm${}^{-2}$s${}^{-1} $
+      \\ \hline
+      \hline
+      white & $0$ & $1$ & $0$ \\
+      black & $10$ & $0$ & $0$ \\
+      green & $10$ & $0$ & $1$ \\
+      \hline
+    \end{tabular}
+    \captionof{table}{Cross sections and source for the lattice test case.}
+    \label{tab:lattice}
+  \end{minipage}
 \end{minipage}
 
-Similar conclusions as in the line-source test case can be drawn for the lattice test case. Ray effects, most visible along the isolines, are mitigated by an increased number of ordinates or by added rotation. Ray effects are present, even for $326$ quadrature points. Adding rotation again yields results that are on par with those achieved by a significant increase in quadrature points. Noticeable in the combination of high rotation and small number of ordinates is, again, the reduced propagation speed (\eg r${}_{10}$S${}_4$).
+Similar conclusions as in the line-source test case can be drawn for
+the lattice test case. Ray effects, most visible along the isolines,
+are mitigated by an increased number of ordinates or by added
+rotation. Ray effects are present, even for $326$ quadrature points.
+Adding rotation again yields results that are on par with those
+achieved by a significant increase in quadrature points. Noticeable
+in the combination of high rotation and small number of ordinates is,
+again, the reduced propagation speed (\eg r${}_{10}$S${}_4$).
 
+Together with Section \ref{sec:linesourceRSN}, these two test cases
+show the benefits and versatility of the rS${}_N$ method. Adding
+little computational overhead, the rS$_N$ method allows for a
+1.5$\times$ increase in performance and memory efficiency. This holds
+true both for test cases that are radially symmetric and those that are not.
+While the implementation of the rS$_N$ method is straight-forward if
+an existing S$_N$ code is available, there is some caveat. Our
+implementation solves the transport equation explicitly via means of
+a finite-volume scheme. It is, however, common to use source
+iteration instead; especially in high-performant, many-cores implementations.
+Since source iteration requires to march through the spatial cells in
+a specific order, and given that this order depends on the ordinates,
+rotating quadrature points inevitably requires to recompute this
+order after each rotation.  This might be infeasible if the ordering
+is precomputed and serves as a basis to load-balance the
+computational work by distribution spatial cells to different cores.
 
-Together with Section \ref{sec:linesourceRSN}, these two test cases show the benefits and versatility of the rS${}_N$ method. Adding little computational overhead, the rS$_N$ method allows for a 1.5$\times$ increase in performance and memory efficiency. This holds true both for test cases that are radially symmetric and those that are not. 
-While the implementation of the rS$_N$ method is straight-forward if an existing S$_N$ code is available, there is some caveat. Our implementation solves the transport equation explicitly via means of a finite-volume scheme. It is, however, common to use source iteration instead; especially in high-performant, many-cores implementations. 
-Since source iteration requires to march through the spatial cells in a specific order, and given that this order depends on the ordinates, rotating quadrature points inevitably requires to recompute this order after each rotation.  This might be infeasible if the ordering is precomputed and serves as a basis to load-balance the computational work by distribution spatial cells to different cores.
+Another questions addresses the choice of the rotation magnitude: How
+to choose this parameter if no parameter study can be performed due
+to the unavailability of a reference solution?
+Two approaches might circumvent this problem. (i) We have not
+discussed the influence that changing the spatial resolution has on
+the solution's outcome. Since the amount by which we execute the
+rotation scales with the spatial resolution, the effect of added
+rotation is mostly independent of the number of spatial cells. A
+parameter study can therefore be performed on a coarse spatial grid
+for the same problem and the optimal $\delta$ will be used for the
+fine grid afterwards. (ii)  We did observe that an optimal $\delta$
+in the line-source test case was also a reasonably good $\delta$ for
+the lattice test case. Thus, if possible, a simplified version of the
+problem of interest can be used to perform a parameter study
+beforehand. The success of this approach arguably depends on the
+similarity of the two problems.
 
-
-Another questions addresses the choice of the rotation magnitude: How to choose this parameter if no parameter study can be performed due to the unavailability of a reference solution? 
-Two approaches might circumvent this problem. (i) We have not discussed the influence that changing the spatial resolution has on the solution's outcome. Since the amount by which we execute the rotation scales with the spatial resolution, the effect of added rotation is mostly independent of the number of spatial cells. A parameter study can therefore be performed on a coarse spatial grid for the same problem and the optimal $\delta$ will be used for the fine grid afterwards. (ii)  We did observe that an optimal $\delta$ in the line-source test case was also a reasonably good $\delta$ for the lattice test case. Thus, if possible, a simplified version of the problem of interest can be used to perform a parameter study beforehand. The success of this approach arguably depends on the similarity of the two problems.
-
-Lastly, the influence of quadrature sets has been omitted from the discussion so far. Qualitatively, the results are similar, regardless of whether we choose the octahedron (lerp or slerp) or icosahedron (lerp or slerp) quadrature. It is worth mentioning that the icosahedron quadrature does not possess a
-90° rotational symmetry, although the quadrature points are spaced more evenly. We decided to use the octahedron (lerp) quadrature to exploit this symmetry, as it is present in both test cases. It is important to note that we are not restricted to only these four quadratures: Quadrature points from any quadrature set can be rotated around random axes. The only fundamental requirement is an available interpolation routine. Here, the octahedron and icosahedron quadratures benefit from the construction via triangulation in combination with the barycentric interpolation. However, other ways to execute the interpolation steps are possible. If the rS$_N$ is to preserve positivity of the angular flux, the interpolation routine has to preserve positivity, too. 
-
-
+Lastly, the influence of quadrature sets has been omitted from the
+discussion so far. Qualitatively, the results are similar, regardless
+of whether we choose the octahedron (lerp or slerp) or icosahedron
+(lerp or slerp) quadrature. It is worth mentioning that the
+icosahedron quadrature does not possess a
+90° rotational symmetry, although the quadrature points are spaced
+more evenly. We decided to use the octahedron (lerp) quadrature to
+exploit this symmetry, as it is present in both test cases. It is
+important to note that we are not restricted to only these four
+quadratures: Quadrature points from any quadrature set can be rotated
+around random axes. The only fundamental requirement is an available
+interpolation routine. Here, the octahedron and icosahedron
+quadratures benefit from the construction via triangulation in
+combination with the barycentric interpolation. However, other ways
+to execute the interpolation steps are possible. If the rS$_N$ is to
+preserve positivity of the angular flux, the interpolation routine
+has to preserve positivity, too.
 
 \input{Chapters/Chapter3/overview3}
 
@@ -439,24 +761,43 @@ Lastly, the influence of quadrature sets has been omitted from the discussion so
 \subsection{rS${}_N$ without change of  ordinates}
 
 \begin{figure}[h!]
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rsnsteadystate/normal}
-		\caption{Scalar flux for the standard rS${}_N$ method with $\delta=4$.}
-		\label{fig:lscomparisonstanda}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.45\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rsnsteadystate/forthback}
-		\caption{Scalar flux for the rS${}_N$ method with two opposite rotations of $\delta=2$. }
-		\label{fig:lscomparisonforthback}
-	\end{subfigure}
-	\caption{Comparison of two ways to implement the rS${}_N$ method.}
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rsnsteadystate/normal}
+    \caption{Scalar flux for the standard rS${}_N$ method with $\delta=4$.}
+    \label{fig:lscomparisonstanda}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/rsnsteadystate/forthback}
+    \caption{Scalar flux for the rS${}_N$ method with two opposite
+    rotations of $\delta=2$. }
+    \label{fig:lscomparisonforthback}
+  \end{subfigure}
+  \caption{Comparison of two ways to implement the rS${}_N$ method.}
 \end{figure}
 
-The change of ordinates that results from the rotation step can be problematic in optimized codes, but also for time-independent problems. Changing the ordinates during every transport sweep potentially interferes with the method's convergence. 
-Additionally, to evaluate the difference of the solution before and after a transport sweep, an additional interpolation step is necessary.
+The change of ordinates that results from the rotation step can be
+problematic in optimized codes, but also for time-independent
+problems. Changing the ordinates during every transport sweep
+potentially interferes with the method's convergence.
+Additionally, to evaluate the difference of the solution before and
+after a transport sweep, an additional interpolation step is necessary.
 
-To overcome this problem, we alter the rS${}_N$ method in the following way: Instead of performing one rotation and one interpolation between two transport sweeps (or at every time step), we perform \textit{two} rotation and interpolation steps. We rotate the quadrature points around a random axis by $\delta/2$; interpolate function values at the new quadrature points; rotate back by $-\delta/2$ around the same axis to obtain the exact same quadrature points as before; and we then interpolate again, using the quadrature points and function values from the intermediate step.
-As a result, transport sweeps (or time stepping) always happen with the exact same set of quadrature points and weights. Nevertheless, we still add the same amount of angular diffusion, at least qualitatively. This is depicted in Figures \ref{fig:lscomparisonstanda} and \ref{fig:lscomparisonforthback} for the scalar flux of the line-source problem with the standard rS${}_N$ method and the forth-and-back modification, respectively.
+To overcome this problem, we alter the rS${}_N$ method in the
+following way: Instead of performing one rotation and one
+interpolation between two transport sweeps (or at every time step),
+we perform \textit{two} rotation and interpolation steps. We rotate
+the quadrature points around a random axis by $\delta/2$; interpolate
+function values at the new quadrature points; rotate back by
+$-\delta/2$ around the same axis to obtain the exact same quadrature
+points as before; and we then interpolate again, using the quadrature
+points and function values from the intermediate step.
+As a result, transport sweeps (or time stepping) always happen with
+the exact same set of quadrature points and weights. Nevertheless, we
+still add the same amount of angular diffusion, at least
+qualitatively. This is depicted in Figures
+\ref{fig:lscomparisonstanda} and \ref{fig:lscomparisonforthback} for
+the scalar flux of the line-source problem with the standard rS${}_N$
+method and the forth-and-back modification, respectively.
 
 \input{Chapters/Chapter3/assn}

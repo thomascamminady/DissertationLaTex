@@ -1,11 +1,11 @@
 \documentclass[]{article}
 \usepackage[margin=0.5in]{geometry}
-\usepackage{graphicx} 
+\usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage{amsmath}
 \usepackage{placeins}
-\captionsetup[subfigure]{list=true, font=large, labelfont=bf, 
- 	labelformat=brace, position=top}
+\captionsetup[subfigure]{list=true, font=large, labelfont=bf,
+labelformat=brace, position=top}
 \title{Preliminary results: line source simulations}
 \author{Thomas Camminady}
 
@@ -13,64 +13,103 @@
 
 \maketitle
 \section*{Setup}
-The setup of the line-source test case is as follows. We solve time-dependent transport, i.e.,
+The setup of the line-source test case is as follows. We solve
+time-dependent transport, i.e.,
 \begin{align}
-\partial_t \psi(t,\bf{x},\bf{\Omega}) + \bf{\Omega} \cdot \nabla \psi + \sigma_s \psi 
-= \sigma_s \int_{4\pi} \frac{1}{4\pi} \psi(t,\bf{x},\bf{\Omega'}) \, d\bf{\Omega'},
- \end{align}
- with $\psi(0,{\bf{x}},{\bf{\Omega}}) = \psi_0(\bf{x})$ and $\sigma_s =1$. For the exact line-source test case, $\psi_0$ is a Dirac-pulse that is centered at $(0,0)$. In numerical S$_N$ computations, that Dirac-pulse is resolved as a narrow Gaussian with $\sigma^2 = 0.03^2$ (similar to [1]). To distinguish these two initial conditions later on, we will call the Gaussian-like initial condition $\psi_0^G$, as opposed to the exact condition $\psi_0$. The exact solution for $\phi(t,r) =\phi(t,||{\bf{x}}||_2) = \int_{4\pi} \psi(t,\bf{x},\bf{\Omega'}) \, d\bf{\Omega'}$ at $t=1$ is due to [2] and code by  Benjamin Seibold\footnote{https://www.math.temple.edu/~seibold/research/starmap/ }, shown in Figure \ref{fig:ref}. Using a second order explicit S$_N$ code (similar to [3] and [4]) with $N=6$ (yielding $N^2$ ordinates) and $N_x = N_y=200$ spatial cells, the scalar flux can be computed and is shown in Figure \ref{fig:sn36}.
+  \partial_t \psi(t,\bf{x},\bf{\Omega}) + \bf{\Omega} \cdot \nabla
+  \psi + \sigma_s \psi
+  = \sigma_s \int_{4\pi} \frac{1}{4\pi} \psi(t,\bf{x},\bf{\Omega'})
+  \, d\bf{\Omega'},
+\end{align}
+with $\psi(0,{\bf{x}},{\bf{\Omega}}) = \psi_0(\bf{x})$ and $\sigma_s
+=1$. For the exact line-source test case, $\psi_0$ is a Dirac-pulse
+that is centered at $(0,0)$. In numerical S$_N$ computations, that
+Dirac-pulse is resolved as a narrow Gaussian with $\sigma^2 = 0.03^2$
+(similar to [1]). To distinguish these two initial conditions later
+on, we will call the Gaussian-like initial condition $\psi_0^G$, as
+opposed to the exact condition $\psi_0$. The exact solution for
+$\phi(t,r) =\phi(t,||{\bf{x}}||_2) = \int_{4\pi}
+\psi(t,\bf{x},\bf{\Omega'}) \, d\bf{\Omega'}$ at $t=1$ is due to [2]
+and code by  Benjamin
+Seibold\footnote{https://www.math.temple.edu/~seibold/research/starmap/
+}, shown in Figure \ref{fig:ref}. Using a second order explicit S$_N$
+code (similar to [3] and [4]) with $N=6$ (yielding $N^2$ ordinates)
+and $N_x = N_y=200$ spatial cells, the scalar flux can be computed
+and is shown in Figure \ref{fig:sn36}.
 
 \section*{Almost exact angular flux}
-To obtain the exact (up to errors in numerical integration) angular flux, we can use the exact (up to errors in the numerical integration) scalar flux as a known source for the transport equation and solve for $\psi(t,\bf{x},\bf{\Omega})$ via
+To obtain the exact (up to errors in numerical integration) angular
+flux, we can use the exact (up to errors in the numerical
+integration) scalar flux as a known source for the transport equation
+and solve for $\psi(t,\bf{x},\bf{\Omega})$ via
 \begin{align}
-\psi(t,{\bf{x}},{\bf{\Omega}}) = e^{-\sigma_s \, t}\psi_0({\bf{x}} - t {\bf{\Omega}})
-+ \int_0^t e^{-\sigma_s(t-\tau)} \phi(t-\tau, ||{\bf{x} }- t {\bf{\Omega}}||_2) \, d\tau.
+  \psi(t,{\bf{x}},{\bf{\Omega}}) = e^{-\sigma_s \, t}\psi_0({\bf{x}}
+  - t {\bf{\Omega}})
+  + \int_0^t e^{-\sigma_s(t-\tau)} \phi(t-\tau, ||{\bf{x} }- t
+  {\bf{\Omega}}||_2) \, d\tau.
 \end{align}
-Numerical, however, we need to solve 
+Numerical, however, we need to solve
 \begin{align}
-\psi^G(t,{\bf{x}},{\bf{\Omega}}) = \underbrace{e^{-\sigma_s \, t}\psi^G_0({\bf{x}} - t {\bf{\Omega}})}_{=:A(t,{\bf{x}},{\bf{\Omega}})}
-+ \underbrace{\int_0^t e^{-\sigma_s(t-\tau)} \phi(t-\tau, ||{\bf{x} }- t {\bf{\Omega}}||_2) \, d\tau}_{=:B(t,{\bf{x}},{\bf{\Omega}})}.
+  \psi^G(t,{\bf{x}},{\bf{\Omega}}) = \underbrace{e^{-\sigma_s \,
+  t}\psi^G_0({\bf{x}} - t {\bf{\Omega}})}_{=:A(t,{\bf{x}},{\bf{\Omega}})}
+  + \underbrace{\int_0^t e^{-\sigma_s(t-\tau)} \phi(t-\tau, ||{\bf{x}
+  }- t {\bf{\Omega}}||_2) \, d\tau}_{=:B(t,{\bf{x}},{\bf{\Omega}})}.
 \end{align}
-The integral $B$ was computationally expensive (and deserves double-checking and more care in general) and is therefore not solved with high accuracy. The scalar fluxes that result from $A$ and $B$, i.e., $\int_{4\pi} A \, d\bf{\Omega'}$ and $\int_{4\pi} B \, d\bf{\Omega'}$, are computed for $N_x=N_y=100$ on $[0,1.5]^2$ and then duplicated to the other four quadrants. The numerical quadrature is a tensorized quadrature using $2\cdot 6$ angles equidistantly spaced in the azimuthal angle and $6 /2$ ordinates for the polar angle, chosen as Gauss-Legendre roots.
+The integral $B$ was computationally expensive (and deserves
+double-checking and more care in general) and is therefore not solved
+with high accuracy. The scalar fluxes that result from $A$ and $B$,
+i.e., $\int_{4\pi} A \, d\bf{\Omega'}$ and $\int_{4\pi} B \,
+d\bf{\Omega'}$, are computed for $N_x=N_y=100$ on $[0,1.5]^2$ and
+then duplicated to the other four quadrants. The numerical quadrature
+is a tensorized quadrature using $2\cdot 6$ angles equidistantly
+spaced in the azimuthal angle and $6 /2$ ordinates for the polar
+angle, chosen as Gauss-Legendre roots.
 
-The exact (up to errors in the numerical integration) angular flux is then integrated using the numerical quadrature, denoted by $\langle \psi^G(1,{\bf{x}},{\bf{\Omega'}}) \rangle$, and shown in Figure \ref{fig:ContributionCombined} and again compared to the S$_6$ computation in Figure \ref{fig:sn36again}. In addition, Figures \ref{fig:IC} and \ref{fig:RHS} show the contributions of $\langle A(1,{\bf{x}},{\bf{\Omega'}}) \rangle$ and $\langle B(1,{\bf{x}},{\bf{\Omega'}})\rangle$, respectively.
+The exact (up to errors in the numerical integration) angular flux is
+then integrated using the numerical quadrature, denoted by $\langle
+\psi^G(1,{\bf{x}},{\bf{\Omega'}}) \rangle$, and shown in Figure
+\ref{fig:ContributionCombined} and again compared to the S$_6$
+computation in Figure \ref{fig:sn36again}. In addition, Figures
+\ref{fig:IC} and \ref{fig:RHS} show the contributions of $\langle
+A(1,{\bf{x}},{\bf{\Omega'}}) \rangle$ and $\langle
+B(1,{\bf{x}},{\bf{\Omega'}})\rangle$, respectively.
 \label{sec:ls}
 
 \begin{figure}[h!]
-\begin{subfigure}[c]{0.43\textwidth}
-	\includegraphics[width=1.0\linewidth]{../REF}
-	\caption{Scalar flux reference solution due to [2].}
-	\label{fig:ref}
-\end{subfigure}
-\hfill
-\begin{subfigure}[c]{0.43\textwidth}
-	\includegraphics[width=1.0\linewidth]{../SN36}
-	\caption{S$_N$ computation using $N=6$, i.e., $36$ ordinates.}
-	\label{fig:sn36}
-\end{subfigure}
+  \begin{subfigure}[c]{0.43\textwidth}
+    \includegraphics[width=1.0\linewidth]{../REF}
+    \caption{Scalar flux reference solution due to [2].}
+    \label{fig:ref}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[c]{0.43\textwidth}
+    \includegraphics[width=1.0\linewidth]{../SN36}
+    \caption{S$_N$ computation using $N=6$, i.e., $36$ ordinates.}
+    \label{fig:sn36}
+  \end{subfigure}
 
-	\begin{subfigure}[c]{0.43\textwidth}
-		\includegraphics[width=1.0\linewidth]{../ContributionCombined}
-		\caption{$\langle \psi^G(1,{\bf{x}},{\bf{\Omega'}})\rangle$.}
-		\label{fig:ContributionCombined}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[c]{0.43\textwidth}
-		\includegraphics[width=1.0\linewidth]{../SN36}
-	\caption{S$_N$ computation using $N=6$, i.e., $36$ ordinates.}
-		\label{fig:sn36again}
-	\end{subfigure}
-\begin{subfigure}[c]{0.43\textwidth}
-	\includegraphics[width=1.0\linewidth]{../ContributionIC}
-	\caption{$\langle A(1,{\bf{x}},{\bf{\Omega'}})\rangle $}
-	\label{fig:IC}
-\end{subfigure}\hfill
-	\begin{subfigure}[c]{0.43\textwidth}
-		\includegraphics[width=1.0\linewidth]{../ContributionRHS}
-		\caption{$\langle B(1,{\bf{x}},{\bf{\Omega'}}) \rangle$}
-		\label{fig:RHS}
-	\end{subfigure}
-\caption{Line-source simulation results.}
+  \begin{subfigure}[c]{0.43\textwidth}
+    \includegraphics[width=1.0\linewidth]{../ContributionCombined}
+    \caption{$\langle \psi^G(1,{\bf{x}},{\bf{\Omega'}})\rangle$.}
+    \label{fig:ContributionCombined}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[c]{0.43\textwidth}
+    \includegraphics[width=1.0\linewidth]{../SN36}
+    \caption{S$_N$ computation using $N=6$, i.e., $36$ ordinates.}
+    \label{fig:sn36again}
+  \end{subfigure}
+  \begin{subfigure}[c]{0.43\textwidth}
+    \includegraphics[width=1.0\linewidth]{../ContributionIC}
+    \caption{$\langle A(1,{\bf{x}},{\bf{\Omega'}})\rangle $}
+    \label{fig:IC}
+  \end{subfigure}\hfill
+  \begin{subfigure}[c]{0.43\textwidth}
+    \includegraphics[width=1.0\linewidth]{../ContributionRHS}
+    \caption{$\langle B(1,{\bf{x}},{\bf{\Omega'}}) \rangle$}
+    \label{fig:RHS}
+  \end{subfigure}
+  \caption{Line-source simulation results.}
 \end{figure}
 
 \FloatBarrier
@@ -78,38 +117,70 @@ The exact (up to errors in the numerical integration) angular flux is then integ
 There are remarks, observations, and questions that follow.
 \subsection*{Some remarks}
 \begin{enumerate}
-	\item $\int_{4\pi}\psi^G(t,{\bf{x}},{\bf{\Omega}}) \, d{\bf{\Omega'}} \not = \phi(t,\bf{x})$ since term $A$ does not use the exact initial conditions. However, evaluating $A$ with the exact initial condition does not seem possible numerically. Additionally, the S$_N$ computations also use the approximated initial conditions. 
-	\item The numerical integration of $B$ is performed with an absolute tolerance of $10^{-2}$ but (very) occasionally, the integral did not seem to convert. As a consequence the maximum number of function evaluations during the numerical integration was set to $1000$. Looking at Figure \ref{fig:RHS}, the results do however look reasonable, at least quality wise.
+  \item $\int_{4\pi}\psi^G(t,{\bf{x}},{\bf{\Omega}}) \,
+    d{\bf{\Omega'}} \not = \phi(t,\bf{x})$ since term $A$ does not
+    use the exact initial conditions. However, evaluating $A$ with
+    the exact initial condition does not seem possible numerically.
+    Additionally, the S$_N$ computations also use the approximated
+    initial conditions.
+  \item The numerical integration of $B$ is performed with an
+    absolute tolerance of $10^{-2}$ but (very) occasionally, the
+    integral did not seem to convert. As a consequence the maximum
+    number of function evaluations during the numerical integration
+    was set to $1000$. Looking at Figure \ref{fig:RHS}, the results
+    do however look reasonable, at least quality wise.
 \end{enumerate}
 
-
-\subsection*{Some observations} 
+\subsection*{Some observations}
 
 \begin{enumerate}
-	\item Since the angular flux is computed (almost) exactly, the ray effects in Figure \ref{fig:ContributionCombined} are exclusively due to the numerical integration of the scalar flux. This scalar flux looks very similar to the S$_6$ simulation results in Figure \ref{fig:sn36again}. 
-	\item Figure \ref{fig:IC} pinpoints the origin of the large ray effects in the S$_6$ simulations. The initial condition only contributes to very few spatial cells, based upon the choice of the quadrature. 	
+  \item Since the angular flux is computed (almost) exactly, the ray
+    effects in Figure \ref{fig:ContributionCombined} are exclusively
+    due to the numerical integration of the scalar flux. This scalar
+    flux looks very similar to the S$_6$ simulation results in Figure
+    \ref{fig:sn36again}.
+  \item Figure \ref{fig:IC} pinpoints the origin of the large ray
+    effects in the S$_6$ simulations. The initial condition only
+    contributes to very few spatial cells, based upon the choice of
+    the quadrature.
 \end{enumerate}
-
 
 \subsection*{Some questions}
 \begin{enumerate}
-	\item Is the only factor that contributes to the presence of ray effects the incorrect integration of the scalar flux? Since we compute the angular flux exactly, this seems like the only error being made (except for numerical integration).
-	\item Is it then fair to use the scalar flux as an error metric to compare S$_N$ computations to the reference scalar flux? Even if the angular flux is solved exactly, the error in the scalar flux can be non-zero. And can we ask the S$_N$ method for more than solving the angular flux exactly?
-	\item We developed ray effect mitigation techniques. But since we saw that the exact angular flux still yields ray effects, aren't our mitigation techniques implying that we purposefully introduce an error in the angular flux just to get a better scalar flux? 
-	\item Should ray effects rather be tackled via a postprocessing step? 
+  \item Is the only factor that contributes to the presence of ray
+    effects the incorrect integration of the scalar flux? Since we
+    compute the angular flux exactly, this seems like the only error
+    being made (except for numerical integration).
+  \item Is it then fair to use the scalar flux as an error metric to
+    compare S$_N$ computations to the reference scalar flux? Even if
+    the angular flux is solved exactly, the error in the scalar flux
+    can be non-zero. And can we ask the S$_N$ method for more than
+    solving the angular flux exactly?
+  \item We developed ray effect mitigation techniques. But since we
+    saw that the exact angular flux still yields ray effects, aren't
+    our mitigation techniques implying that we purposefully introduce
+    an error in the angular flux just to get a better scalar flux?
+  \item Should ray effects rather be tackled via a postprocessing step?
 \end{enumerate}
-
 
 \FloatBarrier
 
 \section*{Bibliography}
 \begin{itemize}
-	\item [[1]] McClarren, Ryan G., and Cory D. Hauck. "Robust and accurate filtered spherical harmonics expansions for radiative transfer." Journal of Computational Physics 229.16 (2010): 5597-5614.
+  \item [[1]] McClarren, Ryan G., and Cory D. Hauck. "Robust and
+    accurate filtered spherical harmonics expansions for radiative
+    transfer." Journal of Computational Physics 229.16 (2010): 5597-5614.
 
-\item [[2]] Ganapol, B. D., et al. Homogeneous infinite media time-dependent analytical benchmarks. No. LA-UR-01-1854. Los Alamos National Laboratory, 2001.
+  \item [[2]] Ganapol, B. D., et al. Homogeneous infinite media
+    time-dependent analytical benchmarks. No. LA-UR-01-1854. Los
+    Alamos National Laboratory, 2001.
 
-\item [[3]] Camminady, Thomas, et al. "Ray effect mitigation for the discrete ordinates method through quadrature rotation." Journal of Computational Physics 382 (2019): 105-123.
+  \item [[3]] Camminady, Thomas, et al. "Ray effect mitigation for
+    the discrete ordinates method through quadrature rotation."
+    Journal of Computational Physics 382 (2019): 105-123.
 
-\item [[4]] Frank, Martin, et al. "Ray Effect Mitigation for the Discrete Ordinates Method Using Artificial Scattering." Nuclear Science and Engineering (2020): 1-18.
+  \item [[4]] Frank, Martin, et al. "Ray Effect Mitigation for the
+    Discrete Ordinates Method Using Artificial Scattering." Nuclear
+    Science and Engineering (2020): 1-18.
 \end{itemize}
 \end{document}

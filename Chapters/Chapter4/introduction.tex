@@ -1,31 +1,62 @@
 
- \section{Introduction}
-Classical transport theory describes a memoryless process: 
-The distance that a particle has already traveled since its last collision does not alter the probability of undergoing a collision in the future. 
-While this theory correctly models and predicts transport in various regimes, experimental and theoretical work has shown its limitations. 
-This initiated the quest for a more general formulation of transport in the recent decade---non-classical transport theories. 
-	 
-On the experimental side, results in atmospheric physics demonstrate the presence of a memory for light transport in clouds \cite{veitel1998geometrical,kostinski2001scale,kostinski2001extinction,borovoi2002extinction,shaw2002super,shaw2002towards}.
-Since the positions of water droplets in clouds are positively correlated, the presence of water droplets increases the likelihood of finding more droplets in the vicinal neighborhood. Conversely, a photon that has already traveled a large distance since its previous collision is likely to further traverse the cloud unhinderedly.
+\section{Introduction}
+Classical transport theory describes a memoryless process:
+The distance that a particle has already traveled since its last
+collision does not alter the probability of undergoing a collision in
+the future.
+While this theory correctly models and predicts transport in various
+regimes, experimental and theoretical work has shown its limitations.
+This initiated the quest for a more general formulation of transport
+in the recent decade---non-classical transport theories.
 
-On the theoretical side, we start by mentioning the\textit{ periodic Lorentz gas } 
-\cite{bourgain1998distribution,golse2008periodic,caglioti2008boltzmann,marklof2008boltzmann,marklof2014free,marklof2011periodic,marklof2014power,marklof2015generalized}. 
-The underlying motivation was to derive a transport equation for particles that interact with a highly correlated medium. 
-Obstacles are placed on a two-dimensional lattice with certain radii and certain distances apart from another and particles undergo elastic collisions with the obstacles. 
-Shrinking the obstacles' radii and distances carefully yields a transport equation that augments the phase-space of the classical transport equation by an additional variable. 
+On the experimental side, results in atmospheric physics demonstrate
+the presence of a memory for light transport in clouds
+\cite{veitel1998geometrical,kostinski2001scale,kostinski2001extinction,borovoi2002extinction,shaw2002super,shaw2002towards}.
+Since the positions of water droplets in clouds are positively
+correlated, the presence of water droplets increases the likelihood
+of finding more droplets in the vicinal neighborhood. Conversely, a
+photon that has already traveled a large distance since its previous
+collision is likely to further traverse the cloud unhinderedly.
+
+On the theoretical side, we start by mentioning the\textit{ periodic
+Lorentz gas }
+\cite{bourgain1998distribution,golse2008periodic,caglioti2008boltzmann,marklof2008boltzmann,marklof2014free,marklof2011periodic,marklof2014power,marklof2015generalized}.
+The underlying motivation was to derive a transport equation for
+particles that interact with a highly correlated medium.
+Obstacles are placed on a two-dimensional lattice with certain radii
+and certain distances apart from another and particles undergo
+elastic collisions with the obstacles.
+Shrinking the obstacles' radii and distances carefully yields a
+transport equation that augments the phase-space of the classical
+transport equation by an additional variable.
 This variable is interpreted as \textit{the distance to the next collision}.
-Independently, a generalized transport theory was hypothesized where the additional variable was interpreted as the \textit{distance since the last event} (be it birth or collision) \cite{larsen2011generalized,vasques2014non,vasques2014non2}. 
-Originated in the nuclear engineering  community, this generalized theory proofed to be a useful tool for e.g. transport in mixtures\cite{vasques2014accuracy} or pebble bed reactors \cite{vasques2014non2}. 
+Independently, a generalized transport theory was hypothesized where
+the additional variable was interpreted as the \textit{distance since
+the last event} (be it birth or collision)
+\cite{larsen2011generalized,vasques2014non,vasques2014non2}.
+Originated in the nuclear engineering  community, this generalized
+theory proofed to be a useful tool for e.g. transport in
+mixtures\cite{vasques2014accuracy} or pebble bed reactors
+\cite{vasques2014non2}.
 
-More recently, non-classical transport has found its way into the computer graphics community. 
-Initial work suggest that non-classical transport is a useful tool for rendering images or animated movies \cite{bitterli2018radiative,d2018reciprocal,d2019reciprocal,deon2019reciprocal3,jarabo2018radiative}. 
+More recently, non-classical transport has found its way into the
+computer graphics community.
+Initial work suggest that non-classical transport is a useful tool
+for rendering images or animated movies
+\cite{bitterli2018radiative,d2018reciprocal,d2019reciprocal,deon2019reciprocal3,jarabo2018radiative}.
 Images appear more realistic and a larger artistic flexibility can be achieved.
 
-Though already addressed in its infancy, the computer graphics community has again highlighted certain limitations of non-classical transport that have to be lifted for it to find broad acceptance and usability. 
-In this work, we are going to focus on one of these limitations: The lack of a description for non-classical transport in heterogeneous media where each medium dictates different transport behavior. 
-Before hypothesizing two sets of heterogeneous non-classical transport equations in Section \ref{sec:transporteqs}, we elaborate on the necessity of distinguishing two species of particles---those that are correlated with the medium and those that are uncorrelated---in Section \ref{sec:corr}. 
-Solution methods for the resulting equations are sketched in Section \ref{sec:Solution methods}. 
+Though already addressed in its infancy, the computer graphics
+community has again highlighted certain limitations of non-classical
+transport that have to be lifted for it to find broad acceptance and usability.
+In this work, we are going to focus on one of these limitations: The
+lack of a description for non-classical transport in heterogeneous
+media where each medium dictates different transport behavior.
+Before hypothesizing two sets of heterogeneous non-classical
+transport equations in Section \ref{sec:transporteqs}, we elaborate
+on the necessity of distinguishing two species of particles---those
+that are correlated with the medium and those that are
+uncorrelated---in Section \ref{sec:corr}.
+Solution methods for the resulting equations are sketched in Section
+\ref{sec:Solution methods}.
 We end with a discussion in Section \ref{sec:discuss}.
- 
- 
- 

@@ -1,111 +1,208 @@
 \part{Non-classical transport}\label{part:2}
 \chapter{Non-classical transport equations}
 \label{chap:nonclassicaltransportequations}
-Not all particles are created equal, for some engage in billiard games that violate Section \ref{sec:transportequations}'s fundamental rule: 
+Not all particles are created equal, for some engage in billiard
+games that violate Section \ref{sec:transportequations}'s fundamental rule:
 Background obstacles ought to be uncorrelated.
-If they are not---and we will go through various examples where this rule is  violated---\textit{classical} transport equations, \ie those that we have encountered so far, model the underlying transport phenomena incorrectly.
-Instead, so-called \textit{non-classical} transport equations emerge, augmenting the phase space of classical transport equations by an additional variable.
-This extra variable can be interpreted both as the distance to collision or the distance since collision, depending on the precise formulation of the non-classical transport equation.
- 
-Different from classical transport in Part \ref{part:1}, non-classical transport, to which Part \ref{part:2} of this thesis is devoted to, is much more novel in its application to radiative transfer.
-This section motivates the necessity of non-classical transport by three applications before delving into further modeling steps that ultimately lead to various ways to generalize classical transport, one of which is the  \textit{generalized linear Boltzmann equation} (GLBE). 
-Throughout Part \ref{part:2}, we will discuss and contribute to so-far unsolved questions regarding the modeling of non-classical transport in the presence of heterogeneities.
- 
- 
- Non-classical transport dates back to the late 2000s and early 2010s where 
- it was independently formalized by Caglioti and Golse \cite{caglioti2010boltzmann, golse2006periodic} and Larsen and Vasques \cite{larsen2011generalized}. 
- Caglioti and Golse discuss the Boltzmann-Grad limit for the periodic Lorentz gas where scatterers are arranged on a lattice rather than at random positions. 
- Larsen and Vasques provide an initial study of non-classical transport, together with the derivation of the respective asymptotic diffusion limit. Numerical test cases show the superiority of non-classical transport equations when modeling transport in a pebble bed reactor.
- Davis and Xu \cite{doi:10.1080/23324309.2014.978083} discussed linear transport in spatially correlated stochastic media in 2014. 
- 
+If they are not---and we will go through various examples where this
+rule is  violated---\textit{classical} transport equations, \ie those
+that we have encountered so far, model the underlying transport
+phenomena incorrectly.
+Instead, so-called \textit{non-classical} transport equations emerge,
+augmenting the phase space of classical transport equations by an
+additional variable.
+This extra variable can be interpreted both as the distance to
+collision or the distance since collision, depending on the precise
+formulation of the non-classical transport equation.
 
- Noteworthy, too, are the recent advances in the computer graphics community. Non-classical transport has been used to enhance the quality and realism of rendered images  \cite{bitterli2018radiative,d2018reciprocal, jarabo2018radiative}. 
- 
- We postpone an extensive discussion of the relevant equations of non-classical transport for now and start off with the first of three examples that demonstrate the violation of classical transport.
- These examples are deliberately chosen to cover different applications and fields of research to showcase the universality of non-classical transport.
- 
- 
- 
- 
+Different from classical transport in Part \ref{part:1},
+non-classical transport, to which Part \ref{part:2} of this thesis is
+devoted to, is much more novel in its application to radiative transfer.
+This section motivates the necessity of non-classical transport by
+three applications before delving into further modeling steps that
+ultimately lead to various ways to generalize classical transport,
+one of which is the  \textit{generalized linear Boltzmann equation} (GLBE).
+Throughout Part \ref{part:2}, we will discuss and contribute to
+so-far unsolved questions regarding the modeling of non-classical
+transport in the presence of heterogeneities.
+
+
+Non-classical transport dates back to the late 2000s and early 2010s where
+it was independently formalized by Caglioti and Golse
+\cite{caglioti2010boltzmann, golse2006periodic} and Larsen and
+Vasques \cite{larsen2011generalized}.
+Caglioti and Golse discuss the Boltzmann-Grad limit for the periodic
+Lorentz gas where scatterers are arranged on a lattice rather than at
+random positions.
+Larsen and Vasques provide an initial study of non-classical
+transport, together with the derivation of the respective asymptotic
+diffusion limit. Numerical test cases show the superiority of
+non-classical transport equations when modeling transport in a pebble
+bed reactor.
+Davis and Xu \cite{doi:10.1080/23324309.2014.978083} discussed linear
+transport in spatially correlated stochastic media in 2014.
+
+
+Noteworthy, too, are the recent advances in the computer graphics
+community. Non-classical transport has been used to enhance the
+quality and realism of rendered images
+\cite{bitterli2018radiative,d2018reciprocal, jarabo2018radiative}.
+
+We postpone an extensive discussion of the relevant equations of
+non-classical transport for now and start off with the first of three
+examples that demonstrate the violation of classical transport.
+These examples are deliberately chosen to cover different
+applications and fields of research to showcase the universality of
+non-classical transport.
+
+
+
+
 \begin{exmp}[Radiation in clouds]
-According to NASA\footnote{The quote is taken from \url{https://www.nasa.gov/image-feature/cloudy-earth}, which itself paraphrases the work published by King et al. \cite{6422379}.}, 
-\enquote{about 67 percent of Earth’s surface is typically covered by clouds,} illustrated in Figure \ref{fig:cloudfraction}.
-Consequently, clouds influence the climate in a variety of ways, one of which is through the interaction with solar radiation. 
-In the mid to late 1990s, however, observations of both under- and overestimation of the solar radiation were reported in the literature \cite{cess1995absorption,ramanathan1995warm,pilewskie1995direct,wild1995validation,arking1996absorption}, ranging from $-10\sfrac{\text{W}}{\text{m}^2}$ to $+30\sfrac{\text{W}}{\text{m}^2}$, respectively.
-With the help of experimental data, Pfeilsticker \cite{pfeilsticker1998first} discovered that the geometric path length distribution of photons is Lévy distributed ($\sim s^{-\gamma-1}$ for large $s$) with Lévy index $1\leq \gamma \leq 2$. This is in stark contrast to Chapter \ref{sec:transportequations}, were the path length distribution for the billiard game was exponentially decaying, not algebraically.
+  According to NASA\footnote{The quote is taken from
+    \url{https://www.nasa.gov/image-feature/cloudy-earth}, which itself
+  paraphrases the work published by King et al. \cite{6422379}.},
+  \enquote{about 67 percent of Earth’s surface is typically covered
+  by clouds,} illustrated in Figure \ref{fig:cloudfraction}.
+  Consequently, clouds influence the climate in a variety of ways,
+  one of which is through the interaction with solar radiation.
+  In the mid to late 1990s, however, observations of both under- and
+  overestimation of the solar radiation were reported in the
+  literature
+  \cite{cess1995absorption,ramanathan1995warm,pilewskie1995direct,wild1995validation,arking1996absorption},
+  ranging from $-10\sfrac{\text{W}}{\text{m}^2}$ to
+  $+30\sfrac{\text{W}}{\text{m}^2}$, respectively.
+  With the help of experimental data, Pfeilsticker
+  \cite{pfeilsticker1998first} discovered that the geometric path
+  length distribution of photons is Lévy distributed ($\sim
+  s^{-\gamma-1}$ for large $s$) with Lévy index $1\leq \gamma \leq
+  2$. This is in stark contrast to Chapter
+  \ref{sec:transportequations}, were the path length distribution for
+  the billiard game was exponentially decaying, not algebraically.
 
-When model and data do not match, it is often a good idea to revise the model (rather than, say, the data). Indeed, the modeling assumption that was made does not hold true in reality: Water droplets, a photon's scatterer, are not distributed randomly. Within clouds, droplets cluster together in some regions while being completely absent in others. Consequently, there is an increased (decreased) probability that a particle will scatter if it has (has not) scattered recently, rendering the  dynamics non-Markovian. As such, the process can not be described with classical transport equations.
+  When model and data do not match, it is often a good idea to revise
+  the model (rather than, say, the data). Indeed, the modeling
+  assumption that was made does not hold true in reality: Water
+  droplets, a photon's scatterer, are not distributed randomly.
+  Within clouds, droplets cluster together in some regions while
+  being completely absent in others. Consequently, there is an
+  increased (decreased) probability that a particle will scatter if
+  it has (has not) scattered recently, rendering the  dynamics
+  non-Markovian. As such, the process can not be described with
+  classical transport equations.
 
-
-\begin{figure}
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/cloudfraction/v8cloudfraction.pdf}
-	\caption{For the month of July 2020, the image shows the averaged cloud fraction with a resolution of $0.25$ degrees. The data was recorded with the Aqua/MODIS satellite by NASA Earth Observations. This visualization reconstructs the image by Reto Stockil, hosted on the NASA website \cite{nasaclouds} (together with the corresponding data).}
-	\label{fig:cloudfraction}
-\end{figure}
-
-
-
+  \begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/cloudfraction/v8cloudfraction.pdf}
+    \caption{For the month of July 2020, the image shows the averaged
+      cloud fraction with a resolution of $0.25$ degrees. The data was
+      recorded with the Aqua/MODIS satellite by NASA Earth
+      Observations. This visualization reconstructs the image by Reto
+      Stockil, hosted on the NASA website \cite{nasaclouds} (together
+    with the corresponding data).}
+    \label{fig:cloudfraction}
+  \end{figure}
 
 \end{exmp}
-
 
 \begin{exmp}[Pebble-bed reactors]
-\enquote{Nuclear power generated around $10\%$ of the world’s electricity in 2019,}
-reads a report by the International Atomic Energy Agency.
-Even though nuclear energy is debated controversially, entirely undisputed, however, is the demand that its mathematical modeling and related predictions be accurate.
+  \enquote{Nuclear power generated around $10\%$ of the world’s
+  electricity in 2019,}
+  reads a report by the International Atomic Energy Agency.
+  Even though nuclear energy is debated controversially, entirely
+  undisputed, however, is the demand that its mathematical modeling
+  and related predictions be accurate.
 
-Pebble-bed reactors (PBR) are a particular kind of graphite-moderated, gas-cooled, very-high-temperature reactors. They get their name from the spherical  pebbles that fuel the reactor. Stacked randomly on top of another, thousands of these pebbles are placed inside a cylindrical reactor core. With an average packing fraction of $81.7\%$, radiation is modeled by the diffusion approximation which uses the atomic mix model to compute the diffusion coefficient as a weighted average of a pebble’s cross section (weighted with $0.817$) and the cross section of vacuum (weighted with $0.183$)  \cite{vasques2009anisotropic, larsen2011generalized, vasques2014non}.
+  Pebble-bed reactors (PBR) are a particular kind of
+  graphite-moderated, gas-cooled, very-high-temperature reactors.
+  They get their name from the spherical  pebbles that fuel the
+  reactor. Stacked randomly on top of another, thousands of these
+  pebbles are placed inside a cylindrical reactor core. With an
+  average packing fraction of $81.7\%$, radiation is modeled by the
+  diffusion approximation which uses the atomic mix model to compute
+  the diffusion coefficient as a weighted average of a pebble’s cross
+  section (weighted with $0.817$) and the cross section of vacuum
+  (weighted with $0.183$)  \cite{vasques2009anisotropic,
+  larsen2011generalized, vasques2014non}.
 
-When compared with Monte Carlo simulations, the diffusion approximation’s error is small but non-negligible. While it might be argued that the discrepancy between both simulations is due to the inapplicability of the diffusion approximation in that particular regime of transport, the asymptotic diffusion limit of a \textit{non-classical} transport equation reduces the error by a factor two to five for the same setup \cite{vasques2014non}. Moreover, when allowing for angular-dependent and non-exponential path length distributions, even asymmetries due to gravity (which, in three dimensions, acts only in the $z$-direction) can be incorporated sufficiently well into non-classical equations.
-Ultimately, the reason why non-classical equations predict radiation in PBRs more accurately is that a particle’s path lengths are not exponentially distributed due to the way the pebbles are stacked.
-
-
+  When compared with Monte Carlo simulations, the diffusion
+  approximation’s error is small but non-negligible. While it might
+  be argued that the discrepancy between both simulations is due to
+  the inapplicability of the diffusion approximation in that
+  particular regime of transport, the asymptotic diffusion limit of a
+  \textit{non-classical} transport equation reduces the error by a
+  factor two to five for the same setup \cite{vasques2014non}.
+  Moreover, when allowing for angular-dependent and non-exponential
+  path length distributions, even asymmetries due to gravity (which,
+  in three dimensions, acts only in the $z$-direction) can be
+  incorporated sufficiently well into non-classical equations.
+  Ultimately, the reason why non-classical equations predict
+  radiation in PBRs more accurately is that a particle’s path lengths
+  are not exponentially distributed due to the way the pebbles are stacked.
 
 \end{exmp}
-
-
-
 
 \begin{figure}
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/bitterli_et_al/WDAS-Cloud.png}
-	\caption{A cloud rendered with a non-exponentially decaying path length distribution. Light penetrates deeper than in the case of exponentially decaying path lengths.
-		This image was provided by Bitterli and a side-by-side comparison of classical and non-classical renders can be found in Bitterli et al. \cite{bitterli2018radiative}. Heterogeneity is introduced into the simulation by assuming a statistically heterogeneous material with identical correlation, similar to Camminady et al. \cite{camminady2017nonclassical}.}
-	\label{fig:nec}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/bitterli_et_al/WDAS-Cloud.png}
+  \caption{A cloud rendered with a non-exponentially decaying path
+    length distribution. Light penetrates deeper than in the case of
+    exponentially decaying path lengths.
+    This image was provided by Bitterli and a side-by-side comparison
+    of classical and non-classical renders can be found in Bitterli et
+    al. \cite{bitterli2018radiative}. Heterogeneity is introduced into
+    the simulation by assuming a statistically heterogeneous material
+    with identical correlation, similar to Camminady et al.
+  \cite{camminady2017nonclassical}.}
+  \label{fig:nec}
 \end{figure}
 
-
-
 \begin{exmp}[Non-classical transport in the field of computer graphics]
-	
-	Produced by Pixar Animation Studios and released by Walt Disney Pictures in 1995, \textit{Toy Story} was the first-ever entirely computer-animated feature film. Its success---Toy Story was praised both by the audience and critics and achieved four Academy Awards in 1996---arguably propelled the animation industry as a whole. The high degree of realism, albeit multifaceted, is largely contributed to the (for its time) unparalleled sophistication of Pixar’s rendering software RenderMan. For objects to look real, not only had their movements to be modeled correctly but also every frame’s illumination. Since light transport is described by kinetic theory’s transport equations, there exists an inherent link between the work discussed thus far and that in the field of computer graphics.
-	
-	While renders of hard, smooth surfaces---\textit{Cars}'s cars or \textit{Toy Story}'s toys---achieve photorealism, some notoriously difficult settings were only recently mastered. This includes, e.g., fur and hair, rough and translucent objects, skin, and---relevant for non-classical transport---clouds. In 2018, Bitterli et al. \cite{bitterli2018radiative} explored the possibility to model light transport through clouds with heavy-tailed transmittance curves which allowed for \enquote{both deeper light penetration as well as a softer appearance near the surface.} A resulting render is shown in Figure \ref{fig:nec}.
-	
-	
-	
-	%This matches the observation of our first example, i.e., transport in clouds is non-classical. 
-	Moreover, non-classical transport increases artistic flexibility, useful to fine-tune renders to look more realistic or appealing by freely choosing the path length distribution. Since scenes in animation movies rarely consist of homogeneous, luminiferous aether, non-classical transport in presence of heterogeneities needs to be understood both from a theoretical and application-oriented viewpoint.
-	
-	
-	
+
+  Produced by Pixar Animation Studios and released by Walt Disney
+  Pictures in 1995, \textit{Toy Story} was the first-ever entirely
+  computer-animated feature film. Its success---Toy Story was praised
+  both by the audience and critics and achieved four Academy Awards
+  in 1996---arguably propelled the animation industry as a whole. The
+  high degree of realism, albeit multifaceted, is largely contributed
+  to the (for its time) unparalleled sophistication of Pixar’s
+  rendering software RenderMan. For objects to look real, not only
+  had their movements to be modeled correctly but also every frame’s
+  illumination. Since light transport is described by kinetic
+  theory’s transport equations, there exists an inherent link between
+  the work discussed thus far and that in the field of computer graphics.
+
+  While renders of hard, smooth surfaces---\textit{Cars}'s cars or
+  \textit{Toy Story}'s toys---achieve photorealism, some notoriously
+  difficult settings were only recently mastered. This includes,
+  e.g., fur and hair, rough and translucent objects, skin,
+  and---relevant for non-classical transport---clouds. In 2018,
+  Bitterli et al. \cite{bitterli2018radiative} explored the
+  possibility to model light transport through clouds with
+  heavy-tailed transmittance curves which allowed for \enquote{both
+    deeper light penetration as well as a softer appearance near the
+  surface.} A resulting render is shown in Figure \ref{fig:nec}.
+
+
+
+  %This matches the observation of our first example, i.e., transport
+  % in clouds is non-classical.
+  Moreover, non-classical transport increases artistic flexibility,
+  useful to fine-tune renders to look more realistic or appealing by
+  freely choosing the path length distribution. Since scenes in
+  animation movies rarely consist of homogeneous, luminiferous
+  aether, non-classical transport in presence of heterogeneities
+  needs to be understood both from a theoretical and
+  application-oriented viewpoint.
 
 
 
 
 \end{exmp}
 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
+
 
 
 
@@ -115,316 +212,508 @@ Ultimately, the reason why non-classical equations predict radiation in PBRs mor
 
 
 \section{Particle billiard redux} \label{sec:particlebilliardredux}
-The particles' interactions with the background obstacles don't differ in their dynamics---particles still undergo elastic, instantaneous collisions---but in the way the scatterers are arranged.
+The particles' interactions with the background obstacles don't
+differ in their dynamics---particles still undergo elastic,
+instantaneous collisions---but in the way the scatterers are arranged.
 
-With randomly distributed scatterers representing one end of the spectrum of correlation, scatters that build a perfect lattice fall on the other end; such a situation is depicted with a single particle's trajectory in Figure \ref{fig:particlebilliardtableNC}.
-To quantify the distribution of path lengths, a distinction needs to be made that was not necessary for the random billiard table: Tallying a single particle's trajectory for $n$ steps is different from tallying $n$ particles' trajectories for a single step. For a single particle, only one path length (the very first) can be smaller than the minimal distance between two obstacles' boundaries. Afterwards, a particle that reflects from an obstacle will not encounter another obstacle before having traveled this minimum distance. But the different statistics are not only limited to the infinitesimally small region. For asymptotically large path lengths, the two resulting distributions decay with different orders of magnitude. These findings are summarized in Figure \ref{fig:differentpathlengthsoverview}. 
+With randomly distributed scatterers representing one end of the
+spectrum of correlation, scatters that build a perfect lattice fall
+on the other end; such a situation is depicted with a single
+particle's trajectory in Figure \ref{fig:particlebilliardtableNC}.
+To quantify the distribution of path lengths, a distinction needs to
+be made that was not necessary for the random billiard table:
+Tallying a single particle's trajectory for $n$ steps is different
+from tallying $n$ particles' trajectories for a single step. For a
+single particle, only one path length (the very first) can be smaller
+than the minimal distance between two obstacles' boundaries.
+Afterwards, a particle that reflects from an obstacle will not
+encounter another obstacle before having traveled this minimum
+distance. But the different statistics are not only limited to the
+infinitesimally small region. For asymptotically large path lengths,
+the two resulting distributions decay with different orders of
+magnitude. These findings are summarized in Figure
+\ref{fig:differentpathlengthsoverview}.
 This difference in behavior requires a more precise language.
 
-
 \begin{definition}[Distance to collision]
-	A particle at $(\bx,\bOmega) \in \mathbb{R}^d \times \mathbb{S}^{d-1}$ is said to have distance to collision $s$, if it undergoes its next collision (where it scatters or gets absorbed) at $\bx + s\cdot\bOmega$.
+  A particle at $(\bx,\bOmega) \in \mathbb{R}^d \times
+  \mathbb{S}^{d-1}$ is said to have distance to collision $s$, if it
+  undergoes its next collision (where it scatters or gets absorbed)
+  at $\bx + s\cdot\bOmega$.
 \end{definition}
 \begin{definition}[Distance since collision]
-	A particle at $(\bx,\bOmega) \in \mathbb{R}^d \times \mathbb{S}^{d-1}$ is said to have distance since collision $s$, if it underwent its last collision (where it scattered) at $\bx - s\cdot\bOmega$.
+  A particle at $(\bx,\bOmega) \in \mathbb{R}^d \times
+  \mathbb{S}^{d-1}$ is said to have distance since collision $s$, if
+  it underwent its last collision (where it scattered) at $\bx - s\cdot\bOmega$.
 \end{definition}
 
 \begin{definition}[Distance since birth]
-		A particle at $(\bx,\bOmega) \in \mathbb{R}^d \times \mathbb{S}^{d-1}$ is said to have distance since birth $s$, if, at $\bx - s\cdot \bOmega$, it entered the domain through the boundary or was emitted by a source.
+  A particle at $(\bx,\bOmega) \in \mathbb{R}^d \times
+  \mathbb{S}^{d-1}$ is said to have distance since birth $s$, if, at
+  $\bx - s\cdot \bOmega$, it entered the domain through the boundary
+  or was emitted by a source.
 \end{definition}
 
 \begin{definition}[Distance between collisions]
-	A particle is said to have distance between collisions $s$, if it travels a distance $s$ between a scattering event and the consecutive collision (where it scatters or gets absorbed).
+  A particle is said to have distance between collisions $s$, if it
+  travels a distance $s$ between a scattering event and the
+  consecutive collision (where it scatters or gets absorbed).
 \end{definition}
 
-
 \begin{figure}
-	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/billiardtable/particlebilliardtable}
-	\caption{A non-classical billiard game where scatterers' centers are arranged according to a lattice structure. This setup is also known under the name \textit{periodic Lorentz gas}. The (solid) white ball's trajectory is shown.}
-	\label{fig:particlebilliardtableNC}
+  \centering
+  \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/billiardtable/particlebilliardtable}
+  \caption{A non-classical billiard game where scatterers' centers
+    are arranged according to a lattice structure. This setup is also
+    known under the name \textit{periodic Lorentz gas}. The (solid)
+  white ball's trajectory is shown.}
+  \label{fig:particlebilliardtableNC}
 \end{figure}
 
-
 \begin{figure}
-	\begin{subfigure}{\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/pathlengths/stepmany}
-		\caption{Path lengths of $10^6$ particles from their birth (at a random position inside the lattice, not touching any obstacle) to their first collision. These path lengths are the \textit{distances to collisions}. Distances smaller than the lattice gap occur frequently.}
-		\label{fig:many}
-	\end{subfigure}
-\vfill
-\begin{subfigure}{\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/pathlengths/stepone}
-	\caption{Path lengths of a single particle's trajectory  over the course of $10^6$ consecutive collisions. At most one (the first) path length is smaller than the lattice gap.
-	Except for the first path length, these are the \textit{distances between collisions}. The result, especially the asymptotic region, looks very similar when the experiment is repeated with other random initial positions and velocities.}
-	\label{fig:one}
-\end{subfigure}
-\vfill
-\begin{subfigure}{\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/pathlengths/both}
-	\caption{Both images combined with zoom. The histogram is recomputed with matching binning.}
-	\label{fig:combined}
-\end{subfigure}
-\caption{Path length distributions in the periodic Lorentz gas with $\sigma= 1.0$ and $10^6$ obstacles, which results in a radius of $2\cdot 10^{-6}$ for each obstacle. The lattice gap---the minimal 
-	distance between obstacles' boundaries---is $0.000996$. The first two plots use $100$ log-spaced bins, the last plot uses $30$.}
- \label{fig:differentpathlengthsoverview}
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/pathlengths/stepmany}
+    \caption{Path lengths of $10^6$ particles from their birth (at a
+      random position inside the lattice, not touching any obstacle) to
+      their first collision. These path lengths are the
+      \textit{distances to collisions}. Distances smaller than the
+    lattice gap occur frequently.}
+    \label{fig:many}
+  \end{subfigure}
+  \vfill
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/pathlengths/stepone}
+    \caption{Path lengths of a single particle's trajectory  over the
+      course of $10^6$ consecutive collisions. At most one (the
+      first) path length is smaller than the lattice gap.
+      Except for the first path length, these are the \textit{distances
+      between collisions}. The result, especially the asymptotic
+      region, looks very similar when the experiment is repeated with
+    other random initial positions and velocities.}
+    \label{fig:one}
+  \end{subfigure}
+  \vfill
+  \begin{subfigure}{\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/pathlengths/both}
+    \caption{Both images combined with zoom. The histogram is
+    recomputed with matching binning.}
+    \label{fig:combined}
+  \end{subfigure}
+  \caption{Path length distributions in the periodic Lorentz gas with
+    $\sigma= 1.0$ and $10^6$ obstacles, which results in a radius of
+    $2\cdot 10^{-6}$ for each obstacle. The lattice gap---the minimal
+    distance between obstacles' boundaries---is $0.000996$. The first
+  two plots use $100$ log-spaced bins, the last plot uses $30$.}
+  \label{fig:differentpathlengthsoverview}
 \end{figure}
 
-
-
-
 \begin{figure}
-	\begin{subfigure}{0.32\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/lattice/100}
-		\caption{$n_\text{obs}=100$, $r=0.02$.}
-		\label{fig:100}
-	\end{subfigure}
-	\hfill
-		\begin{subfigure}{0.32\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/lattice/900}
-		\caption{$n_\text{obs} = 900$, $r=0.00\bar{2}$.}
-		\label{fig:900}
-	\end{subfigure}
-	\hfill
-		\begin{subfigure}{0.32\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/lattice/8100}
-		\caption{$n_\text{obs}=8100$, $r\approx0.0002469$.}
-		\label{fig:8100}
-	\end{subfigure}
-	\caption{Trajectory of $2000$ particles from their birth (at a random position, not touching an obstacle) to their first collision. For all three images, $n_\text{obs} \cdot r$ is constant. The orientation of the lattice fades as we increase the number of obstacles, visible in the trajectories. The domains are periodic.}
-	\label{fig:latticerefinement}
+  \begin{subfigure}{0.32\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/lattice/100}
+    \caption{$n_\text{obs}=100$, $r=0.02$.}
+    \label{fig:100}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.32\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/lattice/900}
+    \caption{$n_\text{obs} = 900$, $r=0.00\bar{2}$.}
+    \label{fig:900}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.32\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter4/figs/lattice/8100}
+    \caption{$n_\text{obs}=8100$, $r\approx0.0002469$.}
+    \label{fig:8100}
+  \end{subfigure}
+  \caption{Trajectory of $2000$ particles from their birth (at a
+    random position, not touching an obstacle) to their first
+    collision. For all three images, $n_\text{obs} \cdot r$ is
+    constant. The orientation of the lattice fades as we increase the
+  number of obstacles, visible in the trajectories. The domains are periodic.}
+  \label{fig:latticerefinement}
 \end{figure}
 
+Consequentially, Figures \ref{fig:many} and \ref{fig:one} show the
+distances to collisions and the distances between collision (except
+for the very first of the $10^6$ path lengths), respectively.
 
+Similar to the random case, we can also perform a Boltzmann-Grad
+limit for the periodic Lorentz gas. The details of this procedure and
+the mathematical analysis, however, are beyond the scope of this work
+and are explained thoroughly in the work by Golse et al.
+\cite{golse2006periodic,golse2008periodic}. Moreover, non-classical
+transport is not restricted to the periodic Lorentz gas but a more
+general phenomena.
+Nevertheless, two essential properties are exemplified. Both of these
+can be understood without executing the Boltzmann-Grad limit in a
+formal manner and instead following Terrence Tao's idea that
+\enquote{[t]here's more to mathematics than rigor and proofs.}
 
+First---though somewhat counterintuitive---it is worth noting that in
+the limit of $r\rightarrow 0$ with $n_\text{obs}\cdot r =
+\text{const.}$, transport in the periodic Lorentz gas is isotropic
+since the effect of the lattice orientation vanishes. While the
+lattice imposes a preference for particles to travel along horizontal
+and vertical \textit{channels}, shrinking the obstacles' radii
+effectively opens up more and more channels along all possible
+directions. This is illustrated in Figure \ref{fig:latticerefinement},
+where we see trajectories for particles in a periodic Lorentz gas
+with radii $r=0.02$, $r=0.00\bar{2}$, and $r\approx 0.00025$,
+respectively. The higher the number of obstacles, the smaller the
+preference for horizontal and vertical directions.
 
-
-Consequentially, Figures \ref{fig:many} and \ref{fig:one} show the distances to collisions and the distances between collision (except for the very first of the $10^6$ path lengths), respectively.
-
-Similar to the random case, we can also perform a Boltzmann-Grad limit for the periodic Lorentz gas. The details of this procedure and the mathematical analysis, however, are beyond the scope of this work and are explained thoroughly in the work by Golse et al. \cite{golse2006periodic,golse2008periodic}. Moreover, non-classical transport is not restricted to the periodic Lorentz gas but a more general phenomena.
-Nevertheless, two essential properties are exemplified. Both of these can be understood without executing the Boltzmann-Grad limit in a formal manner and instead following Terrence Tao's idea that \enquote{[t]here's more to mathematics than rigor and proofs.} 
-
-First---though somewhat counterintuitive---it is worth noting that in the limit of $r\rightarrow 0$ with $n_\text{obs}\cdot r = \text{const.}$, transport in the periodic Lorentz gas is isotropic since the effect of the lattice orientation vanishes. While the lattice imposes a preference for particles to travel along horizontal and vertical \textit{channels}, shrinking the obstacles' radii effectively opens up more and more channels along all possible directions. This is illustrated in Figure \ref{fig:latticerefinement}, 
-where we see trajectories for particles in a periodic Lorentz gas with radii $r=0.02$, $r=0.00\bar{2}$, and $r\approx 0.00025$, respectively. The higher the number of obstacles, the smaller the preference for horizontal and vertical directions.
-
-Second---and while this property is not surprising, its consequences are---the path length distributions (all four that were defined earlier) are non-exponential. Consider (without loss of generality) the distance since a particle's previous interaction. If the respective probability were to be exponential,
- \begin{align}
- \text{Pr}\left(S>s+\Delta s| S>s \right) = \text{Pr}\left(S>\Delta s\right).
- \end{align}
+Second---and while this property is not surprising, its consequences
+are---the path length distributions (all four that were defined
+earlier) are non-exponential. Consider (without loss of generality)
+the distance since a particle's previous interaction. If the
+respective probability were to be exponential,
+\begin{align}
+  \text{Pr}\left(S>s+\Delta s| S>s \right) = \text{Pr}\left(S>\Delta s\right).
+\end{align}
 However, since this is not the case,
- \begin{align}
-\text{Pr}\left(S>s+\Delta s| S>s \right) \not = \text{Pr}\left(S>\Delta s\right),
-\end{align}
-and as a consequence particles must have a \textit{memory}. This memory manifests itself in the fact that the distance traveled by a particle influences its probability to undergo collisions in the future. Thinking back to the example of the periodic Lorentz gas, a particle that has already traveled a long distance might move through one of the domain's channels and is therefore likely to continue unhinderedly. Conversely, a particle that just underwent a collision might be reflected towards a nearby obstacle, scattering again almost immediately. Instead of expressing this memory in terms of the path length distribution, an equivalent formulation makes the total cross section dependent on the distance since collision $s$, since
 \begin{align}
-\sigma_t(s) = \frac{p(s)}{1-\int_0^s p(s')\, ds'}.
+  \text{Pr}\left(S>s+\Delta s| S>s \right) \not =
+  \text{Pr}\left(S>\Delta s\right),
 \end{align}
-It is easy to verify that this expression is constant if and only if $p(s)$ is an exponential distribution. If, for example, 
+and as a consequence particles must have a \textit{memory}. This
+memory manifests itself in the fact that the distance traveled by a
+particle influences its probability to undergo collisions in the
+future. Thinking back to the example of the periodic Lorentz gas, a
+particle that has already traveled a long distance might move through
+one of the domain's channels and is therefore likely to continue
+unhinderedly. Conversely, a particle that just underwent a collision
+might be reflected towards a nearby obstacle, scattering again almost
+immediately. Instead of expressing this memory in terms of the path
+length distribution, an equivalent formulation makes the total cross
+section dependent on the distance since collision $s$, since
 \begin{align}
-p(s) = s e^{-s},
+  \sigma_t(s) = \frac{p(s)}{1-\int_0^s p(s')\, ds'}.
 \end{align}
-then 
+It is easy to verify that this expression is constant if and only if
+$p(s)$ is an exponential distribution. If, for example,
 \begin{align}
-\sigma_t(s) = \frac{s}{1+s}
+  p(s) = s e^{-s},
 \end{align}
-and the likelihood to scatter increases as $s$ increases. Alternatively, we can make an algebraic ansatz and assume that $p$ is a Pareto distribution, \ie
+then
 \begin{align}
-p_{\alpha,x_m}(s) = 
-\begin{cases}
-0 &\text{ if } s<x_m,\\
-\frac{\alpha x_m^\alpha}{x^{\alpha+1}} &\text{ if } s\geq x_m.
-\end{cases}
+  \sigma_t(s) = \frac{s}{1+s}
 \end{align}
-For $\alpha=2$ and $x_m=1$, 
+and the likelihood to scatter increases as $s$ increases.
+Alternatively, we can make an algebraic ansatz and assume that $p$ is
+a Pareto distribution, \ie
 \begin{align}
-\sigma_t(s) = 
-\begin{cases}
-0 &\text{ if } s<1, \\
-\frac{2}{s} &\text{ if } s\geq 1,
-\end{cases}
+  p_{\alpha,x_m}(s) =
+  \begin{cases}
+    0 &\text{ if } s<x_m,\\
+    \frac{\alpha x_m^\alpha}{x^{\alpha+1}} &\text{ if } s\geq x_m.
+  \end{cases}
 \end{align}
-and particles are less likely to scatter the further they travel. Whether the flexibility to choose a path length distribution is reflected in a corresponding arrangement of obstacles is unclear and it seems more likely that certain distributions are not the result of a Boltzmann-Grad-like limit of an arrangement of obstacles.
+For $\alpha=2$ and $x_m=1$,
+\begin{align}
+  \sigma_t(s) =
+  \begin{cases}
+    0 &\text{ if } s<1, \\
+    \frac{2}{s} &\text{ if } s\geq 1,
+  \end{cases}
+\end{align}
+and particles are less likely to scatter the further they travel.
+Whether the flexibility to choose a path length distribution is
+reflected in a corresponding arrangement of obstacles is unclear and
+it seems more likely that certain distributions are not the result of
+a Boltzmann-Grad-like limit of an arrangement of obstacles.
 
-
-
-
-Finally, to tease Chapter \ref{chap:heterogeneousnonclassical}, we briefly mention non-classical transport in the presence of material heterogeneities. Here, the following question arises: How do we correctly encode the memory of particles as they transition between the different materials? Given a lack of experimental evidence, arguments for different models can be made---some of which will be presented here.
-In this chapter, however, we restrict ourselves to the homogeneous case and are now prepared to analyze the governing equations of homogeneous, non-classical transport.
-
-
+Finally, to tease Chapter \ref{chap:heterogeneousnonclassical}, we
+briefly mention non-classical transport in the presence of material
+heterogeneities. Here, the following question arises: How do we
+correctly encode the memory of particles as they transition between
+the different materials? Given a lack of experimental evidence,
+arguments for different models can be made---some of which will be
+presented here.
+In this chapter, however, we restrict ourselves to the homogeneous
+case and are now prepared to analyze the governing equations of
+homogeneous, non-classical transport.
 
 \section{Generalized linear Boltzmann equations}
-We start out simple and add more complexity as we go along. For now, we omit the distinction between distance since collision and distance since birth and write the generalized liner Boltzmann equation (GLBE) in terms of the distance since the last interaction.  Similar to Larsen and Vasques \cite{larsen2011generalized}, we make the following definitions:
-
+We start out simple and add more complexity as we go along. For now,
+we omit the distinction between distance since collision and distance
+since birth and write the generalized liner Boltzmann equation (GLBE)
+in terms of the distance since the last interaction.  Similar to
+Larsen and Vasques \cite{larsen2011generalized}, we make the
+following definitions:
 
 \begin{align*}
-{V} =                                       
-& \text{ ``the spatial domain with boundary }\partial{V}."                                                     
-\\
-\bx =                                            
-& \text{ ``the position }(x,y,z)\in {V}."                                                                 
-\\
-{\bf{n}}(\bx) =                                  
-& \, {\bf{n}} =\text{ ``the outward pointing normal vector at }\bx \in \partial{V}."                    
-\\
-\bOmega =                                        
-& \text{ ``the direction of flight }(\Omega_x,\Omega_y,\Omega_z) \text { with unit speed.}"                    
-\\
-s =                                              
-& \text{ ``the distance that a particle has traveled since the previous event,}                         \\ & \text{ \, be it birth or scattering.}"
-\\
-v=                                               
-& \text{ ``the particle speed.}"                                                                               
-\\
-N(s,\bx,\bOmega)\, ds\,d\bx\, d\bOmega = 
-& \text{ ``the number of particles in }ds\, d{\bx}\, d\bOmega \text{ about } (s,\bx,\bOmega)." 
-\\
-\psi(s,\bx,\bOmega) =                             & \,  v \, N(s,\bx,\bOmega)= \text{ ``the non-classical angular flux.}"                                        
-\\
-\sigma_{t}(s)\, ds =                           & \text{ ``the probability that a particle which has  traveled a distance }s                         \\ & \text{ \, since a previous event experiences a collision while traveling }\\ &\text{ \, a further distance } ds."  
-\\
-c =                                              & \text{ ``the probability that a particle that experiences a collision will scatter.}"                        
-\\
-s(\bOmega' \cdot \bOmega)\, d\bOmega =           & \text{ ``the probability that a particle  with pre-collision direction } \bOmega'                           \\ &\text{ \, scatters into a post-collision direction that lies in }d\bOmega \text{ about } \bOmega."
-\\
-\delta(s) =                                      & \text { ``the Dirac delta function evaluated at }s."
-\\
-Q(\bx)\,d{\bx} =                            & \text{ ``the rate at which particles are isotropically emitted by an internal source}                       
-\\
-& \text{ \, in } d{\bx} \text{ about } \bx."          
-\\
-l(\bx,\bOmega) = &\text{ ``the distance to the domain's boundary from }\bx \text{ in direction } -\bOmega."
+  {V} =
+  & \text{ ``the spatial domain with boundary }\partial{V}."
+  \\
+  \bx =
+  & \text{ ``the position }(x,y,z)\in {V}."
+  \\
+  {\bf{n}}(\bx) =
+  & \, {\bf{n}} =\text{ ``the outward pointing normal vector at }\bx
+  \in \partial{V}."
+  \\
+  \bOmega =
+  & \text{ ``the direction of flight }(\Omega_x,\Omega_y,\Omega_z)
+  \text { with unit speed.}"
+  \\
+  s =
+  & \text{ ``the distance that a particle has traveled since the
+  previous event,}                         \\ & \text{ \, be it birth
+  or scattering.}"
+  \\
+  v=
+  & \text{ ``the particle speed.}"
+  \\
+  N(s,\bx,\bOmega)\, ds\,d\bx\, d\bOmega =
+  & \text{ ``the number of particles in }ds\, d{\bx}\, d\bOmega
+  \text{ about } (s,\bx,\bOmega)."
+  \\
+  \psi(s,\bx,\bOmega) =                             & \,  v \,
+  N(s,\bx,\bOmega)= \text{ ``the non-classical angular flux.}"
+  \\
+  \sigma_{t}(s)\, ds =                           & \text{ ``the
+  probability that a particle which has  traveled a distance }s
+  \\ & \text{ \, since a previous event experiences a collision while
+  traveling }\\ &\text{ \, a further distance } ds."
+  \\
+  c =                                              & \text{ ``the
+  probability that a particle that experiences a collision will scatter.}"
+  \\
+  s(\bOmega' \cdot \bOmega)\, d\bOmega =           & \text{ ``the
+  probability that a particle  with pre-collision direction }
+  \bOmega'                           \\ &\text{ \, scatters into a
+  post-collision direction that lies in }d\bOmega \text{ about } \bOmega."
+  \\
+  \delta(s) =                                      & \text { ``the
+  Dirac delta function evaluated at }s."
+  \\
+  Q(\bx)\,d{\bx} =                            & \text{ ``the rate at
+  which particles are isotropically emitted by an internal source}
+  \\
+  & \text{ \, in } d{\bx} \text{ about } \bx."
+  \\
+  l(\bx,\bOmega) = &\text{ ``the distance to the domain's boundary
+  from }\bx \text{ in direction } -\bOmega."
 \end{align*}
-Just like the time-dependent classical transport equation, the GLBE follows from balancing the gain terms (in-scattering and source contributions) with the loss terms (leakage and collisions). Since particles with any value of $s$ can leak or scatter, but we only gain particles with $s=0$, the gain terms need to be multiplied with the Dirac delta function.
+Just like the time-dependent classical transport equation, the GLBE
+follows from balancing the gain terms (in-scattering and source
+contributions) with the loss terms (leakage and collisions). Since
+particles with any value of $s$ can leak or scatter, but we only gain
+particles with $s=0$, the gain terms need to be multiplied with the
+Dirac delta function.
 The result is then
 \begin{equation}
-\begin{split}
-\underbrace{\partial_s \psi(s,\bx,\bOmega)}_\text{rate of change}
-=& -\underbrace{\bOmega \cdot \nabla_\bx \psi(s,\bx,\bOmega) - \sigma_t(s) \psi(s,\bx,\bOmega)}_\text{leakage and collision} \\
-&
-+\underbrace{\delta(s)  \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot \bOmega) \, \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+ \delta(s) Q(\bx)}_\text{in-scattering and source}.
-\end{split}\end{equation}
-Written more recognizable, we define the generalized linear Boltzmann equation, formulated in terms of the distance since an interaction, as
+  \begin{split}
+    \underbrace{\partial_s \psi(s,\bx,\bOmega)}_\text{rate of change}
+    =& -\underbrace{\bOmega \cdot \nabla_\bx \psi(s,\bx,\bOmega) -
+    \sigma_t(s) \psi(s,\bx,\bOmega)}_\text{leakage and collision} \\
+    &
+    +\underbrace{\delta(s)  \int_0^{l(\bx,\bOmega)}
+      \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot \bOmega)
+      \, \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+ \delta(s)
+    Q(\bx)}_\text{in-scattering and source}.
+  \end{split}
+\end{equation}
+Written more recognizable, we define the generalized linear Boltzmann
+equation, formulated in terms of the distance since an interaction, as
 \begin{equation}
-\begin{split}
-\partial_s \psi(s,\bx,\bOmega) &+\bOmega \cdot \nabla_\bx \psi(s,\bx,\bOmega) + \sigma_t(s) \psi(s,\bx,\bOmega) \\
-&=\delta(s)  \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2} c \, \sigma_t(s') s(\bOmega' \cdot \bOmega) \, \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+ \delta(s) Q(\bx).
- \end{split}
- \label{eq:GLBE_backward}
- \end{equation}
+  \begin{split}
+    \partial_s \psi(s,\bx,\bOmega) &+\bOmega \cdot \nabla_\bx
+    \psi(s,\bx,\bOmega) + \sigma_t(s) \psi(s,\bx,\bOmega) \\
+    &=\delta(s)  \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2} c \,
+    \sigma_t(s') s(\bOmega' \cdot \bOmega) \, \psi(s',\bx,\bOmega')\,
+    d\bOmega' \, ds'+ \delta(s) Q(\bx).
+  \end{split}
+  \label{eq:GLBE_backward}
+\end{equation}
 Some remarks are noteworthy.
 %\begin{remark}
-%	Together with an integral equation formulation and an asymptotic diffusion limit, 
-%	the above formulation of the GLBE dates back to work by Larsen and Vasques [XXX]. Both publications motivate the non-classical transport with the aforementioned observations and measurements in clouds. 
-%	Angular anisotroy has been subsequently incorporated in Vasques Larsen , ......	
+%  Together with an integral equation formulation and an asymptotic
+% diffusion limit,
+%  the above formulation of the GLBE dates back to work by Larsen and
+% Vasques [XXX]. Both publications motivate the non-classical
+% transport with the aforementioned observations and measurements in clouds.
+%  Angular anisotroy has been subsequently incorporated in Vasques
+% Larsen , ......
 %\end{remark}
 \begin{remark}
-	This is the \textit{backward} formulation of the GLBE. Backward in the sense that, given any tuple $(s,\bx,\bOmega)$, we do know where a particle originated (at $\bx - s\cdot\bOmega$), but not where it will collide.
+  This is the \textit{backward} formulation of the GLBE. Backward in
+  the sense that, given any tuple $(s,\bx,\bOmega)$, we do know where
+  a particle originated (at $\bx - s\cdot\bOmega$), but not where it
+  will collide.
 \end{remark}
 \begin{remark}
-Equation \eqref{eq:GLBE_backward} looks similar to the time-dependent classical transport equation, but with a time-dependent cross section and additional delta functions on the right-hand side. Indeed, if it weren't for the delta functions, the backward GLBE could be solved with a standard time-dependent transport code that allows to incorporate a dependency on $s$ in the cross section. But because particles have their memory reset after a collision or when they emerge from a source, a numerical algorithm like S$_N$ that evolves transport forward in time does not immediately work here. The Monte Carlo method, however, can be adapted easily.
+  Equation \eqref{eq:GLBE_backward} looks similar to the
+  time-dependent classical transport equation, but with a
+  time-dependent cross section and additional delta functions on the
+  right-hand side. Indeed, if it weren't for the delta functions, the
+  backward GLBE could be solved with a standard time-dependent
+  transport code that allows to incorporate a dependency on $s$ in
+  the cross section. But because particles have their memory reset
+  after a collision or when they emerge from a source, a numerical
+  algorithm like S$_N$ that evolves transport forward in time does
+  not immediately work here. The Monte Carlo method, however, can be
+  adapted easily.
 \end{remark}
 \begin{remark}
-When generalizing an equation, it should always reduce to its simpler form if the assumptions are the same. This is the case in \eqref{eq:GLBE_backward} with $\sigma_t(s) = \sigma_t$ independent of $s$, followed by operating with $\int_{-\varepsilon}^\infty \cdot \, ds$ and letting $\varepsilon \rightarrow 0$, \ie
-\begin{equation}
-\begin{split}
-\lim_{\varepsilon \rightarrow 0} \int_{-\varepsilon}^\infty \,
-\partial_s \psi(s,\bx,\bOmega) &+\bOmega \cdot \nabla_\bx \psi(s,\bx,\bOmega) + \sigma_t \psi(s,\bx,\bOmega)  \, ds\\
-&=
-\lim_{\varepsilon \rightarrow 0} \int_{-\varepsilon}^\infty\delta(s)  \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2} c \, \sigma_t s(\bOmega' \cdot \bOmega) \, \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+ \delta(s) Q(\bx) \, ds.
-\end{split}
-\label{eq:GLBE_backward_reduces_to_classical}
-\end{equation}
-Since the classical angular (and scalar) flux is agnostic to $s$, we have $\psi(\bx,\bOmega) = \int_0^\infty \psi(s,\bx,\bOmega) \, ds$\footnote{The non-classical angular flux outside the spatial domain is zero and we therefore write $\int_0^\infty \cdot \,ds$ instead of $\int_0^{l(\bx,\bOmega)} \cdot \, ds$. }. Equation \ref{eq:GLBE_backward_reduces_to_classical} is then equivalent to
-\begin{equation}
-	\begin{split}
-		\lim_{\varepsilon \rightarrow 0}
-		 \psi(s,\bx,\bOmega) \bigg\rvert_{s=-\varepsilon}^{s=\infty}&+\bOmega \cdot \nabla_\bx \psi(\bx,\bOmega) + \sigma_t \psi(\bx,\bOmega) \\
-		&=
-c \, \sigma_t \,	  \int_{\mathbb{S}^2}  s(\bOmega' \cdot \bOmega) \, \psi(\bx,\bOmega')\, d\bOmega' +  Q(\bx) ,
-	\end{split}
-	\label{eq:GLBE_backward_reduces_to_classical_reduced}
-\end{equation}
-which---because the first term vanishes---is exactly the classical, time-independent transport equation. %\todo{WHY do the boundary terms vanish?}
+  When generalizing an equation, it should always reduce to its
+  simpler form if the assumptions are the same. This is the case in
+  \eqref{eq:GLBE_backward} with $\sigma_t(s) = \sigma_t$ independent
+  of $s$, followed by operating with $\int_{-\varepsilon}^\infty
+  \cdot \, ds$ and letting $\varepsilon \rightarrow 0$, \ie
+  \begin{equation}
+    \begin{split}
+      \lim_{\varepsilon \rightarrow 0} \int_{-\varepsilon}^\infty \,
+      \partial_s \psi(s,\bx,\bOmega) &+\bOmega \cdot \nabla_\bx
+      \psi(s,\bx,\bOmega) + \sigma_t \psi(s,\bx,\bOmega)  \, ds\\
+      &=
+      \lim_{\varepsilon \rightarrow 0}
+      \int_{-\varepsilon}^\infty\delta(s)  \int_0^{l(\bx,\bOmega)}
+      \int_{\mathbb{S}^2} c \, \sigma_t s(\bOmega' \cdot \bOmega) \,
+      \psi(s',\bx,\bOmega')\, d\bOmega' \, ds'+ \delta(s) Q(\bx) \, ds.
+    \end{split}
+    \label{eq:GLBE_backward_reduces_to_classical}
+  \end{equation}
+  Since the classical angular (and scalar) flux is agnostic to $s$,
+  we have $\psi(\bx,\bOmega) = \int_0^\infty \psi(s,\bx,\bOmega) \,
+  ds$\footnote{The non-classical angular flux outside the spatial
+    domain is zero and we therefore write $\int_0^\infty \cdot \,ds$
+  instead of $\int_0^{l(\bx,\bOmega)} \cdot \, ds$. }. Equation
+  \ref{eq:GLBE_backward_reduces_to_classical} is then equivalent to
+  \begin{equation}
+    \begin{split}
+      \lim_{\varepsilon \rightarrow 0}
+      \psi(s,\bx,\bOmega)
+      \bigg\rvert_{s=-\varepsilon}^{s=\infty}&+\bOmega \cdot
+      \nabla_\bx \psi(\bx,\bOmega) + \sigma_t \psi(\bx,\bOmega) \\
+      &=
+      c \, \sigma_t \,    \int_{\mathbb{S}^2}  s(\bOmega' \cdot
+      \bOmega) \, \psi(\bx,\bOmega')\, d\bOmega' +  Q(\bx) ,
+    \end{split}
+    \label{eq:GLBE_backward_reduces_to_classical_reduced}
+  \end{equation}
+  which---because the first term vanishes---is exactly the classical,
+  time-independent transport equation. %\todo{WHY do the boundary terms vanish?}
 \end{remark}
 
+Expressing transport in terms of the distance to the next collisions,
+we can alternatively derive a \textit{forward} formulation of the
+GLBE. Just like for the \textit{backward} formulation, the phase
+space of the forward formulation is augmented by one additional
+variable when compared to the classical transport equation. To
+distinguish both formulations, we use $f(s,\bx,\bOmega)$ for the
+forward formulation, with $s$ denoting the distance to the next
+interaction. Consequently, all definitions that were made at the
+beginning of this section still hold true for the forward formulation
+when \textit{distance since an interaction} is replaced by
+\textit{distance to an interaction}.
 
-
-Expressing transport in terms of the distance to the next collisions, we can alternatively derive a \textit{forward} formulation of the GLBE. Just like for the \textit{backward} formulation, the phase space of the forward formulation is augmented by one additional variable when compared to the classical transport equation. To distinguish both formulations, we use $f(s,\bx,\bOmega)$ for the forward formulation, with $s$ denoting the distance to the next interaction. Consequently, all definitions that were made at the beginning of this section still hold true for the forward formulation when \textit{distance since an interaction} is replaced by \textit{distance to an interaction}.
-
-However, now that the memory is encoded differently, the transport equation, too, changes. 
-Representing the distance to the next interaction, $s$ has to decrease as particles move  through space. 
-Moreover, the distance to the next interaction has to be known \textit{at the beginning} of a particle's trajectory, sampled from a probability density function. As a result, we know that all particles represented by the infinitesimal phase space element $f(s,\bx,\bOmega) \, ds \, d\bx \, d\bOmega$ are (with absolute certainty) undergoing an interaction inside $\left[\bx+s \, \bOmega,(\bx+d\bx)+(s+ds)\,  (\bOmega + d\bOmega)\right]$. Despite the precise knowledge of future interactions' locations, the forward formulation is of the same random nature as the backward formulation. Even though the location of an upcoming interaction is deterministic, the distance to the next interaction is sampled from a probability density function.
-
-
-
-
-
+However, now that the memory is encoded differently, the transport
+equation, too, changes.
+Representing the distance to the next interaction, $s$ has to
+decrease as particles move  through space.
+Moreover, the distance to the next interaction has to be known
+\textit{at the beginning} of a particle's trajectory, sampled from a
+probability density function. As a result, we know that all particles
+represented by the infinitesimal phase space element
+$f(s,\bx,\bOmega) \, ds \, d\bx \, d\bOmega$ are (with absolute
+certainty) undergoing an interaction inside $\left[\bx+s \,
+\bOmega,(\bx+d\bx)+(s+ds)\,  (\bOmega + d\bOmega)\right]$. Despite
+the precise knowledge of future interactions' locations, the forward
+formulation is of the same random nature as the backward formulation.
+Even though the location of an upcoming interaction is deterministic,
+the distance to the next interaction is sampled from a probability
+density function.
 
 \begin{minipage}[t!]{0.99\textwidth}
-	\centering
-	\begin{tabular}{cccc}\hline
-		& the \textit{backward} formulation & the \textit{forward} formulation \\ 
-		\hline \hline
-		additional variable & $s$, distance since interaction & $s$, distance to interaction \\
-		variable behavior & increases, initialized as $s=0$ & decreases, sampled from $p(s)$\\
-		deterministic component & value of $s$ after collision known & next collision's location known  \\
-		random component & collisions possible for any value of $s$ &$s$ is sampled  randomly\\
-		$(s,\bx,\bOmega )$ implies & particles originate at $\bx-s\, \bOmega$ & particles interact at $\bx + s \, \bOmega$ \\
-		boundary conditions &$\psi(s,\bx,\bOmega) = \delta(s) \cdot g(\bx,\bOmega) $ & $f(s,\bx,\bOmega) = p(s) \cdot g(\bx,\bOmega)$ \\
-		\hline
-	\end{tabular}
-	\captionof{table}{Juxtaposition of the forward and backward formulation.}
-	\label{tab:forwardvsbackwards}
+  \centering
+  \begin{tabular}{cccc}\hline
+    & the \textit{backward} formulation & the \textit{forward} formulation \\
+    \hline \hline
+    additional variable & $s$, distance since interaction & $s$,
+    distance to interaction \\
+    variable behavior & increases, initialized as $s=0$ & decreases,
+    sampled from $p(s)$\\
+    deterministic component & value of $s$ after collision known &
+    next collision's location known  \\
+    random component & collisions possible for any value of $s$ &$s$
+    is sampled  randomly\\
+    $(s,\bx,\bOmega )$ implies & particles originate at $\bx-s\,
+    \bOmega$ & particles interact at $\bx + s \, \bOmega$ \\
+    boundary conditions &$\psi(s,\bx,\bOmega) = \delta(s) \cdot
+    g(\bx,\bOmega) $ & $f(s,\bx,\bOmega) = p(s) \cdot g(\bx,\bOmega)$ \\
+    \hline
+  \end{tabular}
+  \captionof{table}{Juxtaposition of the forward and backward formulation.}
+  \label{tab:forwardvsbackwards}
 \end{minipage}
 
-The forward formulation of the generalized linear Boltzmann equation (omitting boundary contributions) is then given by
+The forward formulation of the generalized linear Boltzmann equation
+(omitting boundary contributions) is then given by
 \begin{align}
-	-\partial_s f(s,\bx,\bOmega) + \bOmega \cdot \nabla_\bx f(s,\bx,\bOmega)
-	= p(s) c \int_{\mathbb{S}^2}s(\bOmega' \cdot \bOmega) f(0,\bx,\bOmega') \, d\bOmega' + p(s) Q(\bx).
+  -\partial_s f(s,\bx,\bOmega) + \bOmega \cdot \nabla_\bx f(s,\bx,\bOmega)
+  = p(s) c \int_{\mathbb{S}^2}s(\bOmega' \cdot \bOmega)
+  f(0,\bx,\bOmega') \, d\bOmega' + p(s) Q(\bx).
 \end{align}
 
+To summarize the differences and similarities, Table
+\ref{tab:forwardvsbackwards} juxtaposes both formulations in a
+condensed form. We also include the respective boundary conditions,
+prescribed for all incoming angles at the domain's boundary, \ie for
+all $\bx \in \partial V$ and $\bOmega \in \mathbb{S}^2$ where
+$\bOmega \cdot \mathbf{n}(\bx) < 0$.
 
-To summarize the differences and similarities, Table \ref{tab:forwardvsbackwards} juxtaposes both formulations in a condensed form. We also include the respective boundary conditions, prescribed for all incoming angles at the domain's boundary, \ie for all $\bx \in \partial V$ and $\bOmega \in \mathbb{S}^2$ where $\bOmega \cdot \mathbf{n}(\bx) < 0$.
-
-
-Equivalence of both formulations has been proven in Larsen et al. \cite{larsen2017equivalence}, using the transformation
+Equivalence of both formulations has been proven in Larsen et al.
+\cite{larsen2017equivalence}, using the transformation
 \begin{align}
-	f(s,\bx,\bOmega) \equiv \int_0^{l(\bx,\bOmega)}\sigma_t(s+s') \psi \left(s+s',\bx+s \, \bOmega, \bOmega\right) \, ds'
-	\label{eq:trafo}
+  f(s,\bx,\bOmega) \equiv \int_0^{l(\bx,\bOmega)}\sigma_t(s+s') \psi
+  \left(s+s',\bx+s \, \bOmega, \bOmega\right) \, ds'
+  \label{eq:trafo}
 \end{align}
 and the relation between cross section and path length distribution
 \begin{align}
-	\sigma_t(s) = \frac{p(s)}{\int_s^\infty p(s')\, ds'} \quad \text{ or }\quad  
-	p(s) = \sigma_t(s) \exp\left(-\int_0^s \sigma_t(s') \, ds'\right).
-	\label{eq:trafo2}
+  \sigma_t(s) = \frac{p(s)}{\int_s^\infty p(s')\, ds'} \quad \text{ or }\quad
+  p(s) = \sigma_t(s) \exp\left(-\int_0^s \sigma_t(s') \, ds'\right).
+  \label{eq:trafo2}
 \end{align}
-The forward formulation inserts randomness into the dynamics by sampling a particle's distance to the next interaction from $p(s)$; from that point on, the particle's trajectory is deterministic. Conversely, the backward formulation always resets the value of $s$ after a collision and inserts randomness by allowing particles to scatter for any value of $s$, based on $\sigma_t(s)$. It is therefore naturally, to link $p(s)$ to the distance to the next interaction (\ie the forward formulation), while $\sigma_t(s)$ refers to the distance since the last interaction (\ie the backward formulation).
-Unless explicitly stated otherwise, we will from now on implicitly assume that $s$  
-is to be interpreted in the forward or backward formulation, based on the choice of $p(s)$ or $\sigma_t(s)$, respectively.
+The forward formulation inserts randomness into the dynamics by
+sampling a particle's distance to the next interaction from $p(s)$;
+from that point on, the particle's trajectory is deterministic.
+Conversely, the backward formulation always resets the value of $s$
+after a collision and inserts randomness by allowing particles to
+scatter for any value of $s$, based on $\sigma_t(s)$. It is therefore
+naturally, to link $p(s)$ to the distance to the next interaction
+(\ie the forward formulation), while $\sigma_t(s)$ refers to the
+distance since the last interaction (\ie the backward formulation).
+Unless explicitly stated otherwise, we will from now on implicitly
+assume that $s$
+is to be interpreted in the forward or backward formulation, based on
+the choice of $p(s)$ or $\sigma_t(s)$, respectively.
 
-We are not going to recapitulate the thorough analysis of Larsen et al. \cite{larsen2017equivalence} that proofs equivalence here, but rather try to provide a physical interpretation of the involved terms, demonstrating that both sides of \eqref{eq:trafo} indeed express the same physical quantity. The left-hand side is easy to understand: $f(s,\bx,\bOmega)$ quantifies the amount of particles that pass through $(\bx,\bOmega)$ to undergo a collision at $\bx + s\, \bOmega$. Next, $\psi(s+s', \bx + s \, \bOmega, \bOmega)$ represents the particles at $(\bx + s \, \bOmega, \bOmega)$ that have traveled a distance $s+s'$ from $\bx - s\, \bOmega$ to reach this point, passing through $(\bx,\bOmega)$ along that journey.
-Multiplied by $\sigma_t(s+s')$, we obtain the fraction of those particles that do undergo a collision at $\bx+s\, \bOmega$. Integrating over all distance $s'$ from $\bx$ back to the domain boundary at $\bx - l(\bx,\bOmega) \, \bOmega$, we obtain \textit{all} particles that travel through $(\bx,\bOmega)$ and collide at $\bx + s \bOmega$, \ie the same quantity as the left-hand side.
+We are not going to recapitulate the thorough analysis of Larsen et
+al. \cite{larsen2017equivalence} that proofs equivalence here, but
+rather try to provide a physical interpretation of the involved
+terms, demonstrating that both sides of \eqref{eq:trafo} indeed
+express the same physical quantity. The left-hand side is easy to
+understand: $f(s,\bx,\bOmega)$ quantifies the amount of particles
+that pass through $(\bx,\bOmega)$ to undergo a collision at $\bx +
+s\, \bOmega$. Next, $\psi(s+s', \bx + s \, \bOmega, \bOmega)$
+represents the particles at $(\bx + s \, \bOmega, \bOmega)$ that have
+traveled a distance $s+s'$ from $\bx - s\, \bOmega$ to reach this
+point, passing through $(\bx,\bOmega)$ along that journey.
+Multiplied by $\sigma_t(s+s')$, we obtain the fraction of those
+particles that do undergo a collision at $\bx+s\, \bOmega$.
+Integrating over all distance $s'$ from $\bx$ back to the domain
+boundary at $\bx - l(\bx,\bOmega) \, \bOmega$, we obtain \textit{all}
+particles that travel through $(\bx,\bOmega)$ and collide at $\bx + s
+\bOmega$, \ie the same quantity as the left-hand side.
 
-%re is no reason to assume that the forward and backward formulations of non-classical transport 
+%re is no reason to assume that the forward and backward formulations
+% of non-classical transport
 
-
-
-%\todo{finish this by indicating that many different formulations exist. mention also integral transport etc etc.}
-
+%\todo{finish this by indicating that many different formulations
+% exist. mention also integral transport etc etc.}
 
 \input{Chapters/Chapter4/correlateduncorrelated}
 
 %\input{/home/qd4314/Work/Documents/2019_HeterogeneousTransport/solutionmethods}
-
-
-
-
-
-
-
-
-
-
-
-

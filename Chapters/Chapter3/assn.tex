@@ -1,335 +1,657 @@
 \FloatBarrier
 \section{as-S$_N$ method}
 \label{sec:asSNmethod}
-Section \ref{sec:asSNmethod} is, at parts, based upon the results in Frank et al. \cite{frank2020ray}. Findings therein have subsequently contributed to the thesis of Kusch  \cite{10.5445/IR/1000121168}, coauthor of  Frank et al. \cite{frank2020ray}.
+Section \ref{sec:asSNmethod} is, at parts, based upon the results in
+Frank et al. \cite{frank2020ray}. Findings therein have subsequently
+contributed to the thesis of Kusch  \cite{10.5445/IR/1000121168},
+coauthor of  Frank et al. \cite{frank2020ray}.
 
-Section \ref{sec:understanding} demonstrates that ray effects are essentially due to the aggregation of the scalar flux, \ie the inability to compute the spherical integral reasonably well. Quintessentially, the rS$_N$ method adds angular diffusion, facilitating to integrate the angular flux numerically.
-Recomputing the sweeping order anew after each time step might ultimately be an unbearable burden when it comes to the integration of the rS${}_N$ method into existing S$_N$ codes; rendering the rS$_N$ difficult---if not impossible---to sell. Although this problem can seemingly be avoided when rotating forth and back, this modification of rS${}_N$ requires further research.
+Section \ref{sec:understanding} demonstrates that ray effects are
+essentially due to the aggregation of the scalar flux, \ie the
+inability to compute the spherical integral reasonably well.
+Quintessentially, the rS$_N$ method adds angular diffusion,
+facilitating to integrate the angular flux numerically.
+Recomputing the sweeping order anew after each time step might
+ultimately be an unbearable burden when it comes to the integration
+of the rS${}_N$ method into existing S$_N$ codes; rendering the
+rS$_N$ difficult---if not impossible---to sell. Although this problem
+can seemingly be avoided when rotating forth and back, this
+modification of rS${}_N$ requires further research.
 
-The artificial scattering S$_N$ (as-S$_N$) method overcomes this hurdle while simultaneously mitigating ray effects equally well. At its core, the as-S$_N$ method adds artificial scattering to the right-hand side of the transport equation in such a way that the following requirements are satisfied:
-(i) In the limit of infinite ordinates, the added term should vanish. (ii) Artificial scattering should be independent of the number of spatial cells and time steps. (iii) Despite adding a nonphysical term to the right-hand side, the solution quality should increase due to the mitigated ray effects. (iv) The ordinates remain unchanged throughout the simulation. Lastly, (v) the effect of artificial scattering should be investigatable both numerically and theoretically.
+The artificial scattering S$_N$ (as-S$_N$) method overcomes this
+hurdle while simultaneously mitigating ray effects equally well. At
+its core, the as-S$_N$ method adds artificial scattering to the
+right-hand side of the transport equation in such a way that the
+following requirements are satisfied:
+(i) In the limit of infinite ordinates, the added term should vanish.
+(ii) Artificial scattering should be independent of the number of
+spatial cells and time steps. (iii) Despite adding a nonphysical term
+to the right-hand side, the solution quality should increase due to
+the mitigated ray effects. (iv) The ordinates remain unchanged
+throughout the simulation. Lastly, (v) the effect of artificial
+scattering should be investigatable both numerically and theoretically.
 
 Starting with the linear transport equation
 \begin{equation}
-\begin{split}
-\partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +\sigma_t
-\psi(t,\bx,\bOmega) \\
-=& {\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\psi(t,\bx,\bOmega') \, d\bOmega'
-+ q(t,\bx,\bOmega),
-\end{split}
+  \begin{split}
+    \partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx
+    \psi(t,\bx,\bOmega) +\sigma_t
+    \psi(t,\bx,\bOmega) \\
+    =& {\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot
+    \bOmega')\psi(t,\bx,\bOmega') \, d\bOmega'
+    + q(t,\bx,\bOmega),
+  \end{split}
 \end{equation}
 we add artificial scattering to the right-hand side to obtain
 \begin{equation}
-\begin{split}
-\partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +\sigma_t
-\psi(t,\bx,\bOmega) \\
-=&{\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\psi(t,\bx,\bOmega') \, d\bOmega'+ q(t,\bx,\bOmega)
-\\
-&+{\sigma_{as}}\int_{\mathbb{S}^2}s_\varepsilon(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') -\psi(t,\bx,\bOmega) \right)\, d\bOmega'.
-\end{split}
-\label{eq:assn}
+  \begin{split}
+    \partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx
+    \psi(t,\bx,\bOmega) +\sigma_t
+    \psi(t,\bx,\bOmega) \\
+    =&{\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot
+    \bOmega')\psi(t,\bx,\bOmega') \, d\bOmega'+ q(t,\bx,\bOmega)
+    \\
+    &+{\sigma_{as}}\int_{\mathbb{S}^2}s_\varepsilon(\bOmega \cdot
+    \bOmega')\left(\psi(t,\bx,\bOmega') -\psi(t,\bx,\bOmega)
+    \right)\, d\bOmega'.
+  \end{split}
+  \label{eq:assn}
 \end{equation}
-Choosing $s_\varepsilon: [-1,1] \to \mathbb{R}$ as 
+Choosing $s_\varepsilon: [-1,1] \to \mathbb{R}$ as
 \begin{align}
-s_\varepsilon(\mu) = \frac{2}{\sqrt{\pi} \varepsilon\text{Erf}\left(\frac{2}{\varepsilon}\right)} \exp\left(-\frac{(1-\mu)^2}{\varepsilon^2}\right)
+  s_\varepsilon(\mu) = \frac{2}{\sqrt{\pi}
+  \varepsilon\text{Erf}\left(\frac{2}{\varepsilon}\right)}
+  \exp\left(-\frac{(1-\mu)^2}{\varepsilon^2}\right)
 \end{align}
 complies with the five requirements that we imposed.
-The error function satisfies $\text{Erf}(x) \rightarrow 1$ as $x\rightarrow \infty$.
- In general, $s_\varepsilon$ can be any Dirac-like sequence, \ie
+The error function satisfies $\text{Erf}(x) \rightarrow 1$ as
+$x\rightarrow \infty$.
+In general, $s_\varepsilon$ can be any Dirac-like sequence, \ie
 \begin{align}
-\int_{-1}^1s_\varepsilon(\mu) \, d\mu = 1 \quad \text{ and } \quad 
-\int_{-1}^1s_\varepsilon(\mu) f(\mu)\, d\mu \rightarrow f(0) 
+  \int_{-1}^1s_\varepsilon(\mu) \, d\mu = 1 \quad \text{ and } \quad
+  \int_{-1}^1s_\varepsilon(\mu) f(\mu)\, d\mu \rightarrow f(0)
 \end{align}
-for any sufficiently smooth function $f$ and $\varepsilon\rightarrow 0$. 
-We paraphrase some of the remarks that were initially made in Frank et al. \cite{frank2020ray}:
+for any sufficiently smooth function $f$ and $\varepsilon\rightarrow 0$.
+We paraphrase some of the remarks that were initially made in Frank
+et al. \cite{frank2020ray}:
 \begin{itemize}
-	\item In- and out-scattering cancel if $\varepsilon \rightarrow 0$ and artificial scattering therefore vanishes. In compliance with (i), we therefore set $\varepsilon = \beta / n_q$ and let the user choose $\beta$.
-	\item Particles are neither gained nor lost because the scattering kernel $s_\varepsilon$ is mass preserving.
-	\item Similar to the P$_{N-1}$-equivalent S$_N$ method \cite{lathrop1971remedies,doi:10.1080/00411450.2012.672360}, we add a fictions term to the standard transport equation. However, the kernel in the as-S$_N$ method is highly forward-peaked.
-	\item The as-S$_N$ method can be solved efficiently, both via implicit or explicit schemes. 
+  \item In- and out-scattering cancel if $\varepsilon \rightarrow 0$
+    and artificial scattering therefore vanishes. In compliance with
+    (i), we therefore set $\varepsilon = \beta / n_q$ and let the
+    user choose $\beta$.
+  \item Particles are neither gained nor lost because the scattering
+    kernel $s_\varepsilon$ is mass preserving.
+  \item Similar to the P$_{N-1}$-equivalent S$_N$ method
+    \cite{lathrop1971remedies,doi:10.1080/00411450.2012.672360}, we
+    add a fictions term to the standard transport equation. However,
+    the kernel in the as-S$_N$ method is highly forward-peaked.
+  \item The as-S$_N$ method can be solved efficiently, both via
+    implicit or explicit schemes.
 \end{itemize}
-More information on the implicit implementation of the as-S$_N$ method can be found in the original paper   \cite{frank2020ray} and the thesis by Kusch \cite{10.5445/IR/1000121168}. 
-Worth mentioning, however, is the fact that the physical scattering term and the artificial scattering term are treated differently. When physical scattering is mostly isotropic, an expansion in spherical harmonics is used. Contrary to that, artificial scattering is highly forward-peaked and thus well-suited for sweeping methods. If this distinction is omitted, implementing the as-S$_N$ method into existing S$_N$ codes is simply realized by changing the scattering kernel.
+More information on the implicit implementation of the as-S$_N$
+method can be found in the original paper   \cite{frank2020ray} and
+the thesis by Kusch \cite{10.5445/IR/1000121168}.
+Worth mentioning, however, is the fact that the physical scattering
+term and the artificial scattering term are treated differently. When
+physical scattering is mostly isotropic, an expansion in spherical
+harmonics is used. Contrary to that, artificial scattering is highly
+forward-peaked and thus well-suited for sweeping methods. If this
+distinction is omitted, implementing the as-S$_N$ method into
+existing S$_N$ codes is simply realized by changing the scattering kernel.
 
 \subsection{Angular discretization}
 
-
 \label{sec:implassn}
-Our goal is to include artificial scattering in the S$_N$ equations in \eqref{eq:SN}. By simply approximating the artificial scattering term in \eqref{eq:assn} with the chosen quadrature rule, we obtain the \aSN equations 
+Our goal is to include artificial scattering in the S$_N$ equations
+in \eqref{eq:SN}. By simply approximating the artificial scattering
+term in \eqref{eq:assn} with the chosen quadrature rule, we obtain
+the \aSN equations
 \begin{equation}
-	\begin{split}
-	\label{eq:asSNeq}
-	\partial_t \psi_q(t,\bx) + \bOmega_q &\cdot \nabla_\bx \psi_q(t,\bx) + \sigma_t(\bx) \psi_q(t,\bx) + \sigma_{\text{as}}(\bx)\psi_q(t,\bx)
-	\\=&\sigma_s(\bx) \sum_{p=1}^{n_q} w_p \cdot c_q \cdot s(\bOmega_q\cdot\bOmega_p) \psi_p(t,\bx)
-	\\
-	&+\sigma_{\text{as}}(\bx)\sum_{p=1}^{n_q}w_p \cdot c_q^{(\varepsilon)}\cdot s_\varepsilon(\bOmega_q\cdot \bOmega_p)\psi_p(t,\bx) \\
-	&+  q_q(t,\bx) 
-	.
-	\end{split}
-	\end{equation}
-Here, $c_q := 1 / \sum_p w_p \cdot s(\bOmega_q\cdot \bOmega_p)$ and $c_q^{(\varepsilon)} := 1 / \sum_p w_p \cdot s_\varepsilon(\bOmega_q\cdot \bOmega_p)$ are normalization factors. While, on the continuous level, these factors are the same for every direction, we obtain a dependency on the chosen ordinates due to the non-uniform discretization in angle. These normalization factors are needed to obtain a simple expression for the out-scattering terms. Moving these terms to the left-hand side of \eqref{eq:asSNeq} stabilizes the source iteration that is used in the implicit method.
-%We will often move the artificial out-scattering to the right-hand side via defining $\sigma_{as,q}(\bx) = \sigma_{\text{as}}(\bx)\sum_{p} w_p \cdot c_q\cdot s_\varepsilon(\bOmega_q\cdot\bOmega_p)$. 
+  \begin{split}
+    \label{eq:asSNeq}
+    \partial_t \psi_q(t,\bx) + \bOmega_q &\cdot \nabla_\bx
+    \psi_q(t,\bx) + \sigma_t(\bx) \psi_q(t,\bx) +
+    \sigma_{\text{as}}(\bx)\psi_q(t,\bx)
+    \\=&\sigma_s(\bx) \sum_{p=1}^{n_q} w_p \cdot c_q \cdot
+    s(\bOmega_q\cdot\bOmega_p) \psi_p(t,\bx)
+    \\
+    &+\sigma_{\text{as}}(\bx)\sum_{p=1}^{n_q}w_p \cdot
+    c_q^{(\varepsilon)}\cdot s_\varepsilon(\bOmega_q\cdot
+    \bOmega_p)\psi_p(t,\bx) \\
+    &+  q_q(t,\bx)
+    .
+  \end{split}
+\end{equation}
+Here, $c_q := 1 / \sum_p w_p \cdot s(\bOmega_q\cdot \bOmega_p)$ and
+$c_q^{(\varepsilon)} := 1 / \sum_p w_p \cdot
+s_\varepsilon(\bOmega_q\cdot \bOmega_p)$ are normalization factors.
+While, on the continuous level, these factors are the same for every
+direction, we obtain a dependency on the chosen ordinates due to the
+non-uniform discretization in angle. These normalization factors are
+needed to obtain a simple expression for the out-scattering terms.
+Moving these terms to the left-hand side of \eqref{eq:asSNeq}
+stabilizes the source iteration that is used in the implicit method.
+%We will often move the artificial out-scattering to the right-hand
+% side via defining $\sigma_{as,q}(\bx) =
+% \sigma_{\text{as}}(\bx)\sum_{p} w_p \cdot c_q\cdot
+% s_\varepsilon(\bOmega_q\cdot\bOmega_p)$.
 
-It remains to pick an adequate quadrature set. When applying artificial scattering, the solution smears out along the directions in the quadrature set. To ensure an evenly spread artificial scattering effect, a quadrature with a highly uniform ordinate distribution should be chosen. 
-Here, we decide to use the icosahedron (slerp) quadrature due to the nearly uniform distribution of quadrature points. Other quadratures were explored too, but the best results were achieved with the icosahedron quadrature, used in all following computations.
-
-
-
-
-
-
+It remains to pick an adequate quadrature set. When applying
+artificial scattering, the solution smears out along the directions
+in the quadrature set. To ensure an evenly spread artificial
+scattering effect, a quadrature with a highly uniform ordinate
+distribution should be chosen.
+Here, we decide to use the icosahedron (slerp) quadrature due to the
+nearly uniform distribution of quadrature points. Other quadratures
+were explored too, but the best results were achieved with the
+icosahedron quadrature, used in all following computations.
 
 \subsection{ Modified equation and asymptotic analysis}
-According to Pomraning \cite{pomraning1992fokker}, the Fokker-Planck operator can be a legitimate description of highly peaked scattering.
-This is true if (i) the scattering kernel $s_\varepsilon(\mu)$ is a Dirac sequence, and (ii) the transport coefficients $p_{\varepsilon,i}:= \int_{-1}^{+1} (1-\mu)^i s_\varepsilon(\mu)\, d\mu$ are of order $\mathcal{O}(\varepsilon^i)$.
+According to Pomraning \cite{pomraning1992fokker}, the Fokker-Planck
+operator can be a legitimate description of highly peaked scattering.
+This is true if (i) the scattering kernel $s_\varepsilon(\mu)$ is a
+Dirac sequence, and (ii) the transport coefficients
+$p_{\varepsilon,i}:= \int_{-1}^{+1} (1-\mu)^i s_\varepsilon(\mu)\,
+d\mu$ are of order $\mathcal{O}(\varepsilon^i)$.
 The resulting modified equation then reads
 \begin{equation} \label{eq:fokkerplancklimit}
-	\begin{split}
-	\partial_t \psi(t,\bx,\bOmega) &+ \bOmega\cdot \nabla_\bx \psi(t,\bx,\bOmega) + (\sigma_a+ \sigma_s ) \psi(t,\bx,\bOmega) \\
-	&= \sigma_s \cdot \phi(t,\bx) +\pi\cdot p_{\varepsilon,1}\cdot \sigma_{as}\cdot  \Delta_\bOmega\, \psi(t,\bx,\bOmega)+ \mathcal{O}\left(\varepsilon^2\right),
-	\end{split}
-	\end{equation}
+  \begin{split}
+    \partial_t \psi(t,\bx,\bOmega) &+ \bOmega\cdot \nabla_\bx
+    \psi(t,\bx,\bOmega) + (\sigma_a+ \sigma_s ) \psi(t,\bx,\bOmega) \\
+    &= \sigma_s \cdot \phi(t,\bx) +\pi\cdot p_{\varepsilon,1}\cdot
+    \sigma_{as}\cdot  \Delta_\bOmega\, \psi(t,\bx,\bOmega)+
+    \mathcal{O}\left(\varepsilon^2\right),
+  \end{split}
+\end{equation}
 where $\Delta_\bOmega$ is the Laplace operator in spherical coordinates.
-We have already shown (i). 
+We have already shown (i).
 To verify (ii), let $y=(1-\mu) / \varepsilon$. Then
 \begin{subequations}
-\begin{align}
-	p_{\varepsilon,i} &= \int_{2/\varepsilon}^0 (\varepsilon \, y)^i \frac{2}{\sqrt{\pi}\, \varepsilon \,\text{Erf}\left(\frac{2}{\varepsilon}\right)}
-	e^{-y^2} (-\varepsilon) \, dy \\
-	&=
-	\frac{2}{\sqrt{\pi}\, \varepsilon \,\text{Erf}\left(\frac{2}{\varepsilon}\right)}\, \varepsilon^i \, \int_0^{2/\varepsilon}y^i e^{-y^2}\, dy \\
-	&= \frac{2}{\sqrt{\pi}\, \varepsilon \,\text{Erf}\left(\frac{2}{\varepsilon}\right)}\, \varepsilon^i
-	\left[\Gamma\left(\frac{1+i}{2}\right)-\Gamma\left(\frac{1+i}{2},\frac{4}{\varepsilon^2}\right)\right] \\
-	&= \mathcal{O}(\varepsilon^i),
-	\end{align}
+  \begin{align}
+    p_{\varepsilon,i} &= \int_{2/\varepsilon}^0 (\varepsilon \, y)^i
+    \frac{2}{\sqrt{\pi}\, \varepsilon
+    \,\text{Erf}\left(\frac{2}{\varepsilon}\right)}
+    e^{-y^2} (-\varepsilon) \, dy \\
+    &=
+    \frac{2}{\sqrt{\pi}\, \varepsilon
+    \,\text{Erf}\left(\frac{2}{\varepsilon}\right)}\, \varepsilon^i
+    \, \int_0^{2/\varepsilon}y^i e^{-y^2}\, dy \\
+    &= \frac{2}{\sqrt{\pi}\, \varepsilon
+    \,\text{Erf}\left(\frac{2}{\varepsilon}\right)}\, \varepsilon^i
+    \left[\Gamma\left(\frac{1+i}{2}\right)-\Gamma\left(\frac{1+i}{2},\frac{4}{\varepsilon^2}\right)\right]
+    \\
+    &= \mathcal{O}(\varepsilon^i),
+  \end{align}
 \end{subequations}
-where $\Gamma(\cdot)$ and $\Gamma(\cdot,\cdot)$ denote the gamma function and the upper incomplete gamma function, respectively. 
-Since (ii) implies that $p_{\varepsilon,1} = \mathcal{O}(\varepsilon)$, the operator vanishes if we let $\varepsilon\to 0$. 
-We set $\varepsilon=\beta /n_q$ in the discrete case so that the angular diffusion vanishes if the number of ordinates $n_q$ tends to infinity. 
-This analysis shows that the product $\sigma_{\text{as}}\cdot \beta$ controls the strength of the added angular diffusion. 
+where $\Gamma(\cdot)$ and $\Gamma(\cdot,\cdot)$ denote the gamma
+function and the upper incomplete gamma function, respectively.
+Since (ii) implies that $p_{\varepsilon,1} =
+\mathcal{O}(\varepsilon)$, the operator vanishes if we let $\varepsilon\to 0$.
+We set $\varepsilon=\beta /n_q$ in the discrete case so that the
+angular diffusion vanishes if the number of ordinates $n_q$ tends to infinity.
+This analysis shows that the product $\sigma_{\text{as}}\cdot \beta$
+controls the strength of the added angular diffusion.
 
-The asymptotic analysis that  follows is a one-to-one translation of the original analysis \cite{pomraning1992fokker} and
-substitutes the new scattering kernel. We omit the source term and shorten notation to get
+The asymptotic analysis that  follows is a one-to-one translation of
+the original analysis \cite{pomraning1992fokker} and
+substitutes the new scattering kernel. We omit the source term and
+shorten notation to get
 \begin{equation}
-\begin{split}
-\underbrace{\partial_t \psi(t,\bx,\bOmega) + \bOmega\cdot \nabla \psi}_{=:L\psi} + \sigma_a \psi 
-=& \sigma_s \int_{\mathbb{S}^2} \frac{1}{4\pi}\left(\psi(\bOmega')-\psi(\bOmega)\right)\, d\bOmega' \\
-&+\sigma_{as} \int_{\mathbb{S}^2} s_{\varepsilon}(\bOmega \cdot \bOmega')\left(\psi(\bOmega')-\psi(\bOmega)\right)\, d\bOmega', 
-\end{split}
+  \begin{split}
+    \underbrace{\partial_t \psi(t,\bx,\bOmega) + \bOmega\cdot \nabla
+    \psi}_{=:L\psi} + \sigma_a \psi
+    =& \sigma_s \int_{\mathbb{S}^2}
+    \frac{1}{4\pi}\left(\psi(\bOmega')-\psi(\bOmega)\right)\, d\bOmega' \\
+    &+\sigma_{as} \int_{\mathbb{S}^2} s_{\varepsilon}(\bOmega \cdot
+    \bOmega')\left(\psi(\bOmega')-\psi(\bOmega)\right)\, d\bOmega',
+  \end{split}
 \end{equation}
-which we further rewrite as 
-\begin{equation}\begin{split}
-L\psi + (\sigma_a+ \sigma_s ) \psi 
-= \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2} s_{\varepsilon}(\bOmega \cdot \bOmega')\left(\psi(\bOmega')-\psi(\bOmega)\right)\, d\bOmega' .
-\end{split}\end{equation}
-Next, define $c_\varepsilon =\int_{\mathbb{S}^2} s_{\varepsilon}(\bOmega \cdot \bOmega') \, d\bOmega'$ to get
-\begin{equation}\begin{split}
-L\psi + (\sigma_a+ \sigma_s +\sigma_{as} c_\varepsilon) \psi 
-= \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2} s_{\varepsilon}(\bOmega \cdot \bOmega')\psi(\bOmega')\, d\bOmega' .
-\end{split}\end{equation}
-Writing the scattering kernel in terms of Legendre polynomials with coefficients \newline  $s_{\varepsilon,n} = 2\pi \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu$ , we obtain
-\begin{equation}\begin{split}
-\underbrace{L\psi + (\sigma_a+ \sigma_s +\sigma_{as} c_\varepsilon) \psi }_{\text{=:LHS}}
-= \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2} \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n} P_n(\bOmega \cdot \bOmega')\psi(\bOmega')\, d\bOmega' .
-\end{split}\end{equation}
-We can express $P_n(\bOmega \cdot \bOmega')$ and $\psi(\bOmega)$ in terms of spherical harmonics as 
-\begin{equation}\begin{split}
-P_n(\bOmega \cdot \bOmega') = \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega)\overline{Y_{n,l}(\bOmega')}
-\end{split}\end{equation}
-and 
-\begin{equation}\begin{split}
-\psi(\bOmega ) = \sum_{n=0}^\infty \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega).
-\end{split}\end{equation}
+which we further rewrite as
+\begin{equation}
+  \begin{split}
+    L\psi + (\sigma_a+ \sigma_s ) \psi
+    = \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}
+    s_{\varepsilon}(\bOmega \cdot
+    \bOmega')\left(\psi(\bOmega')-\psi(\bOmega)\right)\, d\bOmega' .
+  \end{split}
+\end{equation}
+Next, define $c_\varepsilon =\int_{\mathbb{S}^2}
+s_{\varepsilon}(\bOmega \cdot \bOmega') \, d\bOmega'$ to get
+\begin{equation}
+  \begin{split}
+    L\psi + (\sigma_a+ \sigma_s +\sigma_{as} c_\varepsilon) \psi
+    = \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}
+    s_{\varepsilon}(\bOmega \cdot \bOmega')\psi(\bOmega')\, d\bOmega' .
+  \end{split}
+\end{equation}
+Writing the scattering kernel in terms of Legendre polynomials with
+coefficients \newline  $s_{\varepsilon,n} = 2\pi \int_{-1}^1
+s_{\varepsilon}(\mu)P_n(\mu) d\mu$ , we obtain
+\begin{equation}
+  \begin{split}
+    \underbrace{L\psi + (\sigma_a+ \sigma_s +\sigma_{as}
+    c_\varepsilon) \psi }_{\text{=:LHS}}
+    = \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}
+    \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n} P_n(\bOmega
+    \cdot \bOmega')\psi(\bOmega')\, d\bOmega' .
+  \end{split}
+\end{equation}
+We can express $P_n(\bOmega \cdot \bOmega')$ and $\psi(\bOmega)$ in
+terms of spherical harmonics as
+\begin{equation}
+  \begin{split}
+    P_n(\bOmega \cdot \bOmega') = \sum_{l=-n}^n a_{n,l}
+    Y_{n,l}(\bOmega)\overline{Y_{n,l}(\bOmega')}
+  \end{split}
+\end{equation}
+and
+\begin{equation}
+  \begin{split}
+    \psi(\bOmega ) = \sum_{n=0}^\infty \sum_{m=-n}^n
+    \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega).
+  \end{split}
+\end{equation}
 Combining the last three equations yields
-\begin{equation}\begin{split}
-\text{LHS} = \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}  \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n}  \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega)\overline{Y_{n,l}(\bOmega')} \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega')\, d\bOmega'.
-\end{split}\end{equation}
-Using orthogonality 
+\begin{equation}
+  \begin{split}
+    \text{LHS} = \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}
+    \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n}
+    \sum_{l=-n}^n a_{n,l}
+    Y_{n,l}(\bOmega)\overline{Y_{n,l}(\bOmega')} \sum_{m=-n}^n
+    \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega')\, d\bOmega'.
+  \end{split}
+\end{equation}
+Using orthogonality
 $
-\int_{\mathbb{S}^2} Y_{n,m}(\bOmega) \overline{Y_{k,l}} (\bOmega) = \frac{4\pi}{2n+1}\frac{1}{a_{n,m}} \delta_{nk,ml}
+\int_{\mathbb{S}^2} Y_{n,m}(\bOmega) \overline{Y_{k,l}} (\bOmega) =
+\frac{4\pi}{2n+1}\frac{1}{a_{n,m}} \delta_{nk,ml}
 $
 then yields
 \begin{subequations}
-\begin{align}
-\text{LHS} &= \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}  \sum_{n=0}^\infty \frac{2n+1}{2} s_{\varepsilon,n}  \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega)\overline{Y_{n,l}(\bOmega')} \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega')\, d\bOmega' \\
-&=
-\sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n}  \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega) \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} \int_{\mathbb{S}^2} Y_{n,m}(\bOmega')\overline{Y_{n,l}(\bOmega')}\, d\bOmega' \\
-&=
-\sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n}  \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega) \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} 
-\frac{4\pi}{2n+1}\frac{1}{a_{n,m}} \delta_{nn,ml} \\
-&=
-\sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n} \sum_{m=-n}^n   a_{n,m} Y_{n,m}(\bOmega) \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m} 
-\frac{4\pi}{2n+1}\frac{1}{a_{n,m}}  \\
-&=
-\sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi} s_{\varepsilon,n} \sum_{m=-n}^n   a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega)\\
-&=
-\sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty\sum_{m=-n}^n    \frac{2n+1}{4\pi}  a_{n,m} Y_{n,m}(\bOmega) \psi_{n,m} {2\pi} \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\\
-&=
-\sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\sum_{m=-n}^n     a_{n,m} Y_{n,m}(\bOmega) \psi_{n,m}  
-.
-\end{align}
+  \begin{align}
+    \text{LHS} &= \sigma_s \phi +\sigma_{as} \int_{\mathbb{S}^2}
+    \sum_{n=0}^\infty \frac{2n+1}{2} s_{\varepsilon,n}  \sum_{l=-n}^n
+    a_{n,l} Y_{n,l}(\bOmega)\overline{Y_{n,l}(\bOmega')}
+    \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m}
+    Y_{n,m}(\bOmega')\, d\bOmega' \\
+    &=
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi}
+    s_{\varepsilon,n}  \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega)
+    \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m}
+    \int_{\mathbb{S}^2}
+    Y_{n,m}(\bOmega')\overline{Y_{n,l}(\bOmega')}\, d\bOmega' \\
+    &=
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi}
+    s_{\varepsilon,n}  \sum_{l=-n}^n a_{n,l} Y_{n,l}(\bOmega)
+    \sum_{m=-n}^n \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m}
+    \frac{4\pi}{2n+1}\frac{1}{a_{n,m}} \delta_{nn,ml} \\
+    &=
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi}
+    s_{\varepsilon,n} \sum_{m=-n}^n   a_{n,m} Y_{n,m}(\bOmega)
+    \frac{2n+1}{4\pi} a_{n,m} \psi_{n,m}
+    \frac{4\pi}{2n+1}\frac{1}{a_{n,m}}  \\
+    &=
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \frac{2n+1}{4\pi}
+    s_{\varepsilon,n} \sum_{m=-n}^n   a_{n,m} \psi_{n,m} Y_{n,m}(\bOmega)\\
+    &=
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty\sum_{m=-n}^n
+    \frac{2n+1}{4\pi}  a_{n,m} Y_{n,m}(\bOmega) \psi_{n,m} {2\pi}
+    \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\\
+    &=
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty  \frac{2n+1}{2}
+    \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\sum_{m=-n}^n
+    a_{n,m} Y_{n,m}(\bOmega) \psi_{n,m}
+    .
+  \end{align}
 \end{subequations}
 Summarizing the above derivation, we obtain
-\begin{equation}\begin{split}
-L\psi + (\sigma_a+ \sigma_s +\sigma_{as} c_\varepsilon) \psi = \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\sum_{m=-n}^n     a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega) .
-\end{split}\end{equation}
-Next, we define $\hat{s}_\varepsilon(\mu) = s_\varepsilon(\mu) / c_{\varepsilon}$, substitute it into the above equation, and drop the hat to get
-\begin{equation}\begin{split}
-L\psi + (\sigma_a+ \sigma_s +\sigma_{as} ) \psi = \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\sum_{m=-n}^n     a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega) .
-\end{split}\end{equation}
-Let now $\sigma_{as} = \hat \sigma_{as} / \Delta$ with $\hat \sigma_{as} = \mathcal{O}(1)$. The fast variable $y$ is given by $y=(1-\mu)/\delta$  and $\varepsilon=\delta$. Here, $\delta, \Delta \ll 1$.
+\begin{equation}
+  \begin{split}
+    L\psi + (\sigma_a+ \sigma_s +\sigma_{as} c_\varepsilon) \psi =
+    \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty  \frac{2n+1}{2}
+    \int_{-1}^1 s_{\varepsilon}(\mu)P_n(\mu) d\mu\sum_{m=-n}^n
+    a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega) .
+  \end{split}
+\end{equation}
+Next, we define $\hat{s}_\varepsilon(\mu) = s_\varepsilon(\mu) /
+c_{\varepsilon}$, substitute it into the above equation, and drop the hat to get
+\begin{equation}
+  \begin{split}
+    L\psi + (\sigma_a+ \sigma_s +\sigma_{as} ) \psi = \sigma_s \phi
+    +\sigma_{as}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^1
+    s_{\varepsilon}(\mu)P_n(\mu) d\mu\sum_{m=-n}^n     a_{n,m}\,
+    \psi_{n,m} \,  Y_{n,m}(\bOmega) .
+  \end{split}
+\end{equation}
+Let now $\sigma_{as} = \hat \sigma_{as} / \Delta$ with $\hat
+\sigma_{as} = \mathcal{O}(1)$. The fast variable $y$ is given by
+$y=(1-\mu)/\delta$  and $\varepsilon=\delta$. Here, $\delta, \Delta \ll 1$.
 Then
 $
 s_\varepsilon(\mu) = \hat s_\varepsilon(y)
 $
 and we obtain
 
-\begin{subequations}\begin{align}
-\text{LHS} &= \sigma_s \phi +\frac{\hat \sigma_{as}}{\Delta}   \sum_{n=0}^\infty  \frac{2n+1}{2} \underbrace{\int_{-1}^1 \hat s_{\varepsilon}\left(\frac{1-\mu}{\delta}\right)P_n(\mu)\, d\mu}_{\textstyle \underbrace{= \delta \int_{0}^{2/\delta} \hat s_{\varepsilon}(y)P_n(1-\delta y)\, dy}_{\textstyle =\delta \int_0^{2/\delta}\hat s_\varepsilon(y)\left(P_n(1) -\delta yP'_n(1) + \mathcal{O}(\delta)^2\right) \, dy}}\sum_{m=-n}^n     a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega) \\
-&=\sigma_s \phi +\hat \sigma_{as}\frac{\delta }{\Delta}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_0^{2/\delta}\hat s_\varepsilon(y)\left(P_n(1) -\delta yP'_n(1) + \mathcal{O}(\delta)^2\right) \, dy\underbrace{\sum_{m=-n}^n     a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega)}_{C} . \label{eq:taylor}
-\end{align}\end{subequations}
-Together with $P_n(1)=1$ and $P_n'(1) = n(n+1)/2$ 
+\begin{subequations}
+  \begin{align}
+    \text{LHS} &= \sigma_s \phi +\frac{\hat \sigma_{as}}{\Delta}
+    \sum_{n=0}^\infty  \frac{2n+1}{2} \underbrace{\int_{-1}^1 \hat
+      s_{\varepsilon}\left(\frac{1-\mu}{\delta}\right)P_n(\mu)\,
+    d\mu}_{\textstyle \underbrace{= \delta \int_{0}^{2/\delta} \hat
+      s_{\varepsilon}(y)P_n(1-\delta y)\, dy}_{\textstyle =\delta
+        \int_0^{2/\delta}\hat s_\varepsilon(y)\left(P_n(1) -\delta
+    yP'_n(1) + \mathcal{O}(\delta)^2\right) \, dy}}\sum_{m=-n}^n
+    a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega) \\
+    &=\sigma_s \phi +\hat \sigma_{as}\frac{\delta }{\Delta}
+    \sum_{n=0}^\infty  \frac{2n+1}{2} \int_0^{2/\delta}\hat
+    s_\varepsilon(y)\left(P_n(1) -\delta yP'_n(1) +
+    \mathcal{O}(\delta)^2\right) \, dy\underbrace{\sum_{m=-n}^n
+    a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega)}_{C} . \label{eq:taylor}
+  \end{align}
+\end{subequations}
+Together with $P_n(1)=1$ and $P_n'(1) = n(n+1)/2$
 and changing back according to $y=(1-\mu)/\delta$ results in
-\begin{equation}\begin{split}
-\text{LHS}  =&\sigma_s \phi+\hat \sigma_{as}\frac{1 }{\Delta}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^{1}\hat s_\varepsilon\left(\frac{1-\mu}{\delta}\right) \, d\mu\cdot C \\
-&-\hat \sigma_{as}\frac{n(n+1)}{2}\frac{1 }{\Delta}   \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^{1}\hat s_\varepsilon\left(\frac{1-\mu}{\delta}\right)(1-\mu) \, d\mu\cdot C
-\\
-&+\mathcal{O}\left(\frac{\delta^2}{\Delta}\right).
-\end{split}\end{equation}
+\begin{equation}
+  \begin{split}
+    \text{LHS}  =&\sigma_s \phi+\hat \sigma_{as}\frac{1 }{\Delta}
+    \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^{1}\hat
+    s_\varepsilon\left(\frac{1-\mu}{\delta}\right) \, d\mu\cdot C \\
+    &-\hat \sigma_{as}\frac{n(n+1)}{2}\frac{1 }{\Delta}
+    \sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^{1}\hat
+    s_\varepsilon\left(\frac{1-\mu}{\delta}\right)(1-\mu) \, d\mu\cdot C
+    \\
+    &+\mathcal{O}\left(\frac{\delta^2}{\Delta}\right).
+  \end{split}
+\end{equation}
 Reversing the fast-to-slow transformation yields
-\begin{equation}\begin{split}
-\text{LHS} &-\mathcal{O}\left(\frac{\delta^2}{\Delta}\right)\\ &=\sigma_s \phi+ 
-\sigma_{as}  \sum_{n=0}^\infty  \frac{2n+1}{2} \overbrace{\int_{-1}^{1} s_\varepsilon\left(\mu\right) \, d\mu}^{=1/(2\pi)}\cdot C 
-- \sigma_{as}\frac{n(n+1)}{2}\sum_{n=0}^\infty  \frac{2n+1}{2} \int_{-1}^{1} s_\varepsilon\left(\mu\right)(1-\mu) \, d\mu\cdot C.
-\end{split}\end{equation}
+\begin{equation}
+  \begin{split}
+    \text{LHS}
+    &-\mathcal{O}\left(\frac{\delta^2}{\Delta}\right)\\ &=\sigma_s \phi+
+    \sigma_{as}  \sum_{n=0}^\infty  \frac{2n+1}{2}
+    \overbrace{\int_{-1}^{1} s_\varepsilon\left(\mu\right) \,
+    d\mu}^{=1/(2\pi)}\cdot C
+    - \sigma_{as}\frac{n(n+1)}{2}\sum_{n=0}^\infty  \frac{2n+1}{2}
+    \int_{-1}^{1} s_\varepsilon\left(\mu\right)(1-\mu) \, d\mu\cdot C.
+  \end{split}
+\end{equation}
 Here,
 \begin{subequations}
-\begin{align}
-\sigma_{as} &= \mathcal{O}\left(\frac{1}{\Delta}\right), \\
-\sigma_{as}\int_{-1}^{1} s_\varepsilon\left(\mu\right)(1-\mu) \, d\mu &= \mathcal{O}\left(\frac{\delta}{\Delta}\right). 
-\end{align}
+  \begin{align}
+    \sigma_{as} &= \mathcal{O}\left(\frac{1}{\Delta}\right), \\
+    \sigma_{as}\int_{-1}^{1} s_\varepsilon\left(\mu\right)(1-\mu) \,
+    d\mu &= \mathcal{O}\left(\frac{\delta}{\Delta}\right).
+  \end{align}
 \end{subequations}
-The first line is obvious. The second line follows from the fact that $(1-\mu) = \mathcal{O}(\delta)$, resulting in 
-\begin{equation}\begin{split}
-L\psi& + (\sigma_a+ \sigma_s +\sigma_{as} ) \psi \\
-&= \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \sum_{m=-n}^n  \frac{2n+1}{4\pi}   a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega) \cdot \left[1  - n(n+1)\pi\int_{-1}^{1} s_\varepsilon\left(\mu\right)(1-\mu) \, d\mu \right] + \mathcal{O}\left(\frac{\delta^2}{\Delta}\right).
-\end{split}\end{equation}
-For the next step, we follow the  computations (52) and (53) in Pomraning's work  \cite{pomraning1992fokker} to obtain %\todo{include this} This yields
-\begin{equation}\begin{split}
-L\psi& + (\sigma_a+ \sigma_s ) \psi \\
-&= \sigma_s \phi +\underbrace{\sigma_{as} \pi\int_{-1}^{1}s_\varepsilon\left(\mu\right)(1-\mu) \, d\mu}_{\textstyle = \mathcal{O}\left(\sigma_{as}\cdot \varepsilon\right)}\cdot  \left[\frac{\partial}{\partial \mu} (1-\mu^2)\frac{\partial}{\partial \mu} +\frac{1}{1-\mu^2} \frac{\partial^2}{\partial \phi^2}\right]\psi+ \mathcal{O}\left(\sigma_{as}\cdot \varepsilon^2\right),
-\end{split}\end{equation}
-which are the scaling properties that we expect to see and also observe throughout the numerical experiments.
+The first line is obvious. The second line follows from the fact that
+$(1-\mu) = \mathcal{O}(\delta)$, resulting in
+\begin{equation}
+  \begin{split}
+    L\psi& + (\sigma_a+ \sigma_s +\sigma_{as} ) \psi \\
+    &= \sigma_s \phi +\sigma_{as}   \sum_{n=0}^\infty \sum_{m=-n}^n
+    \frac{2n+1}{4\pi}   a_{n,m}\, \psi_{n,m} \,  Y_{n,m}(\bOmega)
+    \cdot \left[1  - n(n+1)\pi\int_{-1}^{1}
+    s_\varepsilon\left(\mu\right)(1-\mu) \, d\mu \right] +
+    \mathcal{O}\left(\frac{\delta^2}{\Delta}\right).
+  \end{split}
+\end{equation}
+For the next step, we follow the  computations (52) and (53) in
+Pomraning's work  \cite{pomraning1992fokker} to obtain %\todo{include
+% this} This yields
+\begin{equation}
+  \begin{split}
+    L\psi& + (\sigma_a+ \sigma_s ) \psi \\
+    &= \sigma_s \phi +\underbrace{\sigma_{as}
+      \pi\int_{-1}^{1}s_\varepsilon\left(\mu\right)(1-\mu) \,
+    d\mu}_{\textstyle = \mathcal{O}\left(\sigma_{as}\cdot
+    \varepsilon\right)}\cdot  \left[\frac{\partial}{\partial \mu}
+      (1-\mu^2)\frac{\partial}{\partial \mu} +\frac{1}{1-\mu^2}
+    \frac{\partial^2}{\partial \phi^2}\right]\psi+
+    \mathcal{O}\left(\sigma_{as}\cdot \varepsilon^2\right),
+  \end{split}
+\end{equation}
+which are the scaling properties that we expect to see and also
+observe throughout the numerical experiments.
 
-Before discussing the results of both the line-source and lattice test case, it is worth mentioning where and how the theoretical setting of the asymptotic analysis deviates from the actual setting of the numerical experiments. Most importantly, the asymptotic analysis works on the continuous level (in angle) while the as-S$_N$ implementation is already discretized (in angle). Next, when trying to quantify the effect of artificial diffusion, we do so by proxying the $L^2$ error with respect to a reference solution, rather than the artificial diffusion itself. Lastly, while the effect of angular diffusion is characterized by the product $\sigma_\text{as} \cdot \varepsilon$, the $\mathcal{O}\left(\sigma_\text{as}\cdot \varepsilon^2\right) $ term might, for certain parameter pairs, be non-negligible to an extend where the difference between the as-S$_N$ and the S$_N$ method can not exclusively be attributed to the angular diffusion.
+Before discussing the results of both the line-source and lattice
+test case, it is worth mentioning where and how the theoretical
+setting of the asymptotic analysis deviates from the actual setting
+of the numerical experiments. Most importantly, the asymptotic
+analysis works on the continuous level (in angle) while the as-S$_N$
+implementation is already discretized (in angle). Next, when trying
+to quantify the effect of artificial diffusion, we do so by proxying
+the $L^2$ error with respect to a reference solution, rather than the
+artificial diffusion itself. Lastly, while the effect of angular
+diffusion is characterized by the product $\sigma_\text{as} \cdot
+\varepsilon$, the $\mathcal{O}\left(\sigma_\text{as}\cdot
+\varepsilon^2\right) $ term might, for certain parameter pairs, be
+non-negligible to an extend where the difference between the as-S$_N$
+and the S$_N$ method can not exclusively be attributed to the angular diffusion.
 
-%Equipped with the insight of the asymptotic analysis and the remarks from the last paragraph, we can now discuss the numerical experiments.
+%Equipped with the insight of the asymptotic analysis and the remarks
+% from the last paragraph, we can now discuss the numerical experiments.
 
 \subsection{as-S$_N$ and the line-source test case}
-Comparing the as-S$_N$ method with the rS$_N$ method, an arguable drawback is the necessity two choose two parameters (\ie $\sigma_\text{as}$ and $\beta$) instead of just one (\ie $\delta$). However, the results from the asymptotic analysis show that (under certain assumptions) the added artificial diffusion is controlled by the product of $\sigma_\text{as}$ and $\beta$ rather than by each parameter individually. This is mostly in agreement with the two parameter studies that are summarized in Figures \ref{fig:nse19-109figheatmapexplicitl2} and \ref{fig:nse19-109figheatmapexplicitl2_fine}, computed for the coarse setting $n_q \times n_x \times n_y = 12 \times 50 \times 50$ and the fine setting $n_q \times n_x \times n_y = 92 \times 200 \times 200$, respectively. In both settings, we (i) run as-S$_N$ simulations for the line-source test case with different combinations of $\sigma_\text{as}$ and $\beta$, (ii) compute the resulting $L^2$ error with respect to the semi-analytical reference solution, and (iii) divide that error by the error obtained from a standard S$_N$ simulation. Each cell in the resulting heatmaps in Figures \ref{fig:nse19-109figheatmapexplicitl2} and \ref{fig:nse19-109figheatmapexplicitl2_fine} is then color-coded by this \textit{baseline normalized error}. Values below (above) unity indicate that the error has decreased (increased) when running the as-S$_N$ method with that specific parameter pair. The optimal parameter pair is highlighted in yellow and all pairs close to optimal in green.
+Comparing the as-S$_N$ method with the rS$_N$ method, an arguable
+drawback is the necessity two choose two parameters (\ie
+$\sigma_\text{as}$ and $\beta$) instead of just one (\ie $\delta$).
+However, the results from the asymptotic analysis show that (under
+certain assumptions) the added artificial diffusion is controlled by
+the product of $\sigma_\text{as}$ and $\beta$ rather than by each
+parameter individually. This is mostly in agreement with the two
+parameter studies that are summarized in Figures
+\ref{fig:nse19-109figheatmapexplicitl2} and
+\ref{fig:nse19-109figheatmapexplicitl2_fine}, computed for the coarse
+setting $n_q \times n_x \times n_y = 12 \times 50 \times 50$ and the
+fine setting $n_q \times n_x \times n_y = 92 \times 200 \times 200$,
+respectively. In both settings, we (i) run as-S$_N$ simulations for
+the line-source test case with different combinations of
+$\sigma_\text{as}$ and $\beta$, (ii) compute the resulting $L^2$
+error with respect to the semi-analytical reference solution, and
+(iii) divide that error by the error obtained from a standard S$_N$
+simulation. Each cell in the resulting heatmaps in Figures
+\ref{fig:nse19-109figheatmapexplicitl2} and
+\ref{fig:nse19-109figheatmapexplicitl2_fine} is then color-coded by
+this \textit{baseline normalized error}. Values below (above) unity
+indicate that the error has decreased (increased) when running the
+as-S$_N$ method with that specific parameter pair. The optimal
+parameter pair is highlighted in yellow and all pairs close to optimal in green.
 
-In the coarse case, the optimal parameter choice of $\beta=3.5$ and $\sigma_\text{as} = 18$ yields an error reduction down to approximately $43$\%, measured in the $L^2$ norm over the full spatial domain at the final time $t=1s$. Parameter pairs close to optimal, \ie where the error does not exceed the optimal error by more than $10\%$, mostly fall in the region $20 \leq \beta \cdot \sigma_\text{as} \leq 80$, $\beta\geq 3$. For $120\leq \beta \cdot \sigma_\text{as}$, the baseline normalized error will be above unity. This corresponds to cases in which too much artificial scattering was added.
+In the coarse case, the optimal parameter choice of $\beta=3.5$ and
+$\sigma_\text{as} = 18$ yields an error reduction down to
+approximately $43$\%, measured in the $L^2$ norm over the full
+spatial domain at the final time $t=1s$. Parameter pairs close to
+optimal, \ie where the error does not exceed the optimal error by
+more than $10\%$, mostly fall in the region $20 \leq \beta \cdot
+\sigma_\text{as} \leq 80$, $\beta\geq 3$. For $120\leq \beta \cdot
+\sigma_\text{as}$, the baseline normalized error will be above unity.
+This corresponds to cases in which too much artificial scattering was added.
 
-It is obviously infeasible to perform a full parameter study on the same fine grid that the actual computation takes place on. Consequently,  we may ask ourselves how well the coarse setting performs as a surrogate for the fine setting. Comparing the heatmap in Figure \ref{fig:nse19-109figheatmapexplicitl2} with the one in Figure \ref{fig:nse19-109figheatmapexplicitl2_fine}, the success of this strategy is evident. 
-While the optimal parameter pair in the fine setting reduces the error down to $23$\%, the optimal parameter pair in the coarse setting still reduces the error down to $42$\% when applied in the fine setting. This is also visualized in Figure \ref{fig:applysuboptimalparameters}.
-The regions of optimal parameter configurations tend to overlap when comparing both settings, although the fine setting has a wider valley of optimal parameter pairs. 
+It is obviously infeasible to perform a full parameter study on the
+same fine grid that the actual computation takes place on.
+Consequently,  we may ask ourselves how well the coarse setting
+performs as a surrogate for the fine setting. Comparing the heatmap
+in Figure \ref{fig:nse19-109figheatmapexplicitl2} with the one in
+Figure \ref{fig:nse19-109figheatmapexplicitl2_fine}, the success of
+this strategy is evident.
+While the optimal parameter pair in the fine setting reduces the
+error down to $23$\%, the optimal parameter pair in the coarse
+setting still reduces the error down to $42$\% when applied in the
+fine setting. This is also visualized in Figure
+\ref{fig:applysuboptimalparameters}.
+The regions of optimal parameter configurations tend to overlap when
+comparing both settings, although the fine setting has a wider valley
+of optimal parameter pairs.
 
-Computing an as-S$_N$ simulation with $n_q\times n_x \times n_y  = 92 \times 200 \times 200$ is approximately $490$ ($\approx 92/12 \times 4\times 4 \times 4 $, since also $n_t = \mathcal{O}(n_x,n_y)$) times as costly as for $n_q\times n_x \times n_y  = 12 \times 50\times 50$. Therefore, performing \textit{all} $306$ simulations for the coarse heatmap, followed by one simulation in the fine setting with the optimal parameter pair increases the runtime by $62$\% while the error is decreased down to $42$\%. A similar return on investment would not be achieved by simply increasing the number of ordinates in the S$_N$ method.
+Computing an as-S$_N$ simulation with $n_q\times n_x \times n_y  = 92
+\times 200 \times 200$ is approximately $490$ ($\approx 92/12 \times
+4\times 4 \times 4 $, since also $n_t = \mathcal{O}(n_x,n_y)$) times
+as costly as for $n_q\times n_x \times n_y  = 12 \times 50\times 50$.
+Therefore, performing \textit{all} $306$ simulations for the coarse
+heatmap, followed by one simulation in the fine setting with the
+optimal parameter pair increases the runtime by $62$\% while the
+error is decreased down to $42$\%. A similar return on investment
+would not be achieved by simply increasing the number of ordinates in
+the S$_N$ method.
 
-Lastly, the discussion of an efficient implementation of the as-S$_N$ method has been omitted since all computations were done explicitly. Because the physical and artificial scattering can be combined into a new scattering kernel, the as-S$_N$ method yields no increase in runtime. 
+Lastly, the discussion of an efficient implementation of the as-S$_N$
+method has been omitted since all computations were done explicitly.
+Because the physical and artificial scattering can be combined into a
+new scattering kernel, the as-S$_N$ method yields no increase in runtime.
 
 \begin{figure}[]
-	\begin{subfigure}{0.27\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lsassn/2020-07-29T12:50:04.603/200.0r0.0S4.0nx200.0cuts}
-		\caption{S$_{4}$ with $92$ ordinates and no artificial scattering, computed with the icosahedron quadrature set.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.27\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lsassn/2020-07-29T12:54:25.179/200.0r0.0S4.0nx200.0cuts}
-	\caption{Using artificial scattering with the optimal parameter set reduces the error down to about $23$\%.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.27\textwidth}
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lsassn/2020-07-29T12:56:08.095/200.0r0.0S4.0nx200.0cuts}
-	\caption{Using the optimal parameter set computed in the coarse setting still reduces the error down to about $43$\%.}
-	\end{subfigure}
-	\caption{For the as-S$_N$ method, two parameters ($\sigma_\text{as}$ and $\beta$) need to be chosen. All three images show line-source cuts with $n_q \times n_x \times n_y = 92 \times 200 \times 200$. Left, artificial scattering is not used. Center, $\sigma_\text{as} = 4.0$ and $\beta=8.0$, which corresponds to the optimal parameter found in the parameter study in Figure \ref{fig:nse19-109figheatmapexplicitl2_fine} on the same grid. Right,  $\sigma_\text{as} = 18.0$ and $\beta=3.5$, which are the optimal parameters from the coarse parameter study ($n_q \times n_x \times n_y = 12 \times 50 \times 50$).}
-	\label{fig:applysuboptimalparameters}
+  \begin{subfigure}{0.27\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lsassn/2020-07-29T12:50:04.603/200.0r0.0S4.0nx200.0cuts}
+    \caption{S$_{4}$ with $92$ ordinates and no artificial
+    scattering, computed with the icosahedron quadrature set.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.27\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lsassn/2020-07-29T12:54:25.179/200.0r0.0S4.0nx200.0cuts}
+    \caption{Using artificial scattering with the optimal parameter
+    set reduces the error down to about $23$\%.}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.27\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/lsassn/2020-07-29T12:56:08.095/200.0r0.0S4.0nx200.0cuts}
+    \caption{Using the optimal parameter set computed in the coarse
+    setting still reduces the error down to about $43$\%.}
+  \end{subfigure}
+  \caption{For the as-S$_N$ method, two parameters
+    ($\sigma_\text{as}$ and $\beta$) need to be chosen. All three
+    images show line-source cuts with $n_q \times n_x \times n_y = 92
+    \times 200 \times 200$. Left, artificial scattering is not used.
+    Center, $\sigma_\text{as} = 4.0$ and $\beta=8.0$, which corresponds
+    to the optimal parameter found in the parameter study in Figure
+    \ref{fig:nse19-109figheatmapexplicitl2_fine} on the same grid.
+    Right,  $\sigma_\text{as} = 18.0$ and $\beta=3.5$, which are the
+    optimal parameters from the coarse parameter study ($n_q \times n_x
+  \times n_y = 12 \times 50 \times 50$).}
+  \label{fig:applysuboptimalparameters}
 \end{figure}
 
-
 \begin{landscape}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn/OLD/linesource/dummy}
-		\caption{Parameter study for $\sigma_{\text{as}}$ and $\beta$ on the grid $n_q \times n_x \times n_y = 12 \times 50 \times 50$ in an explicit calculation. For every set of parameters, we compute the $L^2$ error of the scalar flux $\phi$ with respect to the semi-analytical reference solution on the same spatial grid. The number in each field of the heatmap is then the baseline normalized error, \ie the $L^2$ error obtained for that specific parameter configuration divided by the error obtained without artificial scattering. The optimal parameter configuration, highlighted in yellow, reduces the error down to 43\%. Close-to-optimal parameter pairs are highlighted in green.}
-		\label{fig:nse19-109figheatmapexplicitl2}
-	\end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn/OLD/linesource/dummy}
+    \caption{Parameter study for $\sigma_{\text{as}}$ and $\beta$ on
+      the grid $n_q \times n_x \times n_y = 12 \times 50 \times 50$ in
+      an explicit calculation. For every set of parameters, we compute
+      the $L^2$ error of the scalar flux $\phi$ with respect to the
+      semi-analytical reference solution on the same spatial grid. The
+      number in each field of the heatmap is then the baseline
+      normalized error, \ie the $L^2$ error obtained for that specific
+      parameter configuration divided by the error obtained without
+      artificial scattering. The optimal parameter configuration,
+      highlighted in yellow, reduces the error down to 43\%.
+    Close-to-optimal parameter pairs are highlighted in green.}
+    \label{fig:nse19-109figheatmapexplicitl2}
+  \end{figure}
 \end{landscape}
 
 \begin{landscape}
-	\begin{figure}
-		\centering
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn/NEW/tmp11}
-		\caption{Parameter study for $\sigma_{\text{as}}$ and $\beta$ on the grid $n_q \times n_x \times n_y = 92 \times 200 \times200$ in an explicit calculation. For every set of parameters, we compute the $L^2$ error of the scalar flux $\phi$ with respect to the semi-analytical reference solution on the same spatial grid. The number in each field of the heatmap is then the baseline normalized error, \ie the $L^2$ error obtained for that specific parameter configuration divided by the error obtained without artificial scattering. The optimal parameter configuration, highlighted in yellow, reduces the error down to 23\%. Close-to-optimal parameter pairs are highlighted in green.}
-		\label{fig:nse19-109figheatmapexplicitl2_fine}
-	\end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn/NEW/tmp11}
+    \caption{Parameter study for $\sigma_{\text{as}}$ and $\beta$ on
+      the grid $n_q \times n_x \times n_y = 92 \times 200 \times200$ in
+      an explicit calculation. For every set of parameters, we compute
+      the $L^2$ error of the scalar flux $\phi$ with respect to the
+      semi-analytical reference solution on the same spatial grid. The
+      number in each field of the heatmap is then the baseline
+      normalized error, \ie the $L^2$ error obtained for that specific
+      parameter configuration divided by the error obtained without
+      artificial scattering. The optimal parameter configuration,
+      highlighted in yellow, reduces the error down to 23\%.
+    Close-to-optimal parameter pairs are highlighted in green.}
+    \label{fig:nse19-109figheatmapexplicitl2_fine}
+  \end{figure}
 \end{landscape}
 
 \FloatBarrier
 
-
-
-
 \subsection{as-S$_N$ and the lattice test case}
-The quantitative benefits of artificial scattering are, unsurprisingly, less pronounced in the lattice test case. This is predominantly due to the fact that ray effects occur on neglectable scales, orders of magnitudes smaller than the mean scalar flux. Nevertheless, we will observe an error reduction when switching from S$_N$ to as-S$_N$.
+The quantitative benefits of artificial scattering are,
+unsurprisingly, less pronounced in the lattice test case. This is
+predominantly due to the fact that ray effects occur on neglectable
+scales, orders of magnitudes smaller than the mean scalar flux.
+Nevertheless, we will observe an error reduction when switching from
+S$_N$ to as-S$_N$.
 \begin{figure}[h!]
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/ref_plasma}
-		\caption{S$_{15}$ with $1962$ ordinates and no artificial scattering. Ray effects are still visible at the isolines.}
-		\label{fig:assncbrefsolutionA}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/best_plasma2}
-		\caption{For 92 ordinates, using $\sigma_\text{as} = 1.0$ and $\beta=12.0$ yields the best-case error (down to $69$\%).}
-		\label{fig:assncbrefsolutionB}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/original_plasma}
-		\caption{S$_{4}$ with $92$ ordinates and no artificial scattering. This computation serves as the baseline.}
-		\label{fig:assncbrefsolutionC}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.24\textwidth}
-		\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/worstcase}
-		\caption{Worst-case scenario with too much artificial scattering yields a tenfold increase in  error.}
-		\label{fig:assncbrefsolutionD}
-	\end{subfigure}
-	\caption{Results for the lattice test case with different amounts of artificial scattering. From left to right: A high-order reference solution; the best-case scenario; the baseline; and the worst-case scenario.}
-	\label{fig:assncbrefsolution}
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/ref_plasma}
+    \caption{S$_{15}$ with $1962$ ordinates and no artificial
+    scattering. Ray effects are still visible at the isolines.}
+    \label{fig:assncbrefsolutionA}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/best_plasma2}
+    \caption{For 92 ordinates, using $\sigma_\text{as} = 1.0$ and
+    $\beta=12.0$ yields the best-case error (down to $69$\%).}
+    \label{fig:assncbrefsolutionB}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/original_plasma}
+    \caption{S$_{4}$ with $92$ ordinates and no artificial
+    scattering. This computation serves as the baseline.}
+    \label{fig:assncbrefsolutionC}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.24\textwidth}
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/worstcase}
+    \caption{Worst-case scenario with too much artificial scattering
+    yields a tenfold increase in  error.}
+    \label{fig:assncbrefsolutionD}
+  \end{subfigure}
+  \caption{Results for the lattice test case with different amounts
+    of artificial scattering. From left to right: A high-order
+    reference solution; the best-case scenario; the baseline; and the
+  worst-case scenario.}
+  \label{fig:assncbrefsolution}
 \end{figure}
 
+To derive errors, we computed a reference solution that uses
+$n_q=1962$ ordinates on a spatial grid of $n_x \times n_y = 280
+\times 280$ cells, visualized in Figure \ref{fig:assncbrefsolutionA}.
+The parameter study that was performed for the line-source test case
+is replicated for the lattice test case ($n_q=92$), with the results
+summarized in Figure \ref{fig:cbnse19-109figheatmapexplicitl2_fine}.
+The optimal parameter configuration ($\beta= 12$, $\sigma_\text{as}
+=1$) reduces the error down to $69$\% of the original error, shown
+with the baseline S$_N$ result in Figures
+\ref{fig:assncbrefsolutionB} and \ref{fig:assncbrefsolutionC}, respectively.
 
+Interestingly, using a close-to-optimal parameter pair from the
+coarse line-source parameter study for the lattice test case reduces
+the error down to $72$\%, indicating the possibility to use different
+discretizations \textit{and} test cases as surrogates.
 
-To derive errors, we computed a reference solution that uses $n_q=1962$ ordinates on a spatial grid of $n_x \times n_y = 280 \times 280$ cells, visualized in Figure \ref{fig:assncbrefsolutionA}. The parameter study that was performed for the line-source test case is replicated for the lattice test case ($n_q=92$), with the results summarized in Figure \ref{fig:cbnse19-109figheatmapexplicitl2_fine}. The optimal parameter configuration ($\beta= 12$, $\sigma_\text{as} =1$) reduces the error down to $69$\% of the original error, shown with the baseline S$_N$ result in Figures \ref{fig:assncbrefsolutionB} and \ref{fig:assncbrefsolutionC}, respectively.
-
-
-Interestingly, using a close-to-optimal parameter pair from the coarse line-source parameter study for the lattice test case reduces the error down to $72$\%, indicating the possibility to use different discretizations \textit{and} test cases as surrogates. 
-
-
-While the worst-case error for the line-source test case was reasonably small with a baseline normalized error of $2.23$ (coarse) and $1.65$ (fine), this is not the case for the lattice test case where we observe a baseline normalized error of up to $10.8$ in Figure \ref{fig:assncbrefsolutionD}. The error is due to the enormous amount of artificial diffusion that is added to the solution and smears out the scalar flux unnecessarily.
-
+While the worst-case error for the line-source test case was
+reasonably small with a baseline normalized error of $2.23$ (coarse)
+and $1.65$ (fine), this is not the case for the lattice test case
+where we observe a baseline normalized error of up to $10.8$ in
+Figure \ref{fig:assncbrefsolutionD}. The error is due to the enormous
+amount of artificial diffusion that is added to the solution and
+smears out the scalar flux unnecessarily.
 
 \begin{landscape}
-	\begin{figure}
-		\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/cb}
-		\caption{Parameter study for $\sigma_{\text{as}}$ and $\beta$ on the grid $n_q \times n_x \times n_y = 42 \times 280 \times280$ in an explicit lattice calculation. For every set of parameters, we compute the $L^2$ error of the scalar flux $\phi$ with respect to a reference solution ($n_q= 1962$) on the same spatial grid. The number in each field of the heatmap is then the baseline normalized error, \ie the $L^2$ error obtained for that specific parameter configuration divided by the error obtained without artificial scattering. The optimal parameter configuration, highlighted in yellow, reduces the error down to 69\%. Close-to-optimal parameter pairs are highlighted in green. The colorbar ranges to a maximum value of $3.00$ to avoid color distortion. }
-		\label{fig:cbnse19-109figheatmapexplicitl2_fine}
-	\end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=1.0\linewidth]{Chapters/Chapter3/fig/assn_cb/cb}
+    \caption{Parameter study for $\sigma_{\text{as}}$ and $\beta$ on
+      the grid $n_q \times n_x \times n_y = 42 \times 280 \times280$ in
+      an explicit lattice calculation. For every set of parameters, we
+      compute the $L^2$ error of the scalar flux $\phi$ with respect to
+      a reference solution ($n_q= 1962$) on the same spatial grid. The
+      number in each field of the heatmap is then the baseline
+      normalized error, \ie the $L^2$ error obtained for that specific
+      parameter configuration divided by the error obtained without
+      artificial scattering. The optimal parameter configuration,
+      highlighted in yellow, reduces the error down to 69\%.
+      Close-to-optimal parameter pairs are highlighted in green. The
+    colorbar ranges to a maximum value of $3.00$ to avoid color distortion. }
+    \label{fig:cbnse19-109figheatmapexplicitl2_fine}
+  \end{figure}
 \end{landscape}
-
-
-

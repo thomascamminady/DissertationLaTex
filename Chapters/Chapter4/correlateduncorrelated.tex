@@ -2,134 +2,211 @@
 \section{Correlated and uncorrelated particles}
 \label{sec:corr}
 
-A thought (and numerical) experiment made by d'Eon \cite{d2018reciprocal} that was independently considered in Jarabo et al. \cite{jarabo2018radiative} made the following observation: 
-For non-classical particle transport it is necessary to distinguish particles that are \textit{correlated} with the medium (related quantities are denoted with a subscript $c$) from those particles that are \textit{uncorrelated} with the medium (denoted with a subscript $u$).
+A thought (and numerical) experiment made by d'Eon
+\cite{d2018reciprocal} that was independently considered in Jarabo et
+al. \cite{jarabo2018radiative} made the following observation:
+For non-classical particle transport it is necessary to distinguish
+particles that are \textit{correlated} with the medium (related
+quantities are denoted with a subscript $c$) from those particles
+that are \textit{uncorrelated} with the medium (denoted with a subscript $u$).
 %\footnote{
-%	This terminology is similar to that of \textit{collided }and \textit{uncollided }particles in the transport community.
-%	However, we will learn about mechanisms that allow correlated particles to become uncorrelated. 
-	%Since collided particles can not become uncollided, and given that this was the notation adapted by the original authors, we will also use this notation here.}.
-This distinction is explained by considering particle transport in an obstacle field generated via a Poisson disc sampling procedure. Rather than placing scatterers randomly---as it is the assumption in classical transport theory---we place scatterers in a way such that they obey a certain minimal distance from any other scatterer, visualized in Figures \ref{fig:sub1} and \ref{fig:sub2}, respectively.
-The distributions for the \textit{distance between  consecutive collisions} has to be zero for distances smaller than the minimal distance between scatterers. However, for a particle that is placed independently of the scatters---\eg by a source---the distribution for the \textit{distance to the next collision} does not demand this property.
+%  This terminology is similar to that of \textit{collided }and
+% \textit{uncollided }particles in the transport community.
+%  However, we will learn about mechanisms that allow correlated
+% particles to become uncorrelated.
+%Since collided particles can not become uncollided, and given that
+% this was the notation adapted by the original authors, we will also
+% use this notation here.}.
+This distinction is explained by considering particle transport in an
+obstacle field generated via a Poisson disc sampling procedure.
+Rather than placing scatterers randomly---as it is the assumption in
+classical transport theory---we place scatterers in a way such that
+they obey a certain minimal distance from any other scatterer,
+visualized in Figures \ref{fig:sub1} and \ref{fig:sub2}, respectively.
+The distributions for the \textit{distance between  consecutive
+collisions} has to be zero for distances smaller than the minimal
+distance between scatterers. However, for a particle that is placed
+independently of the scatters---\eg by a source---the distribution
+for the \textit{distance to the next collision} does not demand this property.
 
-Consequently, we distinguish correlated  from uncorrelated particles. These two species then behave as follows:
+Consequently, we distinguish correlated  from uncorrelated particles.
+These two species then behave as follows:
 \begin{itemize}
-	\item[1)] We gain correlated (or uncorrelated) particles by a correlated (or uncorrelated) source.
-	\item[2)] If correlated (or uncorrelated) particles get absorbed we lose correlated (or uncorrelated) particles.
-	\item[3)] If correlated particles scatter they stay correlated.
-	\item[4)] However, if uncorrelated particles scatter, they are no longer independent of the medium and become correlated particles.
+\item[1)] We gain correlated (or uncorrelated) particles by a
+  correlated (or uncorrelated) source.
+\item[2)] If correlated (or uncorrelated) particles get absorbed we
+lose correlated (or uncorrelated) particles.
+\item[3)] If correlated particles scatter they stay correlated.
+\item[4)] However, if uncorrelated particles scatter, they are no
+longer independent of the medium and become correlated particles.
 \end{itemize}
 
-
-
 \begin{figure}
-	\centering
-	\begin{subfigure}{.45\textwidth}
-		\centering
-		\includegraphics[width=.9\linewidth]{Chapters/Chapter4/figures/random}
-		\caption{Scatterers generated in a uniformly random manner. Scatterers are allowed to overlap.}
-		\label{fig:sub1}
-	\end{subfigure}%
-	\hfill
-	\begin{subfigure}{.45\textwidth}
-		\centering
-		\includegraphics[width=.9\linewidth]{Chapters/Chapter4/figures/poisson}
-		\caption{Scatterers generated via Poisson disc sampling where the minimal distance between two boundaries is equal to the radius $r$.}
-		\label{fig:sub2}
-	\end{subfigure}
-	\caption{Scatterers of radius $r=0.01$ generated in the domain $[0,1]\times[0,1]$. Both pictures show $696$ scatterers.}
-	\label{fig:test}
+\centering
+\begin{subfigure}{.45\textwidth}
+\centering
+\includegraphics[width=.9\linewidth]{Chapters/Chapter4/figures/random}
+\caption{Scatterers generated in a uniformly random manner.
+Scatterers are allowed to overlap.}
+\label{fig:sub1}
+\end{subfigure}%
+\hfill
+\begin{subfigure}{.45\textwidth}
+\centering
+\includegraphics[width=.9\linewidth]{Chapters/Chapter4/figures/poisson}
+\caption{Scatterers generated via Poisson disc sampling where the
+minimal distance between two boundaries is equal to the radius $r$.}
+\label{fig:sub2}
+\end{subfigure}
+\caption{Scatterers of radius $r=0.01$ generated in the domain
+$[0,1]\times[0,1]$. Both pictures show $696$ scatterers.}
+\label{fig:test}
 \end{figure}
 \begin{figure}
-	\centering
-	\includegraphics[width=1\linewidth]{Chapters/Chapter4/figures/flowchart1.pdf}
-	\caption{Life cycle of correlated and uncorrelated particles.}
-	\label{fig:photo2019-12-1617-13-40}
+\centering
+\includegraphics[width=1\linewidth]{Chapters/Chapter4/figures/flowchart1.pdf}
+\caption{Life cycle of correlated and uncorrelated particles.}
+\label{fig:photo2019-12-1617-13-40}
 \end{figure}
-Ignoring heterogeneity, this life cycle is depicted in Figure  \ref{fig:photo2019-12-1617-13-40}.
-We are aware that the above distinction is similar to the one of \textit{collided} and \textit{uncollided} particles. 
-In fact, for the homogeneous case, uncorrelated particles are uncollided ones and correlated particles are collided ones. For the heterogeneous case, however, correlated particles can become uncorrelated, whereas collided particles always stay collided. We make the following definitions:
-
+Ignoring heterogeneity, this life cycle is depicted in Figure
+\ref{fig:photo2019-12-1617-13-40}.
+We are aware that the above distinction is similar to the one of
+\textit{collided} and \textit{uncollided} particles.
+In fact, for the homogeneous case, uncorrelated particles are
+uncollided ones and correlated particles are collided ones. For the
+heterogeneous case, however, correlated particles can become
+uncorrelated, whereas collided particles always stay collided. We
+make the following definitions:
 
 \begin{align*}
-	N_u(s,\bx,\bOmega)\, ds\, d{\bx}\, d\bOmega = 
-	& \text{ ``the number of uncorrelated particles in } ds\, d{\bx}\, d\bOmega\text{ about } (s,\bx,\bOmega)." 
-	\\
-	\psi_u(s,\bx,\bOmega) =                             & \,  v \, N_u(s,\bx,\bOmega)= \text{ ``the non-classical, uncorrelated angular flux.}"                                        
-	\\
-	\sigma_{u,t}(s)\, ds =                           & \text{ ``the probability that an uncorrelated particle which has  traveled}                         \\ & \text{ \, a distance }s\text{ since a previous event experiences a collision }\\ &\text{ \, while traveling a further distance } ds."                          
-	\\
-	Q_u(\bx)\,d{\bx} =                            & \text{ ``the rate at which uncorrelated particles are isotropically emitted by }                       
-	\\
-	& \text{ \, an internal source in } d{\bx} \text{ about } \bx."          
+N_u(s,\bx,\bOmega)\, ds\, d{\bx}\, d\bOmega =
+& \text{ ``the number of uncorrelated particles in } ds\, d{\bx}\,
+d\bOmega\text{ about } (s,\bx,\bOmega)."
+\\
+\psi_u(s,\bx,\bOmega) =                             & \,  v \,
+N_u(s,\bx,\bOmega)= \text{ ``the non-classical, uncorrelated angular flux.}"
+\\
+\sigma_{u,t}(s)\, ds =                           & \text{ ``the
+probability that an uncorrelated particle which has  traveled}
+\\ & \text{ \, a distance }s\text{ since a previous event experiences
+a collision }\\ &\text{ \, while traveling a further distance } ds."
+\\
+Q_u(\bx)\,d{\bx} =                            & \text{ ``the rate at
+which uncorrelated particles are isotropically emitted by }
+\\
+& \text{ \, an internal source in } d{\bx} \text{ about } \bx."
 \end{align*}
 Similarly, we obtain the quantities for correlated particles.
 \begin{align*}
-	N_c(s,\bx,\bOmega)\, ds\,d{\bx}\, d\bOmega = 
-	& \text{ ``the number of correlated particles in } ds\, d{\bx}\, d\bOmega \text{ about } (s,\bx,\bOmega)." 
-	\\
-	\psi_c(s,\bx,\bOmega) =                             & \,  v \, N_c(s,\bx,\bOmega)= \text{ ``the non-classical, correlated angular flux.}"                                        
-	\\
-	\sigma_{c,t}(s)\, ds =                           & \text{ ``the probability that a correlated particle which has  traveled}                         \\ & \text{ \, a distance }s\text{ since a previous event experiences a collision }\\ &\text{ \, while traveling a further distance } ds."                          
-	\\
-	Q_c(\bx)\,d{\bx} =                            & \text{ ``the rate at which correlated particles are isotropically emitted by }                       
-	\\
-	& \text{ \, an internal source in } d{\bx} \text{ about } \bx."          
+N_c(s,\bx,\bOmega)\, ds\,d{\bx}\, d\bOmega =
+& \text{ ``the number of correlated particles in } ds\, d{\bx}\,
+d\bOmega \text{ about } (s,\bx,\bOmega)."
+\\
+\psi_c(s,\bx,\bOmega) =                             & \,  v \,
+N_c(s,\bx,\bOmega)= \text{ ``the non-classical, correlated angular flux.}"
+\\
+\sigma_{c,t}(s)\, ds =                           & \text{ ``the
+probability that a correlated particle which has  traveled}
+\\ & \text{ \, a distance }s\text{ since a previous event experiences
+a collision }\\ &\text{ \, while traveling a further distance } ds."
+\\
+Q_c(\bx)\,d{\bx} =                            & \text{ ``the rate at
+which correlated particles are isotropically emitted by }
+\\
+& \text{ \, an internal source in } d{\bx} \text{ about } \bx."
 \end{align*}
 
-Supplementing the definitions above, we remark that (i) these equations describe homogeneous transport, (ii) we only choose isotropic sources to shorten notation, and (iii) we subsequently assume the absence of sources that are correlated with the medium on a microscopic level. 
-Following Larsen and Vasques \cite{larsen2011generalized}, we obtain versions of the generalized linear Boltzmann equation, provided first in a similar form by d'Eon \cite{d2018reciprocal}. They are given by
+Supplementing the definitions above, we remark that (i) these
+equations describe homogeneous transport, (ii) we only choose
+isotropic sources to shorten notation, and (iii) we subsequently
+assume the absence of sources that are correlated with the medium on
+a microscopic level.
+Following Larsen and Vasques \cite{larsen2011generalized}, we obtain
+versions of the generalized linear Boltzmann equation, provided first
+in a similar form by d'Eon \cite{d2018reciprocal}. They are given by
 \begin{align}
-	\partial_s \psi_u(s,\bx,\bOmega) + \bOmega\cdot \nabla_\bx \psi_u(s,\bx,\bOmega) & + \sigma_{t,u}(s)\psi_u(s,\bx,\bOmega) = \delta(s) Q_u(\bx)
-	\label{eq:uncorrelatedtranspor}
+\partial_s \psi_u(s,\bx,\bOmega) + \bOmega\cdot \nabla_\bx
+\psi_u(s,\bx,\bOmega) & + \sigma_{t,u}(s)\psi_u(s,\bx,\bOmega) =
+\delta(s) Q_u(\bx)
+\label{eq:uncorrelatedtranspor}
 \end{align}
 for the uncorrelated angular flux and
 \begin{equation}
-	\begin{split}
-		\partial_s \psi_c(s,\bx,\bOmega) &+ \bOmega\cdot \nabla_\bx \psi_c(s,\bx,\bOmega) + \sigma_{t,c}(s)\psi_c(s,\bx,\bOmega)  \\=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2}
-		s(\bOmega' \cdot \bOmega)\left( \sigma_{t,c}(s')\psi_c(s',\bx,\bOmega')
-			+ \sigma_{t,u}(s')\psi_u(s',\bx,\bOmega') \right) \, d\bOmega'\, ds'
-	\end{split}
-	\label{eq:correlatedtranspor}
+\begin{split}
+\partial_s \psi_c(s,\bx,\bOmega) &+ \bOmega\cdot \nabla_\bx
+\psi_c(s,\bx,\bOmega) + \sigma_{t,c}(s)\psi_c(s,\bx,\bOmega)  \\=\,
+&c\,\delta(s)\, \int_0^{l(\bx,\bOmega)} \int_{\mathbb{S}^2}
+s(\bOmega' \cdot \bOmega)\left( \sigma_{t,c}(s')\psi_c(s',\bx,\bOmega')
++ \sigma_{t,u}(s')\psi_u(s',\bx,\bOmega') \right) \, d\bOmega'\, ds'
+\end{split}
+\label{eq:correlatedtranspor}
 \end{equation}
-for the correlated angular flux, respectively. With $l(\bx,\bOmega)$ we denote the distance from $\bx$ to $\partial{V}$  moving backward with direction $-\bOmega$. Boundary conditions are given by
+for the correlated angular flux, respectively. With $l(\bx,\bOmega)$
+we denote the distance from $\bx$ to $\partial{V}$  moving backward
+with direction $-\bOmega$. Boundary conditions are given by
 \begin{subequations}
-	\begin{align}
-		%{\bf{n}}(\bx) \cdot\nabla 
-		\psi_c(0,\bx,\bOmega) & = 0                              & \text{ for }\bx\in  \partial{V}, \,{\bf{n}}(\bx) \cdot \bOmega<0, & \\
-		%{\bf{n}}(\bx) \cdot \nabla 
-		\psi_u(s,\bx,\bOmega) & = \delta(s)\psi_u^{bc}(\bx,\bOmega) & \text{ for }\bx\in  \partial{V}, \,{\bf{n}}(\bx) \cdot \bOmega<0, &
-		%{\bf{n}}(\bx) \cdot \nabla 
-		%f_{i}(\bx,\bOmega,s) &= 0 & \text{ for }\bx\in  \partial{V}, \,{\bf{n}}(\bx) \cdot \bOmega\geq 0, &\, i\in\{u,c\}. DO I NEED THIS
-		\label{eq:bc}
-	\end{align}
+\begin{align}
+%{\bf{n}}(\bx) \cdot\nabla
+\psi_c(0,\bx,\bOmega) & = 0                              & \text{ for
+}\bx\in  \partial{V}, \,{\bf{n}}(\bx) \cdot \bOmega<0, & \\
+%{\bf{n}}(\bx) \cdot \nabla
+\psi_u(s,\bx,\bOmega) & = \delta(s)\psi_u^{bc}(\bx,\bOmega) & \text{
+for }\bx\in  \partial{V}, \,{\bf{n}}(\bx) \cdot \bOmega<0, &
+%{\bf{n}}(\bx) \cdot \nabla
+%f_{i}(\bx,\bOmega,s) &= 0 & \text{ for }\bx\in  \partial{V},
+% \,{\bf{n}}(\bx) \cdot \bOmega\geq 0, &\, i\in\{u,c\}. DO I NEED THIS
+\label{eq:bc}
+\end{align}
 \end{subequations}
 with a prescribed function $\psi_u^{bc}(\bx,\bOmega)$.
-This means that particles entering the domain cannot be correlated since, by definition, they have not yet interacted with the obstacles. There is only a flux of uncorrelated particles entering the domain with $s=0$.
+This means that particles entering the domain cannot be correlated
+since, by definition, they have not yet interacted with the
+obstacles. There is only a flux of uncorrelated particles entering
+the domain with $s=0$.
 
-Since \eqref{eq:uncorrelatedtranspor} can be solved independently of \eqref{eq:correlatedtranspor}, it is possible to solve \eqref{eq:uncorrelatedtranspor} for $\psi_u(s,\bx,\bOmega)$ first and rewrite  \eqref{eq:correlatedtranspor} as
+Since \eqref{eq:uncorrelatedtranspor} can be solved independently of
+\eqref{eq:correlatedtranspor}, it is possible to solve
+\eqref{eq:uncorrelatedtranspor} for $\psi_u(s,\bx,\bOmega)$ first and
+rewrite  \eqref{eq:correlatedtranspor} as
 \begin{equation}
-	\begin{split}
-		\partial_s \psi_c(s,\bx,\bOmega) &+ \bOmega\cdot \nabla_\bx \psi_c(s,\bx,\bOmega) + \sigma_{t,c}(s)\psi_c(s,\bx,\bOmega)  \\=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}  \int_{\mathbb{S}^2}
-		s(\bOmega' \cdot \bOmega)\sigma_{t,c}(s')\psi_c(s',\bx,\bOmega') \, d\bOmega'\, ds'
-		+ Q_c(s,\bx,\bOmega),
-	\end{split}
-	\label{eq:correlatedtransporreqritten}
+\begin{split}
+\partial_s \psi_c(s,\bx,\bOmega) &+ \bOmega\cdot \nabla_\bx
+\psi_c(s,\bx,\bOmega) + \sigma_{t,c}(s)\psi_c(s,\bx,\bOmega)  \\=\,
+&c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}  \int_{\mathbb{S}^2}
+s(\bOmega' \cdot \bOmega)\sigma_{t,c}(s')\psi_c(s',\bx,\bOmega') \,
+d\bOmega'\, ds'
++ Q_c(s,\bx,\bOmega),
+\end{split}
+\label{eq:correlatedtransporreqritten}
 \end{equation}
 with
 \begin{equation}
-	\begin{split}
-		Q_c(s,\bx,\bOmega)=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}  \int_{\mathbb{S}^2}
-		s(\bOmega' \cdot \bOmega)\sigma_{t,u}(s')\psi_u(s',\bx,\bOmega') \, d\bOmega'\, ds'.
-	\end{split}
-	\label{eq:definitionqc}
+\begin{split}
+Q_c(s,\bx,\bOmega)=\, &c\,\delta(s)\, \int_0^{l(\bx,\bOmega)}
+\int_{\mathbb{S}^2}
+s(\bOmega' \cdot \bOmega)\sigma_{t,u}(s')\psi_u(s',\bx,\bOmega') \,
+d\bOmega'\, ds'.
+\end{split}
+\label{eq:definitionqc}
 \end{equation}
 
-In the case of classical transport, \ie $\sigma_{t,c}(s) = \sigma_{t,u}(s) = \sigma_t$ independent of $s$, the equations reduce to the classical linear transport equation.
+In the case of classical transport, \ie $\sigma_{t,c}(s) =
+\sigma_{t,u}(s) = \sigma_t$ independent of $s$, the equations reduce
+to the classical linear transport equation.
 
-Additionally, the necessity for splitting particles into correlated and uncorrelated ones
-vanishes if $\sigma_{t,c}(s) = \sigma_{t,u}(s) = \sigma_t(s)$, resulting in the generalized linear Boltzmann equation derived by Larsen and Vasques
-\cite{larsen2011generalized} with the non-classical angular flux satisfying $\psi(s,\bx,\bOmega) = \psi_u(s,\bx,\bOmega) + \psi_c(s,\bx,\bOmega) $.
+Additionally, the necessity for splitting particles into correlated
+and uncorrelated ones
+vanishes if $\sigma_{t,c}(s) = \sigma_{t,u}(s) = \sigma_t(s)$,
+resulting in the generalized linear Boltzmann equation derived by
+Larsen and Vasques
+\cite{larsen2011generalized} with the non-classical angular flux
+satisfying $\psi(s,\bx,\bOmega) = \psi_u(s,\bx,\bOmega) +
+\psi_c(s,\bx,\bOmega) $.
 
-Jarabo et al. \cite{jarabo2018radiative} and d'Eon \cite{d2018reciprocal} omitted the consideration of heterogeneous non-classical transport. 
-To extend their analysis to the heterogeneous case, we first need to introduce the concept of heterogeneity with all its subtleties. Correlated and uncorrelated transport in heterogeneous materials is then reconsidered in Section \ref{sec:transporteqs}.
-
+Jarabo et al. \cite{jarabo2018radiative} and d'Eon
+\cite{d2018reciprocal} omitted the consideration of heterogeneous
+non-classical transport.
+To extend their analysis to the heterogeneous case, we first need to
+introduce the concept of heterogeneity with all its subtleties.
+Correlated and uncorrelated transport in heterogeneous materials is
+then reconsidered in Section \ref{sec:transporteqs}.

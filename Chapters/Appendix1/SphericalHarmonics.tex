@@ -1,39 +1,50 @@
 \chapter{Spherical harmonics}
-\todo{add references}The spherical harmonics are a complete set of orthogonal functions on the unit sphere. 
-There exist different definitions of the spherical harmonics that vary in the respective normalization constants. 
-One possible definition is 
+\todo{add references}The spherical harmonics are a complete set of
+orthogonal functions on the unit sphere.
+There exist different definitions of the spherical harmonics that
+vary in the respective normalization constants.
+One possible definition is
 \begin{align}
-	Y_n^m(\theta,\phi) := \sqrt{\frac{2n+1}{4\pi} \, \frac{(n-m)!}{(n+m)!}}e^{i m \theta}P_n^m\left(\cos(\phi)\right),
+  Y_n^m(\theta,\phi) := \sqrt{\frac{2n+1}{4\pi} \,
+  \frac{(n-m)!}{(n+m)!}}e^{i m \theta}P_n^m\left(\cos(\phi)\right),
 \end{align}
-with $|m|\leq n$, the azimuthal angle $\theta\in [0,2\pi]$, the polar angle $\phi\in [0,\pi]$, and $P_n^m$ as the associated Legendre functions.
+with $|m|\leq n$, the azimuthal angle $\theta\in [0,2\pi]$, the polar
+angle $\phi\in [0,\pi]$, and $P_n^m$ as the associated Legendre functions.
 This choices ensures
 \begin{align}
-	\int_0^{2\pi} \int_0^\pi  Y_n^m(\theta,\phi) \overline{Y_{n'}^{m'} (\theta,\phi)} \, \sin(\phi)\,d\phi \, d\theta
-	%&\int_{\mathcal{S}^2}Y_n^m  \, \overline{Y_{n'}^{m'}} \, d\bOmega 
-	= \delta_{n,n'}\delta_{m,m'},
+  \int_0^{2\pi} \int_0^\pi  Y_n^m(\theta,\phi) \overline{Y_{n'}^{m'}
+  (\theta,\phi)} \, \sin(\phi)\,d\phi \, d\theta
+  %&\int_{\mathcal{S}^2}Y_n^m  \, \overline{Y_{n'}^{m'}} \, d\bOmega
+  = \delta_{n,n'}\delta_{m,m'},
 \end{align}
 \ie orthonormality with respect to integration over the unit sphere.
-The real parts of the spherical harmonics up to $m=3$ are visualized in Fig.~\ref{fig:sphericalharmonics}.
+The real parts of the spherical harmonics up to $m=3$ are visualized
+in Fig.~\ref{fig:sphericalharmonics}.
 
-The spherical harmonics relate to the Legendre polynomials via the \textit{addition theorem}. 
+The spherical harmonics relate to the Legendre polynomials via the
+\textit{addition theorem}.
 For $\bOmega,\bOmega'\in \mathbb{S}^2$ and $l\in \Ngeqz$ the equality
 \begin{align}
-	P_n(\bOmega\cdot \bOmega') = \frac{4\pi}{2n+1} \sum_{|m|\leq n}Y_n^m(\bOmega) \overline{Y_n^m(\bOmega')}
+  P_n(\bOmega\cdot \bOmega') = \frac{4\pi}{2n+1} \sum_{|m|\leq
+  n}Y_n^m(\bOmega) \overline{Y_n^m(\bOmega')}
 \end{align}
-allows to express the Legendre polynomials in form of the spherical harmonics, given an argument that is the dot product of two vectors living on the unit sphere. 
-Since the scattering kernel is frequently evaluated at the dot product between the in- and out-scattering directions, the \textit{addition theorem} allows to write
+allows to express the Legendre polynomials in form of the spherical
+harmonics, given an argument that is the dot product of two vectors
+living on the unit sphere.
+Since the scattering kernel is frequently evaluated at the dot
+product between the in- and out-scattering directions, the
+\textit{addition theorem} allows to write
 \begin{align}
-	s(\bOmega \cdot \bOmega') = \sum_{n=0}^\infty s_n \sum_{|m|\leq n}Y_n^m(\bOmega) \overline{Y_n^m(\bOmega')},
+  s(\bOmega \cdot \bOmega') = \sum_{n=0}^\infty s_n \sum_{|m|\leq
+  n}Y_n^m(\bOmega) \overline{Y_n^m(\bOmega')},
 \end{align}
 where $s_n$ are expansion coefficients.
 \label{appendix:sphericalharmonics}
 \begin{landscape}
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.9\linewidth]{Chapters/Appendix1/figs/sphericalharmonics/sphericalharmonics}
-		\caption{Real parts of the spherical harmonics for different orders.}
-		\label{fig:sphericalharmonics}
-	\end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{Chapters/Appendix1/figs/sphericalharmonics/sphericalharmonics}
+    \caption{Real parts of the spherical harmonics for different orders.}
+    \label{fig:sphericalharmonics}
+  \end{figure}
 \end{landscape}
-
-
