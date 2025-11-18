@@ -290,7 +290,7 @@
 \newcommand{\theinstitute}{
   \iflanguage{ngerman}
    {Institut f\"ur Anthropomatik und Robotik (IAR) -\\ Intelligente Prozessautomation und Robotik (IPR)}
-   { Institut für Angewandte und Numerische Mathematik 
+   { Institut für Angewandte und Numerische Mathematik
    	 (IANM)	 }
   }
 \newcommand{\myinstitute}[1]{\renewcommand{\theinstitute}{#1}}
@@ -301,7 +301,7 @@
       {KIT-Fakult\"at f\"ur Mathematik}
       %{KIT Department of Mathematics}
   }
-%asd asd 
+%asd asd
 \newcommand{\KITfaculty}[1]{\renewcommand{\theinstitutefaculty}{#1}}
 
 \newcommand{\theinstituteaddress}{
@@ -384,7 +384,7 @@
     \else
       \large
     \fi
-    
+
 
     \small{
     Zur Erlangung des akademischen Grades eines
@@ -396,7 +396,7 @@
 	\small{
     von der KIT-Fakultät für Mathematik des \\
     Karlsruher Instituts für Technologie (KIT) \\
-    genehmigte 
+    genehmigte
     \\}
 	\vspace{0.5cm}
     \Large{DISSERTATION}
@@ -405,11 +405,11 @@
     \small{von} \\
     \vspace{0.5cm}
 \Large{THOMAS CAMMINADY, M.Sc.}
-	
 
 
-    
-    
+
+
+
 
     \ifKITthesis@declaration \vspace*{1cm} \else \vspace*{1cm} \fi
 
@@ -451,37 +451,37 @@
 
 	\ifKITthesis@declaration \vspace{1cm} \else \vspace{4cm} \fi
 	  \pagenumbering{roman}
-	\newpage 
+	\newpage
 	${}$
 	\thispagestyle{empty}
-	\newpage 
+	\newpage
 	${}$
 	\thispagestyle{empty}
 		  \pagenumbering{roman}
 	\vfill
-  
+
 
   \begin{minipage}{\textwidth}
   	\normalsize{
   		%\hbox to \textwidth{\hrulefill}
   		\par\vspace{0.2cm}
   		\iflanguage{ngerman}
-  	
+
   		{Ich versichere wahrheitsgem\"a\ss, die Arbeit selbstst\"andig angefertigt, alle benutzten Hilfsmittel vollst\"andig und genau angegeben und alles kenntlich gemacht zu haben, was aus Arbeiten anderer unver\"andert oder mit Ab\"anderungen entnommen wurde.}
   		%{Ich versichere wahrheitsgem\"a\ss, die Arbeit selbstst\"andig angefertigt, alle benutzten Hilfsmittel vollst\"andig und genau angegeben und alles kenntlich gemacht zu haben, was aus Arbeiten anderer unver\"andert oder mit Ab\"anderungen entnommen wurde.}
   		\vspace{1cm}
-  		
+
   			{I declare that I have developed and written the enclosed thesis completely by myself, and have not used sources or means without declaration in the text.}
-  		
+
   		\vspace{0.4cm}
 
   		\vspace{2cm}
-  		
+
   		\dotline{6.1cm}\hspace*{2.0cm}\\
   		\hspace*{0cm}Thomas Camminady%center name with hspace
-  		
-  		{Karlsruhe, 15.12.2020} 
-  		
+
+  		{Karlsruhe, 15.12.2020}
+
   	}
   \end{minipage}
     }
@@ -759,6 +759,3 @@
         \include{Aux/0-How-to-Use}
     }
 \fi
-
-
-

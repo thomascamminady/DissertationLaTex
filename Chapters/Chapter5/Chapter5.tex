@@ -2,10 +2,10 @@
 \label{chap:heterogeneousnonclassical}
 
 
-\textit{What happens to a particle's memory when it crosses a material interface?} 
+\textit{What happens to a particle's memory when it crosses a material interface?}
 
 
-This is the main question that Chapter \ref{chap:heterogeneousnonclassical} attempts to answer. Easy to pose, we will see that the respective answer fundamentally depends upon the underlying assumptions that are made to model heterogeneous materials. We will discuss why this is a relevant, non-trivial question in the context of non-classical particle transport and encounter a fundamental problem of mathematical modeling: Lacking real-world measurements or experimental data, we are limited to educated guesses and bona fide speculations. And while these are \textit{falsifiable} guesses and speculations,  it is beyond the scope of this work to actually execute the necessary experiments or measurements to either falsify or verify the subsequent  models. 
+This is the main question that Chapter \ref{chap:heterogeneousnonclassical} attempts to answer. Easy to pose, we will see that the respective answer fundamentally depends upon the underlying assumptions that are made to model heterogeneous materials. We will discuss why this is a relevant, non-trivial question in the context of non-classical particle transport and encounter a fundamental problem of mathematical modeling: Lacking real-world measurements or experimental data, we are limited to educated guesses and bona fide speculations. And while these are \textit{falsifiable} guesses and speculations,  it is beyond the scope of this work to actually execute the necessary experiments or measurements to either falsify or verify the subsequent  models.
 
 Note, again, that the problem of modeling transport in the presence of heterogeneities is exclusively limited to non-classical particle transport where the governing equations have to encode a particle's memory.
 As already mentioned in Chapter \ref{chap:nonclassicaltransportequations}, classical transport is memoryless in the sense that
@@ -21,17 +21,17 @@ Consequently, the path length distribution for a particle that faces an interfac
 \label{eq:pdfclassical}
 \end{align}
 where $\sigma_1$ and $\sigma_2$ denote the cross sections in front of and behind the interface, respectively.
-%We are formulating the path length distribution in terms of the distance since the last interaction (be it birth or scattering), because of 
+%We are formulating the path length distribution in terms of the distance since the last interaction (be it birth or scattering), because of
 
 
 
-With non-classical transport dating back to the early 2000s (approximately), heterogeneous non-classical transport has only recently become a topic of greater interest \cite{camminady2017nonclassical,jarabo2018radiative,bitterli2018radiative} and an equivalent formulation of \eqref{eq:pdfclassical} is not proven. 
-%To date, there is no definitive theory that models non-classical particle transport across interfaces.  
+With non-classical transport dating back to the early 2000s (approximately), heterogeneous non-classical transport has only recently become a topic of greater interest \cite{camminady2017nonclassical,jarabo2018radiative,bitterli2018radiative} and an equivalent formulation of \eqref{eq:pdfclassical} is not proven.
+%To date, there is no definitive theory that models non-classical particle transport across interfaces.
 
 \section{The crux of particles crossing material interfaces}
-Using the backward formulation of the generalized linear Boltzmann equation, the total cross section depends upon the distance that a particle has already traveled.  For simplicity, we consider the situation depicted in Figure \ref{fig:hetmaterial}, where there is only one interface and a particle, moving from left to right across that interface. Considered individually, the cross sections on the left and right side of the interface are $\sigma_1(s)$ and $\sigma_2(s)$, respectively. The key point here, is the word \textit{individually}, because it implies that we are able to model the heterogeneity by two cross sections that are the result of an individual, homogeneous consideration. 
+Using the backward formulation of the generalized linear Boltzmann equation, the total cross section depends upon the distance that a particle has already traveled.  For simplicity, we consider the situation depicted in Figure \ref{fig:hetmaterial}, where there is only one interface and a particle, moving from left to right across that interface. Considered individually, the cross sections on the left and right side of the interface are $\sigma_1(s)$ and $\sigma_2(s)$, respectively. The key point here, is the word \textit{individually}, because it implies that we are able to model the heterogeneity by two cross sections that are the result of an individual, homogeneous consideration.
 
-\newpage 
+\newpage
 
 If we for now assume that this is a valid model, several requirements  seem reasonable \cite{camminady2017nonclassical}:
 \begin{enumerate}
@@ -48,7 +48,7 @@ If we for now assume that this is a valid model, several requirements  seem reas
 The first point is merely a technicality. The second point follows from the fact that the non-classical transport equation reduces to the classical transport equation if the cross sections are independent of the distance that a particle has traveled. It can also be used as a way to check any proposed candidate for the path length distribution for the non-classical, heterogeneous case.
 Lastly, since we consider the \textit{backward} formulation, the path length distribution should be agnostic to future materials and obey the third point.
 
-Now, if the cross sections of non-classical materials depend on $s$, and a particle crosses an interface after having traveled a distance $s^*$ to reach a material with $\sigma_2(s)$, should it 
+Now, if the cross sections of non-classical materials depend on $s$, and a particle crosses an interface after having traveled a distance $s^*$ to reach a material with $\sigma_2(s)$, should it
 experience $\sigma_2(s^*+\Delta s)$ or $\sigma_2(\Delta s)$ when traveling another distance $\Delta s$ in the new material? Per se, there is no compelling reason to evaluate the cross section of the new material at $s^* + \Delta s$ rather than at $\Delta s$. Arguing for the former implies that it is possible to relate the distance traveled in \textit{one }material to the likelihood of scattering in \textit{another }material; even when we allow to choose the materials completely independent from each other.
 
 Things become more complicated when we consider one further requirement:
@@ -84,7 +84,7 @@ By now it is clear that the definition of heterogeneity depends on our perspecti
 Whether a heterogeneous domain with cross sections $\sigma_1(s)$ and $\sigma_2(s)$ turns homogeneous if $\sigma_1(s) \equiv \sigma_2(s)$ depends on the circumstances. If we define a material solely by its cross sections, it should be homogeneous. If we instead consider the underlying microscopic situation, an interface remains and a path length distribution has to account for it.
 
 
-Given these circumstances, we will provide {two different} types of approaches to express the distribution of path lengths in presence of (potentially) different cross sections. One formulation preserves the particle's memory when crossing an untrue ($\sigma_1(s) \equiv \sigma_2(s)$) interface and another formulation where this is not the case. Both formulations, however, will satisfy the first three requirements that we imposed. 
+Given these circumstances, we will provide {two different} types of approaches to express the distribution of path lengths in presence of (potentially) different cross sections. One formulation preserves the particle's memory when crossing an untrue ($\sigma_1(s) \equiv \sigma_2(s)$) interface and another formulation where this is not the case. Both formulations, however, will satisfy the first three requirements that we imposed.
 
 
 
@@ -95,9 +95,9 @@ Given these circumstances, we will provide {two different} types of approaches t
 		\caption{Ensemble averaging the whole domain yields a homogeneous material, defined by $p(s)$ and $\sigma_t(s)$.}
 		\label{fig:pictogram2}
 	\end{subfigure}
-	
+
 	\vspace{1cm}
-	
+
 	\begin{subfigure}{1.0\textwidth}
 		\centering
 		\includegraphics[width=1.0\linewidth]{Chapters/Chapter5/figures/pictogram_old/stuff_has_to_reduce_if_the_interface_is_artificial/pictogram_3}
@@ -111,7 +111,7 @@ Given these circumstances, we will provide {two different} types of approaches t
 
 
 \begin{figure}
-	
+
 	\begin{subfigure}{1.0\textwidth}
 		\centering
 		\includegraphics[width=1.0\linewidth]{Chapters/Chapter5/figures/pictogram_old/stuff_has_to_reduce_if_the_interface_is_artificial/falsehet}
@@ -125,7 +125,7 @@ Given these circumstances, we will provide {two different} types of approaches t
 		\caption{A heterogeneous material that comprises two fundamentally different types of obstacle arrangements.}
 		\label{fig:truehet}
 	\end{subfigure}
-	\caption{Material heterogeneities can be the result of density fluctuations (Figure \ref{fig:falsehet}), or structural differences (Figure \ref{fig:truehet}).}	
+	\caption{Material heterogeneities can be the result of density fluctuations (Figure \ref{fig:falsehet}), or structural differences (Figure \ref{fig:truehet}).}
 	\label{fig:truefalsehet}
 \end{figure}
 
@@ -134,7 +134,7 @@ Given these circumstances, we will provide {two different} types of approaches t
 \section{Memory-resetting ansatz}
 \label{sec:memoryresetting}
 
-Arguably the simpler---and maybe less exciting---case, we will start by considering the scenario in which the memory of a particle gets reset at an interface. 
+Arguably the simpler---and maybe less exciting---case, we will start by considering the scenario in which the memory of a particle gets reset at an interface.
 
 Consider a particle positioned at $x_0$ inside Material $1$ which is defined by $\sigma_1(s)$ and $p_1(s)$. For a fixed direction of flight, the particle crosses the interface between Material $1$ and Material $2$ at $x_0+s_1$. More generally, after traveling a distance $s_i$, the particle is crossing the interface between Material $i-1$ and Material $i$, where the $s_i$ are prescribed by the arrangement of materials; additionally, we define $s_0=0$. This situation is visualized for the direction $\bOmega = (1,0)^T$ in Figure \ref{fig:traverse}. The individual cross sections and path length distributions for a material describe a particle's dynamics if it were to be placed inside an infinite, homogeneous domain of exactly that material.
 
@@ -162,7 +162,7 @@ where the indicator function $\chi(x)$ returns the index of the material at posi
 		\left(1-\int_0^{s_1} p(s')\, ds'\right)p_2(s-s_1)& \text{ if } s \in [s_1,s_2), \\
 		\left(1-\int_{0}^{s_2} p(s')\, ds'\right)p_3(s-s_2) &\text{ if } s\in [s_2,s_3),\\
 		\left(1-\int_{0}^{s_3} p(s')\, ds'\right)p_4(s-s_3) &\text{ if } s\in [s_3,s_4),\\
-		... &  
+		... &
 	\end{cases}
  \label{eq:manypdf}
 \end{align}
@@ -173,7 +173,7 @@ First, we compute the respective cumulative distribution function for \eqref{eq:
 \begin{align}
 	P(s) &\defas \int_0^s p(s') ds' \\
 	       & = P(s_{i-1}) + \int_{s_{i-1}}^s p(s')\, ds'  \\
-	       	& = P(s_{i-1}) + \int_{s_{i-1}}^s  \left(1-P(s_{i-1})\right) p_i(s'-s_{i-1})\, ds'   \\ 
+	       	& = P(s_{i-1}) + \int_{s_{i-1}}^s  \left(1-P(s_{i-1})\right) p_i(s'-s_{i-1})\, ds'   \\
 	 %     	&= P(s_{i-1}) +  \left(1-P(s_i)\right)\int_{s_{i-1}}^s  p_i(s'-s_{i-1})\, ds' \\
 	       	&= P(s_{i-1}) +  \left(1-P(s_{i-1})\right)  P_i(s-s_{i-1}).
 \end{align}
@@ -197,8 +197,8 @@ which is exactly the relation from \eqref{eq:manypdf}. Consequently, \eqref{eq:m
 		\toprule
 		\hfill i \hfill & $p_i(s)$          & \hfill  $\sigma_i(s)$ & \hfill Name \hfill\\
 		\midrule
-		$1$                    & $e^{-s}$           &$ 1$                             & Exponential\\ 
-		$2$                    & $2e^{-2s}$           &$ 2$                             & Exponential\\ 
+		$1$                    & $e^{-s}$           &$ 1$                             & Exponential\\
+		$2$                    & $2e^{-2s}$           &$ 2$                             & Exponential\\
 		$3$       			& $se^{-s}$           &$\frac{s}{s+1} $& Gamma\\
 		$4$       & $\begin{cases}
 			0 \text{ if } s\leq s_0, \\
@@ -207,7 +207,7 @@ which is exactly the relation from \eqref{eq:manypdf}. Consequently, \eqref{eq:m
 			0 \text{ if } s\leq s_0,\\
 			\frac{\alpha}{s}  \text{ if } s>s_0
 		\end{cases}$ & Pareto  ($\alpha =3$, $s_0=1$)\\
-		
+
 		\bottomrule
 	\end{tabular}
 	\caption{Cross sections and distribution functions for the materials in Figure \ref{fig:pdfvssigma}.}
@@ -218,19 +218,19 @@ which is exactly the relation from \eqref{eq:manypdf}. Consequently, \eqref{eq:m
 
 By design, this formulation does not reproduce the non-classical, homogeneous formulation if the cross sections or distribution functions are identical. As an example, Figure \ref{fig:pdfvssigma} shows different materials which are explained in Table \ref{tab:materials}.
 Here, the Pareto distribution has both a finite mean and a finite variance for $\alpha \geq 2$ which is why we choose $\alpha=3$ in this case.
-In Figure \ref{fig:combinedpdf1}, we have two domains, both consistent of the same material; path lengths are  gamma distributed. 
+In Figure \ref{fig:combinedpdf1}, we have two domains, both consistent of the same material; path lengths are  gamma distributed.
 This is also indicated by the color coding; purple corresponds to $p_3(s)$ in Figure \ref{fig:pdfvssigma}.
- The combined path length distribution is then made up of two parts: For $s\leq 2$, particles only experience the first material and the combined path length distribution $p(s)$ is identical to the gamma distribution. 
+ The combined path length distribution is then made up of two parts: For $s\leq 2$, particles only experience the first material and the combined path length distribution $p(s)$ is identical to the gamma distribution.
  However, when particles cross the interface at $s=2$, their memory is reset.
- The probability to further travel a certain distance, given that the particle has already traveled a distance $s=2$ is re-sampled from the path length distribution of the new domain. 
+ The probability to further travel a certain distance, given that the particle has already traveled a distance $s=2$ is re-sampled from the path length distribution of the new domain.
  Hence, the combined (unconditional) distribution has a discontinuity at $s=2$.
- Nevertheless, $p(s)$ still integrates to unity (as required for any probability density function).  
- 
+ Nevertheless, $p(s)$ still integrates to unity (as required for any probability density function).
+
  If we had chosen both materials as classical materials, the combined distribution would be equivalent to the distribution for the homogeneous case. For non-classical materials, however, this is not the case.
- 
+
  Lastly, we consider a more elaborate scenario in Figure \ref{fig:combinedpdf23322} with two interfaces and three distinctively different materials. The domains' colors again correspond to the materials presented in Figure \ref{fig:pdfvssigma}.  As before, the path length distribution results from the application of  \eqref{eq:manypdf} and is visualized in Figure \ref{fig:combinedpdf2}.
-Similarly, we can use \eqref{eq:manysigma} to compute the resulting $s$-dependent cross section, shown in Figure \ref{fig:combinedpdf3}. 
-At every interface, the particle's distance to the next collision is resampled from the respective distribution and the cross section ignores the distance traveled up to the interface, \ie the memory is reset. 
+Similarly, we can use \eqref{eq:manysigma} to compute the resulting $s$-dependent cross section, shown in Figure \ref{fig:combinedpdf3}.
+At every interface, the particle's distance to the next collision is resampled from the respective distribution and the cross section ignores the distance traveled up to the interface, \ie the memory is reset.
 
 
 
@@ -283,8 +283,8 @@ At every interface, the particle's distance to the next collision is resampled f
 		\toprule
 		\hfill Name \hfill & General definition    $p_\rho(s)$     & \hfill  Base density $p_1(s)$ & Conversion $\rho \cdot \left(p_1(\rho \cdot s)\right)$\hfill  \hfill\\
 		\midrule
-		Exponential                 &$\rho e^{-\rho s}$  & $e^{-s}$        & $\rho \cdot \left(e^{-\rho s}\right)$\\ 
-		Gamma &  $\rho^2 s e^{-\rho s}		                  $ & $se^{-s}$                 & $\rho \cdot \left( \rho \, s e^{-\rho s}\right)$\\ 
+		Exponential                 &$\rho e^{-\rho s}$  & $e^{-s}$        & $\rho \cdot \left(e^{-\rho s}\right)$\\
+		Gamma &  $\rho^2 s e^{-\rho s}		                  $ & $se^{-s}$                 & $\rho \cdot \left( \rho \, s e^{-\rho s}\right)$\\
 		Pareto & $\begin{cases}
 			0 \text{ if } s\leq 1/\rho, \\
 			\alpha \frac{(1/\rho)^\alpha}{s^{\alpha+1}} \text{ if } s> 1/\rho
@@ -294,10 +294,10 @@ At every interface, the particle's distance to the next collision is resampled f
 		\end{cases}$                 &  $\rho \cdot \begin{cases}
 			0 \text{ if } \rho \, s  \leq 1, \\
 			\alpha \frac{1}{s^{\alpha+1}\rho^{\alpha+1}} \text{ if } \rho \, s  > 1
-		\end{cases}		                  $\\ 
+		\end{cases}		                  $\\
 		\bottomrule
 	\end{tabular}
-	\caption{Requirement (ii) is satisfied for all probability density functions, showcased 
+	\caption{Requirement (ii) is satisfied for all probability density functions, showcased
 		for those functions that we have already encountered. For each one, we observe that the general definition equals the conversion. The $\bx$-dependency of $\rho$ was only omitted to shorten notation.}
 	\label{tab:materialssatisfybase}
 \end{table}
@@ -305,11 +305,11 @@ At every interface, the particle's distance to the next collision is resampled f
 \section{Memory-preserving ansatz}
 \label{sec:memorypreserving}
 
-Next, we are discussing memory-preserving ansätze. We start with the simpler scenario that was initially considered in Camminady et al. \cite{camminady2017nonclassical} and in which heterogeneity is the result of density fluctuations of a single type of material. 
+Next, we are discussing memory-preserving ansätze. We start with the simpler scenario that was initially considered in Camminady et al. \cite{camminady2017nonclassical} and in which heterogeneity is the result of density fluctuations of a single type of material.
 
 \subsection{Heterogeneity via density fluctuations}
 
-In this scenario, the fundamental idea is similar to the conversion between the geometric and optical path length in optics.	Light that travels a distance $s$ through a medium has a geometric path length of $s$. The optical path length, however, takes the refractive index $n$ of that material into account and is computed as the product of $s$ and $n$. Then, to sample the optical path length, we only need to sample values from the geometric path length and divide them by $n$. 
+In this scenario, the fundamental idea is similar to the conversion between the geometric and optical path length in optics.	Light that travels a distance $s$ through a medium has a geometric path length of $s$. The optical path length, however, takes the refractive index $n$ of that material into account and is computed as the product of $s$ and $n$. Then, to sample the optical path length, we only need to sample values from the geometric path length and divide them by $n$.
 
 We make the following two assumptions for the conversion to work in our application. (i) We are equipped with a \textit{base} density function for the distance to the next collision, called $p_1(s)$. (ii) If the material found at $\bx$ were to cover the full, infinite, homogeneous domain, its density function could be written as $p_{\rho(\bx)}(s) \defas \rho(\bx)\, p_1(\rho(\bx) \cdot s)$ for some function $\rho(\bx)$ that encodes the domain's density fluctuations.
 Note that (ii) is a reasonable assumption for all probability density functions,  shown in Table \ref{tab:materialssatisfybase} for the distributions we have encountered so far.
@@ -322,19 +322,19 @@ Moreover, with $P_{\rho(\bx)}(s)$ and $P_1(s)$ as the cumulative distribution fu
 		\label{eq:hetcdf}
 	\end{align}
 \end{conjecture}
-Consequently, the respective density function satisfies 
+Consequently, the respective density function satisfies
 \begin{align}
 	p(s,\bx,\bOmega) = \rho(\bx + s\cdot\bOmega) \, p_1\left(\int_0^s \rho(\bx+s'\cdot \bOmega)\, ds'\right)
 	\label{eq:hetpdf}
 \end{align}
-and it follows that the  cross section satisfies 
+and it follows that the  cross section satisfies
 \begin{align}
 	\sigma(s,\bx,\bOmega) = \frac{ \displaystyle \rho(\bx + s\cdot\bOmega) \, p_1\left(\int_0^s \rho(\bx+s'\cdot \bOmega)\, ds'\right)}{\displaystyle 1-P_1\left(\int_0^s \rho(\bx+s'\cdot \bOmega)\, ds'\right)}.
 	\end{align}
-It is eminent that \eqref{eq:hetcdf} and \eqref{eq:hetpdf} reduce to the known results in the case of (i) a classical, but heterogeneous material, \ie $p_1(s) = e^{-s}$, and (ii) a non-classical, but homogeneous material, \ie $\rho(\bx+s\cdot\bOmega) = \sigma$.	
+It is eminent that \eqref{eq:hetcdf} and \eqref{eq:hetpdf} reduce to the known results in the case of (i) a classical, but heterogeneous material, \ie $p_1(s) = e^{-s}$, and (ii) a non-classical, but homogeneous material, \ie $\rho(\bx+s\cdot\bOmega) = \sigma$.
 
-In Figure \ref{fig:materialoverview}, we see the expression \eqref{eq:hetpdf} for different densities $\rho_1(s) = \left(1 \text{ if } s\leq 2 \text { else } 2\right)$, $\rho_2(s) = \left(2 \text{ if } s\leq 2 \text { else } 1\right)$, and $\rho_3(s) \equiv 1.5$. The base distribution is the gamma distribution (Figure \ref{fig:allmaterials}) or the Pareto distribution (Figure \ref{fig:allmaterialspareto}). For $\rho_3(s)$, the respective path length distribution equals the homogeneous one since we preserve the particles' memory. 
-	
+In Figure \ref{fig:materialoverview}, we see the expression \eqref{eq:hetpdf} for different densities $\rho_1(s) = \left(1 \text{ if } s\leq 2 \text { else } 2\right)$, $\rho_2(s) = \left(2 \text{ if } s\leq 2 \text { else } 1\right)$, and $\rho_3(s) \equiv 1.5$. The base distribution is the gamma distribution (Figure \ref{fig:allmaterials}) or the Pareto distribution (Figure \ref{fig:allmaterialspareto}). For $\rho_3(s)$, the respective path length distribution equals the homogeneous one since we preserve the particles' memory.
+
 
 
 
@@ -344,7 +344,7 @@ In Figure \ref{fig:materialoverview}, we see the expression \eqref{eq:hetpdf} fo
 	\centering
 	\includegraphics[width=1.0\linewidth]{Chapters/Chapter5/figures/pdfsdensityfluctuations/gammapdf}
 	\caption{Gamma distribution as $p_1(s)$.}
-	\label{fig:allmaterials} 
+	\label{fig:allmaterials}
 \end{subfigure}
 \begin{subfigure}{1\textwidth}
 	\centering
@@ -358,31 +358,31 @@ In Figure \ref{fig:materialoverview}, we see the expression \eqref{eq:hetpdf} fo
 
 
 \subsection{True heterogeneity}
-The obvious drawback of the previous approach is that its application is limited to materials whose heterogeneity has to be explainable by density fluctuations only. Domains composed of 
+The obvious drawback of the previous approach is that its application is limited to materials whose heterogeneity has to be explainable by density fluctuations only. Domains composed of
 \textit{structurally} different materials are not governed by \eqref{eq:hetpdf}.
 
 To overcome this limitation, we need to be able to stitch together arbitrary path length distributions.
-This kind of  \textit{surgery} needs to be done carefully to both preserve a particle's memory and 
+This kind of  \textit{surgery} needs to be done carefully to both preserve a particle's memory and
 ensure that the resulting path length distribution still integrates to unity.
-The approach presented here ensures this by stitching together the materials' cumulative distribution functions in a way that ensures continuity of the overall, fully heterogeneous cumulative distribution. 
+The approach presented here ensures this by stitching together the materials' cumulative distribution functions in a way that ensures continuity of the overall, fully heterogeneous cumulative distribution.
 This is done in the following way: A particle that has already traveled a certain distance $s'$ is bound to enter a new material at $\bx + s' \cdot  \bOmega$. If we know the value of the heterogeneous cumulative distribution function $P(s,\bx,\bOmega)$ up to the point $s=s'$, we can try to find $t'$ such that $P(s',\bx,\bOmega) = P_{\bx+s'\cdot \bOmega}(t')$. Here, $P_{\bx+s'\cdot \bOmega}(t')$ is the cumulative distribution function of the material that the particle is about to enter. Next, we stitch the part of $P_{\bx+s'\cdot \bOmega}(t)$ where $t\geq t'$  to  the right of $P(s',\bx,\bOmega) $. Once the particle enters another material, the process repeats itself.
 
-Finding the value of $t'$ such that $P(s',\bx,\bOmega) = P_{\bx+s'\cdot \bOmega}(t')$ is equivalent to asking the question: How far could a particle have traveled inside the material at $\bx+s' \cdot \bOmega$ to reach the same value of the cumulative distribution function $P(s,\bx,\bOmega)$ that we currently observe? 
+Finding the value of $t'$ such that $P(s',\bx,\bOmega) = P_{\bx+s'\cdot \bOmega}(t')$ is equivalent to asking the question: How far could a particle have traveled inside the material at $\bx+s' \cdot \bOmega$ to reach the same value of the cumulative distribution function $P(s,\bx,\bOmega)$ that we currently observe?
 With this intuitive understanding of the process, we are now ready to reformulate it in a more precise, mathematical language.
 
-As before, we assume that $p_{\bx}(s)$ defines the probability density function for the distance to the next collisions in an infinite, homogeneous domain that is filled with the material found at $\bx$. Similarly, we interpret $P_\bx(s)$. A cumulative distribution function, $P_\bx(s)$ is invertible on $[0,1]$ with $P_\bx^{-1} : [0,1] \to \Rgeqz$. Abbreviate $\bx(s) = \bx + s \cdot \bOmega$; even tough we can assume $\bx=\mathbf{0}$ and $\bOmega = \mathbf{e}_1$ without loss of generality. The expression we are interested in is $p(s,\bx,\bOmega)$, interpreted as 
+As before, we assume that $p_{\bx}(s)$ defines the probability density function for the distance to the next collisions in an infinite, homogeneous domain that is filled with the material found at $\bx$. Similarly, we interpret $P_\bx(s)$. A cumulative distribution function, $P_\bx(s)$ is invertible on $[0,1]$ with $P_\bx^{-1} : [0,1] \to \Rgeqz$. Abbreviate $\bx(s) = \bx + s \cdot \bOmega$; even tough we can assume $\bx=\mathbf{0}$ and $\bOmega = \mathbf{e}_1$ without loss of generality. The expression we are interested in is $p(s,\bx,\bOmega)$, interpreted as
 \begin{align*}
-	p(s,\bx,\bOmega) 
+	p(s,\bx,\bOmega)
 	=&  \text{ ``the probability that a particle  which underwent a collision at } \bx
 	\\ &\text{ \, and faces direction } \bOmega \text{ will travel a distance } s \text{ through a }
 	\\ & \text{ \, truly heterogeneous material to scatter at  } \bx + s \cdot \bOmega."
 \end{align*}
 
-For a given value $P(s,\bx,\bOmega)$, we find $t$ such that $P_{\bx(s)}(t) = P(s,\bx,\bOmega)$ via 
+For a given value $P(s,\bx,\bOmega)$, we find $t$ such that $P_{\bx(s)}(t) = P(s,\bx,\bOmega)$ via
 \begin{align}
 	t = P_{\bx(s)}^{-1}\left ( P(s,\bx,\bOmega) \right).
  \end{align}
-Stitching the right half of $P_{\bx(s)}(t)$ to $P(s,\bx,\bOmega)$ implies that, for an infinitesimal distance $\Delta s$, we update 
+Stitching the right half of $P_{\bx(s)}(t)$ to $P(s,\bx,\bOmega)$ implies that, for an infinitesimal distance $\Delta s$, we update
 \begin{subequations}
 \begin{align}
 	P(s + \Delta s, \bx,\bOmega) &= P(s,\bx,\bOmega) + \Delta s \cdot p_{\bx(s)}(t) \\
@@ -390,7 +390,7 @@ Stitching the right half of $P_{\bx(s)}(t)$ to $P(s,\bx,\bOmega)$ implies that, 
 \end{align}
 \end{subequations}
 Rearranging terms, letting $\Delta s \rightarrow 0$, and noting that $P(0,\bx,\bOmega)=0$, we obtain
-an ordinary differential equation (ODE) for $P(s,\bx,\bOmega)$ in the form of 
+an ordinary differential equation (ODE) for $P(s,\bx,\bOmega)$ in the form of
 \begin{align}
 	\begin{cases}
 		P(0,\bx,\bOmega) &= 0, \\
@@ -405,7 +405,7 @@ an ordinary differential equation (ODE) for $P(s,\bx,\bOmega)$ in the form of
 Solving the above system for $P(s,\bx,\bOmega)$ and differentiating with respect to $s$ we obtain
 \begin{align}
 	p(s,\bx,\bOmega)=\frac{d}{ds}P(s,\bx,\bOmega)=p_{\bx(s)}(t)= p_{\bx(s)}\Bigl(
-	P^{-1}_{\bx(s)}	\bigl( 
+	P^{-1}_{\bx(s)}	\bigl(
 P(s,\bx,\bOmega)
 	\bigr)
 	\Bigr),
@@ -417,7 +417,7 @@ material, we know that we have to sample the distance to collision for a
 particle at $\bx$ facing direction $\bOmega$ from
 \begin{align}
  p_{\bx(s)}\Bigl(
-P^{-1}_{\bx(s)}	\bigl( 
+P^{-1}_{\bx(s)}	\bigl(
 P(s,\bx,\bOmega)
 \bigr)
 \Bigr)
@@ -449,7 +449,7 @@ one-to-one). Thus, with $P(s,\bx,\bOmega)=p_{\bx(s)}(t)$, also $P(s,\bx,\bOmega)
 
 
 In the classical, possibly heterogeneous case, we have $p_{\bx(t)}(s) = \rho(\bx(t))
-e^{-\rho(\bx(t))s}$, $P_{\bx(t)}(s) = 1-e^{-\rho(\bx(t))s}$, and consequently $P_{\bx(t)}^{-1}(y) = -\log(1-y)/\rho(\bx(t))$. 
+e^{-\rho(\bx(t))s}$, $P_{\bx(t)}(s) = 1-e^{-\rho(\bx(t))s}$, and consequently $P_{\bx(t)}^{-1}(y) = -\log(1-y)/\rho(\bx(t))$.
 We compute
 \begin{align}
 	p_{\bx(s)}\Bigl(
@@ -490,11 +490,11 @@ alongside the scaling
 	p_{\rho(\bx)}(s) = \rho(\bx)\, p_1(\rho(\bx) \cdot s)
 	\label{eq:step1a}
 \end{align}
-was introduced previously. Integrating the last expression yields $	P_{\rho(\bx)}(s) = P_1(\rho(\bx) \cdot s)$ with an inverse 
+was introduced previously. Integrating the last expression yields $	P_{\rho(\bx)}(s) = P_1(\rho(\bx) \cdot s)$ with an inverse
 \begin{align}
 	P^{-1}_{\rho(\bx)}(y) = P_1^{-1}( y) / \rho(\bx).
 	\label{eq:step2a}
-\end{align} 
+\end{align}
 Abusing notation, we use $p_\bx(s)$ and  $p_{\rho(\bx)}(s)$ interchangeably.
 The ODE then satisfies
 \begin{align*}
@@ -528,7 +528,7 @@ Rearranging terms and integrating yields
 	&  &(P^{-1})'(P(s,\bx,\bOmega))\cdot \frac{d}{ds} P(s,\bx,\bOmega) & = \rho(\bx(s))                                            \\
 	\Leftrightarrow &       & \frac{d}{ds} P^{-1}(P(s,\bx,\bOmega))                         & = \rho(\bx(s))                                            \\
 	\Leftrightarrow &       & P^{-1}(P(s,\bx,\bOmega))                                      & = \int_0^s\rho(\bx(s'))\, ds'                              \\
-	\Leftrightarrow &       & P(s,\bx,\bOmega)                                              & = P\left(\int_0^s\rho(\bx(s'))\, ds'\right)  . 
+	\Leftrightarrow &       & P(s,\bx,\bOmega)                                              & = P\left(\int_0^s\rho(\bx(s'))\, ds'\right)  .
 	%           \\
 	%\Leftrightarrow &       & P(s,\bx,\bOmega)                                              & = \rho(\bx(s)) %q\left(\int_0^s\sigma(x(s'))\, ds'\right).
 \end{aligned}
@@ -536,7 +536,7 @@ Rearranging terms and integrating yields
 Hence, for heterogeneity that results from density fluctuations, we recover the expression that we derived previously---translating the geometric distance to the optical distance by means of a base distribution.
 
 
-\newpage 
+\newpage
 
 {\bfseries{Is void treated correctly?}}
 
@@ -551,7 +551,7 @@ zero, a natural modification of the system is given by setting
 for any  void region. In this case, the value of $P(s,\bx,\bOmega)$ will not increase
 within a void region, corresponding to a zero probability of scattering events.
 
-Another subtlety arises in the case of a particle being sourced inside a material that satisfies $p_{\bx(0)}(0) = 0$, \ie a zero probability of undergoing a collision immediately at the start of the particle's trajectory. With the previous ODE system 
+Another subtlety arises in the case of a particle being sourced inside a material that satisfies $p_{\bx(0)}(0) = 0$, \ie a zero probability of undergoing a collision immediately at the start of the particle's trajectory. With the previous ODE system
 \begin{align}
 	\begin{cases}
 		P(0,\bx,\bOmega)             & = 0       \\
@@ -603,18 +603,18 @@ Undeniably too expensive, we provide this algorithm only for completeness. More 
 
 \begin{algorithmic}[1]
 	\Function{SingleSample}{$\bx(t),p_{\bx(t)}(s), P_{\bx(t)}(s), P^{-1}_{\bx(t)}(s)$ }
-	
+
 %	\KwInput{The trajectory $x(t)$ of a particle and $q(x(t),s)$, $Q(x(t),s)$ and $Q^{-1}(x(t),s)$ along the trajectory.}
 %	\KwOutput{A sample $s$ for the distance-to-collision.}
 	%\KwData{Testing set $x$}
 	%$\sum_{i=1}^{\infty} := 0$ \tcp*{this is a comment}
-	
+
 	%\tcc{Now this is an if...else conditional loop}
 	%${}$\\
 	\State $u \sim \mathcal{U}[0,1]$ %// Generate a sample from a uniform distribution.
-	
+
 	\State Solve \eqref{eq:ode} for $s^*$ such that $P(s^*,\bx,\bOmega) = u$
-	
+
 	\State \textbf{return}  $s^*$
 %	Sample $u$ from $\mathcal{U}[0,1]$ \tcp*{Generate a sample from a uniform distribution.}
 %	Solve \eqref{eq:ode} for $P(x_0,\bOmega,s^*) = u$. \tcp*{Solve the ODE until reaching the value $u$.}
@@ -636,28 +636,28 @@ If we instead decide to generate multiple samples from a single distribution, we
 \begin{algorithm}[]
 	\centering
 	\caption{Generating multiple samples in the general case.}
-	
+
 	\begin{algorithmic}[1]
 		\Function{MultipleSample}{$\varepsilon,n,\bx(t),p_{\bx(t)}(s), P_{\bx(t)}(s), P^{-1}_{\bx(t)}(s)$ }
-		
+
 		%	\KwInput{The trajectory $x(t)$ of a particle and $q(x(t),s)$, $Q(x(t),s)$ and $Q^{-1}(x(t),s)$ along the trajectory.}
 		%	\KwOutput{A sample $s$ for the distance-to-collision.}
 		%\KwData{Testing set $x$}
 		%$\sum_{i=1}^{\infty} := 0$ \tcp*{this is a comment}
-		
+
 		%\tcc{Now this is an if...else conditional loop}
 		%${}$\\
 		%\State $u \sim \mathcal{U}[0,1]$ %// Generate a sample from a uniform distribution.
-		
+
 		\State Solve \eqref{eq:ode} up to $s^*$ such that $P(s^*,\bx,\bOmega)  \leq 1-\varepsilon$
 		\State $T = \text{lookup table}(P^{-1}(u,\bx,\bOmega))$ for $u$ from $0$ to $1-\varepsilon$
 		\State $y = \text{zeros}(n)$
-		
+
 		\For{$i=1,\cdots,n$}
 			\State $u_i \sim \mathcal{U}[0,1-\varepsilon]	$
-			\State $y[i] = T(u_i)$ %// Evaluate the lookup-table 
+			\State $y[i] = T(u_i)$ %// Evaluate the lookup-table
 		\EndFor
-		
+
 		\State \textbf{return} $y$
 		%	Sample $u$ from $\mathcal{U}[0,1]$ \tcp*{Generate a sample from a uniform distribution.}
 		%	Solve \eqref{eq:ode} for $P(x_0,\bOmega,s^*) = u$. \tcp*{Solve the ODE until reaching the value $u$.}
@@ -677,17 +677,17 @@ For piecewise homogeneous, non-classical materials, the computational costs for 
 \begin{algorithm}[]
 	\centering
 	\caption{Generating a single sample in the piecewise homogeneous case (without void).}
-	
+
 	\begin{algorithmic}[1]
 		\Function{SingleSamplePiecewise}{$s_i,\, p_{i}(s),\, P_{i}(s), \, P^{-1}_i(s)$ for all materials $i$ \newline$ {}\quad \quad \quad \quad \quad \quad \quad \quad  \quad \quad \quad \quad \quad \quad \, \, \, {}$ along the particle's trajectory}
-		
+
 		\State $i=0$, $y=0.0$, $t=0.0$
 		\State $u \sim \mathcal{U}[0,1]$
 		%	\KwInput{The trajectory $x(t)$ of a particle and $q(x(t),s)$, $Q(x(t),s)$ and $Q^{-1}(x(t),s)$ along the trajectory.}
 		%	\KwOutput{A sample $s$ for the distance-to-collision.}
 		%\KwData{Testing set $x$}
 		%$\sum_{i=1}^{\infty} := 0$ \tcp*{this is a comment}
-		
+
 		%\tcc{Now this is an if...else conditional loop}
 		%${}$\\
 		%\State $u \sim \mathcal{U}[0,1]$ %// Generate a sample from a uniform distribution.
@@ -717,7 +717,7 @@ For $s\in[0,s_1)$, we write
 		&= p_1(p_1^{-1}(P(s,\bx,\bOmega))) = {1}/{(P_1^{-1})'(P(s,\bx,\bOmega))}.
 	\end{cases}
 \end{equation}
-The last line is equivalent to 
+The last line is equivalent to
 \begin{align}
 	(P_1^{-1})'(P(s,\bx,\bOmega))\cdot \frac{d}{ds}P(s,\bx,\bOmega) =  \frac{d}{ds} P_1^{-1}(P(s,\bx,\bOmega)).
 \end{align}
@@ -751,7 +751,7 @@ We solve for $\tilde{P}(\tilde{s},\bx,\bOmega)$ to get
 	\tilde{P}(\tilde{s},\bx,\bOmega)= P_{i+1}(\tilde{s}+c_{i+1})
 \end{align}
 Then, $c_{i+1} = P_{i+1}^{-1}(y_{i})$ and consequently
-\begin{subequations}	
+\begin{subequations}
 \begin{align}
 	P(s,\bx,\bOmega) & = \tilde{P}(\tilde{s},\bx,\bOmega)                   \\
 	& =P_{i+1}(\tilde{s}+P_{i+1}^{-1}(y_{i}))  \\
@@ -767,5 +767,4 @@ With $P(s)=P_{i+1}(s-s_i+P_{i+1}^{-1}(P(s_i,\bx,\bOmega)))$ inverse transform sa
 \input{Chapters/Chapter4/hettransport}
 %\section{The need for experimental evidence}
 %we need experiments
-%whether correlated / uncorrelated is necessary : i don't know 
-
+%whether correlated / uncorrelated is necessary : i don't know

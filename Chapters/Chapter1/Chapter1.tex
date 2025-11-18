@@ -1,8 +1,8 @@
 \part{Classical transport}\label{part:1}
 \chapter{Transport equations}\label{sec:transportequations}
 Imagine an infinitely large billiard table.
-A particle---represented by the white billiard ball---moves frictionlessly along straight 
-lines until undergoing elastic, instantaneous collisions with background 
+A particle---represented by the white billiard ball---moves frictionlessly along straight
+lines until undergoing elastic, instantaneous collisions with background
 obstacles---the black billiard balls---that do not move due to their infinite weight and neglectable velocity.
 The situation is depicted in
 Figure \ref{fig:particlebilliardtable}.
@@ -14,30 +14,30 @@ Figure \ref{fig:particlebilliardtable}.
 	\label{fig:particlebilliardtable}
 \end{figure}
 
-This in many ways simplified microscopic description of particle interactions will serve as the 
-starting point for this thesis. Despite its simplicity, it allows the derivation of governing 
-mesoscopic and macroscopic equations, as well as the construction of one of the most 
-prominent numerical methods in transport theory---the Monte Carlo method. Furthermore, 
-changing the microscopic picture will motivate non-classical transport, discussed in the 
+This in many ways simplified microscopic description of particle interactions will serve as the
+starting point for this thesis. Despite its simplicity, it allows the derivation of governing
+mesoscopic and macroscopic equations, as well as the construction of one of the most
+prominent numerical methods in transport theory---the Monte Carlo method. Furthermore,
+changing the microscopic picture will motivate non-classical transport, discussed in the
 second part of this thesis.
 
-A magnitude of real-world phenomena and topics can be formulated in the language of kinetic 
-theory. These include, but are not limited to, the theory of gases; radiation therapy for cancer 
+A magnitude of real-world phenomena and topics can be formulated in the language of kinetic
+theory. These include, but are not limited to, the theory of gases; radiation therapy for cancer
 treatment; modeling of nuclear reactors; or illumination in movies and computer games.
 
-Transport equations try to achieve the following: Instead of describing a 
-system by the behavior of every single molecule, every single particle, or every single light-ray, 
-they seek a description in terms of statistical quantities that evolve in time. This is both 
-necessary and often desirable. Necessary, since it already becomes computationally 
-impossible 
+Transport equations try to achieve the following: Instead of describing a
+system by the behavior of every single molecule, every single particle, or every single light-ray,
+they seek a description in terms of statistical quantities that evolve in time. This is both
+necessary and often desirable. Necessary, since it already becomes computationally
+impossible
 to evolve the trajectory of each of the roughly $6.022\cdot 10^{23}$ particles in one mole.
 Desirable, since it is generally of no interest to know each of these trajectories individually.
-Thus, transport equations are convenient tools that distill complex physical systems to 
+Thus, transport equations are convenient tools that distill complex physical systems to
 manageable equations.
 
-Throughout the scope of this thesis we are going to consider uncharged particle 
-transport; 
-that is, particles do not interact with another via long range interactions---like electrons 
+Throughout the scope of this thesis we are going to consider uncharged particle
+transport;
+that is, particles do not interact with another via long range interactions---like electrons
 do---but with the background medium or through direct collisions with another.
 Given these assumptions, particles move through phase space according to Newton's laws of motion
 \begin{align}
@@ -58,7 +58,7 @@ If the number of particles becomes large, tracking every single trajectory is  i
 	\end{aligned}
 \end{equation}
 With this fundamental variable, we can define the angular flux
-$\psi:\Rgeqz \times \RThree \times \RThree \to \Rgeqz$ by $\psi(t,\bx,\bv)=v N(t,\bx,\bv)$, where $v$ is the particle's speed and $\bv$ the particle's direction of flight. According to Prinja and Larsen \cite{prinja2010general}, we can interpret  this quantity as 
+$\psi:\Rgeqz \times \RThree \times \RThree \to \Rgeqz$ by $\psi(t,\bx,\bv)=v N(t,\bx,\bv)$, where $v$ is the particle's speed and $\bv$ the particle's direction of flight. According to Prinja and Larsen \cite{prinja2010general}, we can interpret  this quantity as
 \begin{equation}
 	\begin{aligned}
 		\psi(t,\bx,\bv) \,d\bv \, dS\defas & \text{ ``the absolute rate at which particles in } d\bv \text{ about } \bv \\
@@ -73,7 +73,7 @@ Knowing the angular flux, we can derive moments by integrating $\psi$ against $\
 	\begin{aligned}
 		\phi(t,\bx) & \defas
 		% \text{ ``the rate of particles at time }t\text{ and position }\bx" \\
-			    %& = 
+			    %& =
 			    \int_{\RThree}\psi(t,\bx,\bv) \, d\bv,
 			    \label{eq:DefinitionPhiWithWords}
 	\end{aligned}
@@ -86,9 +86,9 @@ Parts of the following sections are inspired by the classical books of Chandrase
 \section{Microscopic viewpoint}
 Before  discussing transport problems from the mesoscopic perspective, the microscopic viewpoint deserves further consideration.
 Let $\mathcal{C}_r \defas \{{\bf{c}}_i=(x_i,y_i)\}_{i=1,...,N}$ be the set of $N$ circles, centered at positions $(x_i,y_i)$, each with radius $r$.  For any prescribed initial position $\bx_0=(x_0,y_0)$ and unit velocity $\bv_0 =(v_x,v_y)$,  the trajectory of a particle with radius $r$ is unambiguous.
-Let $t_n$ denote the time---and therefore the distance, because  the particle travels with unit 
-speed---until undergoing the $n$-th collision. Furthermore, let $i(n)$ denote the index of the 
-obstacle that causes collision $n$. With $\bx(t_n^-)$ and $\bv(t_n^-)$ as the pre-collision 
+Let $t_n$ denote the time---and therefore the distance, because  the particle travels with unit
+speed---until undergoing the $n$-th collision. Furthermore, let $i(n)$ denote the index of the
+obstacle that causes collision $n$. With $\bx(t_n^-)$ and $\bv(t_n^-)$ as the pre-collision
 position and velocity, the post-collision position and velocity are given by
 \begin{subequations}
 \begin{align}
@@ -121,8 +121,8 @@ For a fixed domain size $A$ we can let $N\rightarrow \infty$ and $r\rightarrow 0
 	Q_{\sigma_t}(\delta t) = e^{-\sigma_t \,\delta t}.
 \end{align}
 With $Q_{\sigma_t}(\delta t)$ as the probability of particles \textit{not} colliding before traveling a distance $\delta_t$, $1-Q_{\sigma_t}(\delta_t)$ is the probability of particles traveling \textit{at most} a distance $\delta_t$.
-Differentiating $1-Q_{\sigma_t}(\delta_t)$, we define 
- %Then $1-Q_{\sigma_t}(\delta_t)$ is the cumulative distribution function (CDF) or 
+Differentiating $1-Q_{\sigma_t}(\delta_t)$, we define
+ %Then $1-Q_{\sigma_t}(\delta_t)$ is the cumulative distribution function (CDF) or
  the path length distribution $p_{\sigma_t} (\delta t)$  as
 \begin{equation}
 	\begin{split}
@@ -133,41 +133,41 @@ Differentiating $1-Q_{\sigma_t}(\delta_t)$, we define
 		\label{eq:pdfprediction}
 	\end{split}
 \end{equation}
-Another physical interpretation of the total cross section $\sigma_t$ is given by its inverse 
-relation to the mean free path (MFP), \ie the mean distance that particles can travel in the 
-obstacle field of Figure \ref{fig:particlebilliardtable}. This can be confirmed numerically. 
-The 
-software  \texttt{PLE.jl}\footnote{\texttt{PLE.jl}, a path length estimator that I implemented in the Julia programming language, is available under the MIT license at  \href{https://github.com/camminady/PLE.jl}{https://github.com/camminady/PLE.jl}.} allows, among other things, to efficiently trace particles through an 
+Another physical interpretation of the total cross section $\sigma_t$ is given by its inverse
+relation to the mean free path (MFP), \ie the mean distance that particles can travel in the
+obstacle field of Figure \ref{fig:particlebilliardtable}. This can be confirmed numerically.
+The
+software  \texttt{PLE.jl}\footnote{\texttt{PLE.jl}, a path length estimator that I implemented in the Julia programming language, is available under the MIT license at  \href{https://github.com/camminady/PLE.jl}{https://github.com/camminady/PLE.jl}.} allows, among other things, to efficiently trace particles through an
 ensemble of obstacles, interacting with the obstacles on the basis of Newtonian mechanics.
-Consider therefore a random ensemble of obstacles with centers in $[0,1]\times[0,1]$. 
- A 
-sample simulation of the first ten collisions of a single particle in a periodic domain is 
-visualized in Figure  \ref{fig:obstaclegame}. When we increase the number of obstacles and 
-simultaneously shrink their radii, the theoretical results of the Boltzmann-Grad limit can be 
-reproduced numerically. Figure \ref{fig:histogram} summarizes the trajectory of a particle 
-over 100000 collisions in a field of 10000 obstacles with $\sigma_t=4$. Together with the data 
-(green) we show the best fit with ansatz $\lambda \exp{(-\lambda s)}$. As predicted by 
+Consider therefore a random ensemble of obstacles with centers in $[0,1]\times[0,1]$.
+ A
+sample simulation of the first ten collisions of a single particle in a periodic domain is
+visualized in Figure  \ref{fig:obstaclegame}. When we increase the number of obstacles and
+simultaneously shrink their radii, the theoretical results of the Boltzmann-Grad limit can be
+reproduced numerically. Figure \ref{fig:histogram} summarizes the trajectory of a particle
+over 100000 collisions in a field of 10000 obstacles with $\sigma_t=4$. Together with the data
+(green) we show the best fit with ansatz $\lambda \exp{(-\lambda s)}$. As predicted by
 \eqref{eq:pdfprediction}, the best fit $\lambda$ is reasonably close to $\sigma_t$.
 
 
 
 
- 
+
 \begin{figure}
 	\centering
 	\includegraphics[width=0.6\linewidth]{Chapters/Chapter1/figs/pathlength/Bounce}
-	\caption{Trajectory of a particle with $r=0$ in an obstacle field. The domain is 
-	periodic and obstacles were allowed to overlap. The picture shows $180$ obstacles with 
-	$\sigma_t=8$.  The white line overlaps with the obstacles 
+	\caption{Trajectory of a particle with $r=0$ in an obstacle field. The domain is
+	periodic and obstacles were allowed to overlap. The picture shows $180$ obstacles with
+	$\sigma_t=8$.  The white line overlaps with the obstacles
 	only as a result of plotting with a non-zero linewidth.}
 	\label{fig:obstaclegame}
 \end{figure}
 \begin{figure}
 	\centering
 	\includegraphics[width=1.0\linewidth]{Chapters/Chapter1/figs/pathlength/stepkithistogram}
-	\caption{A distribution for the distances between consecutive collisions with $\sigma_t=4$, 
-	$10000$ obstacles, and $100000$ traced trajectories. Additionally to the histogram, we have 
-	a best fit with ansatz $\lambda \exp{(-\lambda s)}$. The best $\lambda$ is close to the 
+	\caption{A distribution for the distances between consecutive collisions with $\sigma_t=4$,
+	$10000$ obstacles, and $100000$ traced trajectories. Additionally to the histogram, we have
+	a best fit with ansatz $\lambda \exp{(-\lambda s)}$. The best $\lambda$ is close to the
 	expected value $\sigma_t=4$. Statistical noise becomes visible for long distances. }
 	\label{fig:histogram}
 \end{figure}
@@ -177,13 +177,13 @@ over 100000 collisions in a field of 10000 obstacles with $\sigma_t=4$. Together
 
 
 \section{Liouville equation}
-We may ask ourselves why we would wish to describe a fully deterministic system---\ie a 
-system following Newton's laws as described in \eqref{eq:NewtonsLaw}---in a probabilistic 
-way---\ie using the definition from \eqref{eq:DefinitionPhiWithWords}. Clearly, the evolution of 
-the distribution $\psi(t,\bx,\bv)$ should follow the same deterministic dynamics as with the 
-microscopic viewpoint; otherwise the evolution of $\psi(t,\bx,\bv)$ in time would not relate to 
+We may ask ourselves why we would wish to describe a fully deterministic system---\ie a
+system following Newton's laws as described in \eqref{eq:NewtonsLaw}---in a probabilistic
+way---\ie using the definition from \eqref{eq:DefinitionPhiWithWords}. Clearly, the evolution of
+the distribution $\psi(t,\bx,\bv)$ should follow the same deterministic dynamics as with the
+microscopic viewpoint; otherwise the evolution of $\psi(t,\bx,\bv)$ in time would not relate to
 the evolution of the particle billiard at all.
-% Instead, \enquote{[r]andomness is introduced only 
+% Instead, \enquote{[r]andomness is introduced only
 %in the initial data} \cite[p.~14]{spohn2012large}.
 %\todo{This paragraph needs to be rewritten}
 However, a compelling argument for the statistical description of the otherwise deterministic processes
@@ -233,7 +233,7 @@ The idea of the Boltzmann-Grad limit that we have mentioned before was rigorousl
 Clearly the microscopic viewpoint is reversible: At any given time $t$ we can stop the billiard flow, flip the velocity vector, let the process run for another time $t$, and return to the original arrangement of particles and obstacles.
 Thus, when the positions of all obstacles $\mathcal{C}_r \defas \{{\bf{c}}_i=(x_i,y_i)\}_{i=1,...,N}$, as well as the initial distribution of particles  $\psi_0(\bx_0,\bv_0)$ are known, the time evolution of particles $\psi(t,\bx,\bv \,|\, \mathcal{C}_r)$ is known, too. The expression $\psi(t,\bx,\bv \,|\, \mathcal{C}_r)$ simply involves tracing back the particles' trajectories through the obstacle field to their origin.
 
-The Boltzmann-Grad limit is then the ensemble average $\langle \psi(t,\bx,\bv \,|\, \mathcal{C}_r) \rangle_{\mathcal{C}_r}$ with $N\rightarrow \infty$ and $r\rightarrow 0$ such that $N\cdot r =\text{constant}$. It involves geometric arguments about the trajectories of particles and statistical arguments about the arrangement of obstacles. 
+The Boltzmann-Grad limit is then the ensemble average $\langle \psi(t,\bx,\bv \,|\, \mathcal{C}_r) \rangle_{\mathcal{C}_r}$ with $N\rightarrow \infty$ and $r\rightarrow 0$ such that $N\cdot r =\text{constant}$. It involves geometric arguments about the trajectories of particles and statistical arguments about the arrangement of obstacles.
 
 Several assumptions are necessary to arrive at the ensemble-averaged distribution: (i) Obstacles are placed independently. (ii) Situations where particles bounce forth and back between two (or more) obstacles infinitely often are omitted. (iii) Collisions involve exactly two participants, one particle and one obstacle.
 
@@ -252,7 +252,7 @@ Modeling the evolution of the distribution function for the particle billiard sh
 In a heterogeneous material, the cross sections will have an additional spatial dependency. Given certain materials, there might also be a dependency on the angle, \ie the likelihood to undergo an event depends on a particle's direction of travel.%direction with which particles travel.
 
 Using all the information above and assuming particles with unit speed and velocity $\bOmega$, we obtain
-%\footnote{Note that we will always use normalized spherical integration, \ie $\int_{\mathbb{S}^2} 1\,  d\bOmega' = 1$.} 
+%\footnote{Note that we will always use normalized spherical integration, \ie $\int_{\mathbb{S}^2} 1\,  d\bOmega' = 1$.}
 the linear transport equation as
 \begin{equation}
 	\begin{split}
@@ -261,12 +261,12 @@ the linear transport equation as
 						\label{eq:lineartransport}
 	\end{split}
 \end{equation}
-Let us dissect the equation above  into its main parts. The left-hand side of the equation is an 
-advection-plus-absorption part: Particles move along straight lines while being absorbed at a 
-certain rate. The right-hand side of the equation describes the gain and loss due to 
-in- and out-scattering, as well as the contribution due to a source 
-$q(t,\bx,\bOmega)$. The scattering kernel $s(\bOmega\cdot \bOmega')$ describes the 
-probability that a particle with direction $\bOmega$ changes direction to $\bOmega'$ (or vice 
+Let us dissect the equation above  into its main parts. The left-hand side of the equation is an
+advection-plus-absorption part: Particles move along straight lines while being absorbed at a
+certain rate. The right-hand side of the equation describes the gain and loss due to
+in- and out-scattering, as well as the contribution due to a source
+$q(t,\bx,\bOmega)$. The scattering kernel $s(\bOmega\cdot \bOmega')$ describes the
+probability that a particle with direction $\bOmega$ changes direction to $\bOmega'$ (or vice
 versa) in case of scattering. A common convention is
 \begin{align}
 	\bOmega =
@@ -283,14 +283,14 @@ versa) in case of scattering. A common convention is
 	\end{pmatrix},
 \end{align}
 with the \textit{azimuthal angle} $\phi$, the \textit{polar angle }$\theta$, and $\mu = \cos(\theta)$.
-%Note that we write $\int_{4\pi} \cdot \, d\bOmega'$ to denote the 
+%Note that we write $\int_{4\pi} \cdot \, d\bOmega'$ to denote the
 %\textit{normalized} integration over the unit sphere.
 %\footnote{This is a redefinition of the spherical integration, \ie $\int_{4\pi} \cdot \, d\bOmega' =1$ but $\int_{\mathbb{S}^2} \cdot \, d\bOmega' = 4\pi$.} over the unit sphere, \ie $\int_{4\pi} 1\, d\bOmega'=1$.
 With a non-negative scattering kernel that integrates to unity, we can split the scattering operator
 \begin{equation}
 	\begin{split}
 		S(\psi)(t,\bx,\bOmega) \defas
-		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') - 
+		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') -
 		\psi(t,\bx,\bOmega)\right)\, d\bOmega'
 	\end{split}
 	\label{eq:scatteringoperator}
@@ -310,14 +310,14 @@ and out-scattering
 		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega') d\bOmega' \psi(t,\bx,\bOmega) = \psi(t,\bx,\bOmega).
 	\end{split}
 \end{equation}
-The simplest choice for the scattering kernel models isotropic scattering via $\displaystyle s(\bOmega \cdot 
+The simplest choice for the scattering kernel models isotropic scattering via $\displaystyle s(\bOmega \cdot
 \bOmega') = 1 \, /\, 4\pi$, \ie particles scatter into all directions equally likely. Another
-choice is the Henyey-Greenstein kernel \cite{henyey1941diffuse}, satisfying the 
+choice is the Henyey-Greenstein kernel \cite{henyey1941diffuse}, satisfying the
 relation
 \begin{equation}
 	\begin{split}
-		s_g(\bOmega' \cdot \bOmega) =\frac{1-g^2}{4\pi\left(1-2g \,\bOmega' \cdot 
-		\bOmega+g^2\right)^{3/2}} = \sum_{n=0}^\infty  g^n \sum_{m=-n}^nY_n^m(\bOmega) \, 
+		s_g(\bOmega' \cdot \bOmega) =\frac{1-g^2}{4\pi\left(1-2g \,\bOmega' \cdot
+		\bOmega+g^2\right)^{3/2}} = \sum_{n=0}^\infty  g^n \sum_{m=-n}^nY_n^m(\bOmega) \,
 		\overline{Y_n^m(\bOmega')},
 	\end{split}
 	\label{eq:HGkernelexpansion}
@@ -328,20 +328,20 @@ and the relation to the spherical harmonics is discussed in Section \ref{appendi
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{Chapters/Chapter1/figs/HGkernel/henyeygreensteinpolar.pdf}
-	\caption{The Henyey-Greenstein scattering kernel $\log_{10} s_g(\cos(\theta))$ for 
-	different values of $g$ 
-	with $\cos\,\theta = \bOmega \cdot \bOmega'$. The radial component is the 
-	$\log_{10}$-probability of scattering into the corresponding angle (relative to the 
-	pre-scattering direction). For $g=0$ (orange), particles scatter isotropically. For 
-	$g=1-\varepsilon$ with $0<\varepsilon\ll 1$, particles mostly scatter into the pre-scattering 
+	\caption{The Henyey-Greenstein scattering kernel $\log_{10} s_g(\cos(\theta))$ for
+	different values of $g$
+	with $\cos\,\theta = \bOmega \cdot \bOmega'$. The radial component is the
+	$\log_{10}$-probability of scattering into the corresponding angle (relative to the
+	pre-scattering direction). For $g=0$ (orange), particles scatter isotropically. For
+	$g=1-\varepsilon$ with $0<\varepsilon\ll 1$, particles mostly scatter into the pre-scattering
 	direction (green).}
 	\label{fig:henyeygreensteinpolar}
 \end{figure}
-%Properties of the linear transport equation are 
+%Properties of the linear transport equation are
 %Let us now investigate certain properties of the linear transport equation.
 
 %\begin{lemma}[Positivity of the linear transport equation]
-%	For given initial conditions and for an unbounded domain the solution remains positive. if 
+%	For given initial conditions and for an unbounded domain the solution remains positive. if
 %	$q$>0.
 %\end{lemma}
 %\begin{proof}
@@ -363,52 +363,52 @@ Let us discuss the scattering operator from \eqref{eq:scatteringoperator}, given
 \begin{equation*}
 	\begin{split}
 		S(\psi)(t,\bx,\bOmega) \defas
-		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') - 
+		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') -
 		\psi(t,\bx,\bOmega)\right)\, d\bOmega'
 	\end{split}
 \end{equation*}
 and its scattering kernel $s(\bOmega\cdot \bOmega')$ more thoroughly.
-For every $(t,\bx)\in \Rgeqz \times \RThree$, the operator $S$ defined by 
+For every $(t,\bx)\in \Rgeqz \times \RThree$, the operator $S$ defined by
 \eqref{eq:scatteringoperator} is self-adjoint from $L^2(\mathbb{S}^2)$ to
-$L^2(\mathbb{S}^2)$. Moreover, we assume the scattering kernel to be bounded in the 
-sense (cf. \cite{coulombel2005diffusion}) 
+$L^2(\mathbb{S}^2)$. Moreover, we assume the scattering kernel to be bounded in the
+sense (cf. \cite{coulombel2005diffusion})
 \begin{align}
-	\sigma_s \int_{\mathbb{S}^2}\int_{\mathbb{S}^2} s(\bOmega\cdot\bOmega')^2 \, d\bOmega \, 
+	\sigma_s \int_{\mathbb{S}^2}\int_{\mathbb{S}^2} s(\bOmega\cdot\bOmega')^2 \, d\bOmega \,
 	d\bOmega' \leq K < \infty.
 \end{align}
-An additional assumptions is $s(\bOmega\cdot \bOmega')\geq 0$. In general, the scattering 
+An additional assumptions is $s(\bOmega\cdot \bOmega')\geq 0$. In general, the scattering
 kernel
-can depend on $\bOmega$ and $\bOmega'$ individually---as opposed to  $\bOmega\cdot 
-\bOmega'$. By writing $s(\bOmega\cdot \bOmega')$, scattering from $\bOmega$ into 
-$\bOmega'$ is as likely as scattering from $\bOmega'$ into $\bOmega$. 
+can depend on $\bOmega$ and $\bOmega'$ individually---as opposed to  $\bOmega\cdot
+\bOmega'$. By writing $s(\bOmega\cdot \bOmega')$, scattering from $\bOmega$ into
+$\bOmega'$ is as likely as scattering from $\bOmega'$ into $\bOmega$.
 Replacing the dependency on $\bOmega$ and $\bOmega'$ by the dependency on $\bOmega\cdot \bOmega'$---the cosine of the \textit{scattering angle}---is a significant mathematical simplification.
-Lastly, since particles 
-have to scatter into \textit{some} direction, 
+Lastly, since particles
+have to scatter into \textit{some} direction,
 \begin{align}
 	\int_{\mathbb{S}^2} s(\bOmega\cdot \bOmega') \, d\bOmega' = 1
 \end{align}
 is required for any $\bOmega\in \mathbb{S}^2$.
 \begin{lemma}[Range and kernel of $S$]
 
-	Under the above assumptions, the range and kernel of the scattering operator $S$ are given 
+	Under the above assumptions, the range and kernel of the scattering operator $S$ are given
 	by
 	\begin{itemize}
-		\item $\mathcal{R}(S) =  \{\psi(t,\bx,\bOmega), \text{ such that } \int_{\mathbb{S}^2} 
+		\item $\mathcal{R}(S) =  \{\psi(t,\bx,\bOmega), \text{ such that } \int_{\mathbb{S}^2}
 			\psi(t,\bx,\bOmega) \, d\bOmega = 0\}$, and
-		\item $\mathcal{K}(S) =  \{\psi(t,\bx,\bOmega), \text{ where } \psi(t,\bx,\bOmega)\text{  is 
+		\item $\mathcal{K}(S) =  \{\psi(t,\bx,\bOmega), \text{ where } \psi(t,\bx,\bOmega)\text{  is
 			constant in } \bOmega\}$,
 	\end{itemize}
-	respectively. See, \eg the lecture notes by Frank \cite{kinetictheory201819} for a proof of both properties. 
+	respectively. See, \eg the lecture notes by Frank \cite{kinetictheory201819} for a proof of both properties.
 \end{lemma}
-Intuitively, this 
+Intuitively, this
 implies that:
 \begin{itemize}
-	\item The scattering operator is mass-preserving. Locally (at $t$ and $\bx$), particles are 
-	only re-distributed (in $\bOmega$). Overall, no particles are gained or lost. 
-	\item Unless $\psi$ is isotropic (independent of $\bOmega$), scattering will cause the 
-	pre-collision state to be different from the post-collision state and, regardless of the 
-	scattering kernel $s$, the equilibrium state of the scattering operator $S$ is  isotropic. This 
-	does not imply the absence of scattering events; it merely implies a balance of in- 
+	\item The scattering operator is mass-preserving. Locally (at $t$ and $\bx$), particles are
+	only re-distributed (in $\bOmega$). Overall, no particles are gained or lost.
+	\item Unless $\psi$ is isotropic (independent of $\bOmega$), scattering will cause the
+	pre-collision state to be different from the post-collision state and, regardless of the
+	scattering kernel $s$, the equilibrium state of the scattering operator $S$ is  isotropic. This
+	does not imply the absence of scattering events; it merely implies a balance of in-
 	and out-scattering.
 \end{itemize}
 
@@ -416,15 +416,15 @@ implies that:
 \subsection{Entropy for the linear transport equation}
 \label{sec:entropy}
 Let $\eta:\mathbb{R} \to \mathbb{R}$ be a differentiable, convex function, \ie $\forall x_1,x_2 \in \mathbb{R}$ and $\forall t \in [0,1]$, we have $\eta(t \, x_1 + (1-t) \, x_2) \leq t\, \eta(x_1) + (1-t) \, \eta(x_2)$. Since $\eta$ is convex, its derivative is monotonically non-decreasing.
-Furthermore, recall that the scattering component of the transport equation \eqref{eq:lineartransport} was given by 
+Furthermore, recall that the scattering component of the transport equation \eqref{eq:lineartransport} was given by
 \begin{equation*}
 	\begin{split}
 		S(\psi)(t,\bx,\bOmega) \defas
-		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') - 
+		\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') -
 		\psi(t,\bx,\bOmega)\right)\, d\bOmega'.
 	\end{split}
 \end{equation*}
-It follows that 
+It follows that
 \begin{align}
 	\int_{\mathbb{S}^2} \eta'\left(\psi(t,\bx,\bOmega)\right) S(\psi)(t,\bx,\bOmega) \, d\bOmega \leq 0,
 \end{align}
@@ -432,22 +432,22 @@ because
 	\begin{subequations}
 		\begin{align}
 	&\int_{\mathbb{S}^2} \eta'\left(\psi(t,\bx,\bOmega)\right) S(\psi)(t,\bx,\bOmega) \, d\bOmega \\
-=&	\int_{\mathbb{S}^2} \int_{\mathbb{S}^2}\eta'\left(\psi(t,\bx,\bOmega)\right) s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') - 
+=&	\int_{\mathbb{S}^2} \int_{\mathbb{S}^2}\eta'\left(\psi(t,\bx,\bOmega)\right) s(\bOmega \cdot \bOmega')\left(\psi(t,\bx,\bOmega') -
 \psi(t,\bx,\bOmega)\right)\, d\bOmega'\, d\bOmega  \\
-=&	\int_{\mathbb{S}^2}\int_{\mathbb{S}^2} \eta'\left(\psi(t,\bx,\bOmega')\right) s(\bOmega' \cdot \bOmega)\left(\psi(t,\bx,\bOmega) - 
+=&	\int_{\mathbb{S}^2}\int_{\mathbb{S}^2} \eta'\left(\psi(t,\bx,\bOmega')\right) s(\bOmega' \cdot \bOmega)\left(\psi(t,\bx,\bOmega) -
 \psi(t,\bx,\bOmega')\right)\, d\bOmega\, d\bOmega' \\
 = & \frac{1}{2}\int_{\mathbb{S}^2}\int_{\mathbb{S}^2}
-\underbrace{\left(\eta'\left(\psi(t,\bx,\bOmega)\right)- \eta'\left(\psi(t,\bx,\bOmega')\right)\right)}_{\defas c_1} \, 
-\underbrace{s(\bOmega \cdot \bOmega') }_{\geq 0} \, 
-\underbrace{\left(\psi(t,\bx,\bOmega') - 
+\underbrace{\left(\eta'\left(\psi(t,\bx,\bOmega)\right)- \eta'\left(\psi(t,\bx,\bOmega')\right)\right)}_{\defas c_1} \,
+\underbrace{s(\bOmega \cdot \bOmega') }_{\geq 0} \,
+\underbrace{\left(\psi(t,\bx,\bOmega') -
 \psi(t,\bx,\bOmega)\right)}_{\defas c_2}\, d\bOmega\, d\bOmega' \\
 \leq & 0,
 \end{align}
 \end{subequations}
 since the signs of $c_1$ and $c_2$ are opposite due to the convexity of $\eta$.
-Additionally, if $\psi(t,\bx,\bOmega)\equiv 0$ for $||\bx||_2\rightarrow \infty$, the mathematical entropy 
+Additionally, if $\psi(t,\bx,\bOmega)\equiv 0$ for $||\bx||_2\rightarrow \infty$, the mathematical entropy
 \begin{align}
-H(\psi)(t) \defas \int_{\mathbb{R}^3}\int_{\mathbb{S}^2} \eta\left(\psi(t,\bx,\bOmega)\right) \, d\bOmega \, d\bx	
+H(\psi)(t) \defas \int_{\mathbb{R}^3}\int_{\mathbb{S}^2} \eta\left(\psi(t,\bx,\bOmega)\right) \, d\bOmega \, d\bx
 \end{align}
 is non-increasing.
 The proof follows from the convexity of $\eta$ and the symmetry of the scattering kernel.
@@ -463,7 +463,7 @@ Thus, the linear transport equation \eqref{eq:lineartransport} needs to be equip
 \begin{figure}
 	\centering
 	\includegraphics[width=0.99\linewidth]{Chapters/Chapter1/figs/boundaryconditions/domain_with_boundary}
-	\caption{Spatial domain $V\subsetneq\RThree$ with boundary $\partial V$ and outward 
+	\caption{Spatial domain $V\subsetneq\RThree$ with boundary $\partial V$ and outward
 	facing normal  $\bf{n}$.}
 	\label{fig:domainwithboundary}
 \end{figure}
@@ -473,8 +473,8 @@ For a bounded domain $V\subsetneq \RThree$ with boundary $\partial V$ and outwar
 \begin{align}
 	\psi(t,\bx,\bOmega) = \psi^{\text{bc}}(t,\bx,\bOmega)\quad\text{ for all t}\in \Rgeqz,\, \bx\in\partial V,\, \bOmega \in \mathbb{S}^2\text{ such that } \bOmega \cdot {\bf{n}} <0.
 \end{align}
-However, different ways to treat the boundary exist. We can as well have periodic boundaries 
-or (specular) reflective boundaries, \ie particles that hit the boundary are being (isotropically) 
+However, different ways to treat the boundary exist. We can as well have periodic boundaries
+or (specular) reflective boundaries, \ie particles that hit the boundary are being (isotropically)
 re-emitted into the domain.
 
 For the initial condition, we have to prescribe the angular flux at $t=0$, \ie
@@ -614,16 +614,16 @@ This so-called $k$ eigenvalue problem is of significant importance in the field 
 
 
 \section{Asymptotic limits}
-Let us, once again, consider the velocity-dependent, linear transport equation, expressed in 
-terms of 
-the 
+Let us, once again, consider the velocity-dependent, linear transport equation, expressed in
+terms of
+the
 total  cross section $\sigma_t$  and the probability that a colliding particle will scatter $c$, given by
 \begin{equation*}
 	\begin{split}
-		\frac{1}{v}\, \partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) 
-		+\sigma_t 
+		\frac{1}{v}\, \partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega)
+		+\sigma_t
 		\psi(t,\bx,\bOmega) \\
-							   &= {c\, \sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\psi(t,\bx,\bOmega') \, 
+							   &= {c\, \sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot \bOmega')\psi(t,\bx,\bOmega') \,
 							   d\bOmega'+ q(t,\bx,\bOmega).
 							   \label{eq:lineartransport_again}
 	\end{split}
@@ -639,42 +639,42 @@ To obtain a dimensionless equation, we set
 	\end{eqnarray}
 
 \end{subequations}
-where variables with a superscript bar denote dimensionless variables and capitalized variables 
-denote the reference time, length, velocity, and cross section, respectively. We further assume 
-the scattering kernel to already be dimensionless. 
-Substituting \eqref{eq:dimensionless} in the linear transport equation and omitting the source 
+where variables with a superscript bar denote dimensionless variables and capitalized variables
+denote the reference time, length, velocity, and cross section, respectively. We further assume
+the scattering kernel to already be dimensionless.
+Substituting \eqref{eq:dimensionless} in the linear transport equation and omitting the source
 yields
 \begin{equation}
 	\begin{split}
-		\frac{1}{\bar{v}V}\partial_{\bar{t} \, T} &{\psi}(\bar{t} \, T,\bar{{\bx}}\, L,\bOmega) + 
-		\,\bOmega\cdot 
-		\nabla_{\bar{{\bx}}\, L} 
-		{\psi}(\bar{t} \, T,\bar{{\bx}}\, L,\bOmega) 
-		+ \bar{\sigma}_t \, \Sigma_t 
+		\frac{1}{\bar{v}V}\partial_{\bar{t} \, T} &{\psi}(\bar{t} \, T,\bar{{\bx}}\, L,\bOmega) +
+		\,\bOmega\cdot
+		\nabla_{\bar{{\bx}}\, L}
+		{\psi}(\bar{t} \, T,\bar{{\bx}}\, L,\bOmega)
+		+ \bar{\sigma}_t \, \Sigma_t
 		{\psi}(\bar{t} \, T,\bar{{\bx}}\, L,\bOmega) \\
-							  &= c\, { \bar{\sigma}_t \, \Sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot 
-							  \bOmega' ){\psi}(\bar{t} \, 
+							  &= c\, { \bar{\sigma}_t \, \Sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot
+							  \bOmega' ){\psi}(\bar{t} \,
 							  T,\bar{{\bx}}\, L,\bOmega) \, d\bOmega.
 							  \label{eq:lineartransport_again_dimless}
 	\end{split}
 \end{equation}
-We define\footnote{It is the velocity $v$, not the 
-	direction $\bOmega$ that has to be scaled since $\bOmega$ is, by definition, a unit-vector.} 
+We define\footnote{It is the velocity $v$, not the
+	direction $\bOmega$ that has to be scaled since $\bOmega$ is, by definition, a unit-vector.}
 	$\psi(\bar{t} \, T,\bar{{\bx}}\, L,\bOmega)
-= \bar{\psi} (\bar{t} ,\bar{{\bx}},\bOmega)\Psi$ 
-and 
-directly omit the superscript bar 
-everywhere to 
+= \bar{\psi} (\bar{t} ,\bar{{\bx}},\bOmega)\Psi$
+and
+directly omit the superscript bar
+everywhere to
 get
 \begin{equation}
 	\begin{split}
-		\frac{\Psi}{T\,V}\,\frac{1}{\bar{v}} \,\partial_t \psi(t,\bx,\bOmega) +& \,\frac{\Psi }{L}\bOmega 
-		\cdot 
-		\nabla_\bx 
-		\psi(t,\bx,\bOmega) 
-		+ \Psi\, \Sigma_t \,\sigma_t 
+		\frac{\Psi}{T\,V}\,\frac{1}{\bar{v}} \,\partial_t \psi(t,\bx,\bOmega) +& \,\frac{\Psi }{L}\bOmega
+		\cdot
+		\nabla_\bx
+		\psi(t,\bx,\bOmega)
+		+ \Psi\, \Sigma_t \,\sigma_t
 		\psi(t,\bx,\bOmega) \\
-										       &= c\,\Psi \, \Sigma_t \, {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot 
+										       &= c\,\Psi \, \Sigma_t \, {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot
 										       \bOmega')
 										       \psi(t,\bx,\bOmega') \, d\bOmega',
 										       \label{eq:lineartransport_again_dimless2a}
@@ -682,199 +682,199 @@ get
 \end{equation}
 or equivalently\begin{equation}
 	\begin{split}
-		\frac{L}{V\, T} \,\frac{1}{{v}}\,\partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot 
-		\nabla_\bx 
-		\psi(t,\bx,\bOmega) 
-		+ \Sigma_t\, L \,\sigma_t 
+		\frac{L}{V\, T} \,\frac{1}{{v}}\,\partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot
+		\nabla_\bx
+		\psi(t,\bx,\bOmega)
+		+ \Sigma_t\, L \,\sigma_t
 		\psi(t,\bx,\bOmega) \\
-										 &= c \, \Sigma_t \,L\, {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot 
+										 &= c \, \Sigma_t \,L\, {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot
 										 \bOmega')\psi(t,\bx,\bOmega') \, d\bOmega'.
 										 \label{eq:lineartransport_again_dimless2}
 	\end{split}
 \end{equation}
-Equation \eqref{eq:lineartransport_again_dimless2} can be rewritten in terms of the Strouhal 
-number (St $\defas L/(V\,  T)$) and the Knudsen number (Kn $\defas 1/(\Sigma_t \, 
-L)$). We additionally set $v=1$ since the velocity can be controlled by $V$, and $v$ does not 
-occur in the equation without being multiplied by $V$. The transport 
-equation in dimensionless form then reads 
+Equation \eqref{eq:lineartransport_again_dimless2} can be rewritten in terms of the Strouhal
+number (St $\defas L/(V\,  T)$) and the Knudsen number (Kn $\defas 1/(\Sigma_t \,
+L)$). We additionally set $v=1$ since the velocity can be controlled by $V$, and $v$ does not
+occur in the equation without being multiplied by $V$. The transport
+equation in dimensionless form then reads
 \begin{equation}
 	\begin{split}
-		\text{St} \,\partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot 
-		\nabla_\bx 
-		\psi(t,\bx,\bOmega) 
+		\text{St} \,\partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot
+		\nabla_\bx
+		\psi(t,\bx,\bOmega)
 		+ \frac{1}{{\text{Kn}}} \sigma_t \,
 		\psi(t,\bx,\bOmega) \\
-							    &= \frac{c}{{\text{Kn}}}  {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot 
+							    &= \frac{c}{{\text{Kn}}}  {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot
 							    \bOmega')\psi(t,\bx,\bOmega') \, d\bOmega'.
 							    \label{eq:lineartransport_again_dimless_final}
 	\end{split}
 \end{equation}
-The inverse Knudsen number $\Sigma_t \, 
-L$ is a measure for 
-thickness of the system in units of mean free paths. 
+The inverse Knudsen number $\Sigma_t \,
+L$ is a measure for
+thickness of the system in units of mean free paths.
 The Strouhal number is
  interpreted as the ratio between the time needed to cross the domain by
 the characteristic velocity and the characteristic time scale \cite{kinetictheory201819}.
 
-Under different assumptions on the order of the Knudsen and Strouhal number, we are now 
+Under different assumptions on the order of the Knudsen and Strouhal number, we are now
 able to obtain different asymptotic limits to the standard transport equation.
-Due to its importance in theoretical considerations, as well as its implications for numerical 
-methods, we will discuss the diffusive scaling in more 
-detail. 
-Diffusive scaling uses the following assumptions: 
+Due to its importance in theoretical considerations, as well as its implications for numerical
+methods, we will discuss the diffusive scaling in more
+detail.
+Diffusive scaling uses the following assumptions:
 \begin{enumerate}
-	\item The mean free path is much smaller than the reference length ($\text{Kn} = 
+	\item The mean free path is much smaller than the reference length ($\text{Kn} =
 		\varepsilon$).
-	\item Interactions happen on a much smaller time-scale than the reference time 
+	\item Interactions happen on a much smaller time-scale than the reference time
 		($\text{St}=\varepsilon$).
-	\item The likelihood to scatter is much, much larger than the likelihood to be absorbed in 
+	\item The likelihood to scatter is much, much larger than the likelihood to be absorbed in
 		case of a collision
 		($c=1-\varepsilon^2$).
 \end{enumerate}
-First we rewrite \eqref{eq:lineartransport_again_dimless_final} by moving out-scattering back 
-on 
+First we rewrite \eqref{eq:lineartransport_again_dimless_final} by moving out-scattering back
+on
 the right-hand side.
 \begin{equation}
 	\begin{split}
-		\text{St} \,\partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot 
-		\nabla_\bx 
-		\psi(t,\bx,\bOmega) 
+		\text{St} \,\partial_t \psi(t,\bx,\bOmega) +& \,\bOmega \cdot
+		\nabla_\bx
+		\psi(t,\bx,\bOmega)
 		+ \frac{1-c}{{\text{Kn}}} \sigma_t \,
 		\psi(t,\bx,\bOmega) \\
-							    &= \frac{c}{{\text{Kn}}}  {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot 
+							    &= \frac{c}{{\text{Kn}}}  {\sigma_t}\int_{\mathbb{S}^2}s(\bOmega \cdot
 							    \bOmega')\left(\psi(t,\bx,\bOmega') -\psi(t,\bx,\bOmega)\right)\, d\bOmega'.
 							    \label{eq:lineartransport_again_dimless_final_sigmas_sigmaa}
 	\end{split}
 \end{equation}
-We now substitute $\text{Kn}=\varepsilon$ and $\text{St}=\varepsilon$. Next, $(1-c)\sigma_t$ and $c 
-\sigma_t$ can be expressed in terms of $\varepsilon$ and dimensionless quantities as 
-$\varepsilon^2\sigma_a$ and $\sigma_s$, respectively. 
-A final multiplication with $\varepsilon$ results in 
+We now substitute $\text{Kn}=\varepsilon$ and $\text{St}=\varepsilon$. Next, $(1-c)\sigma_t$ and $c
+\sigma_t$ can be expressed in terms of $\varepsilon$ and dimensionless quantities as
+$\varepsilon^2\sigma_a$ and $\sigma_s$, respectively.
+A final multiplication with $\varepsilon$ results in
 
 \begin{equation}
 	\begin{split}
-		\varepsilon^2\,\partial_t \psi_{(\varepsilon)}(t,\bx,\bOmega) +& \,\varepsilon \,\bOmega \cdot 
-		\nabla_\bx 
-		\psi_{(\varepsilon)}(t,\bx,\bOmega) 
+		\varepsilon^2\,\partial_t \psi_{(\varepsilon)}(t,\bx,\bOmega) +& \,\varepsilon \,\bOmega \cdot
+		\nabla_\bx
+		\psi_{(\varepsilon)}(t,\bx,\bOmega)
 		+ \varepsilon^2\sigma_a \,
 		\psi_{(\varepsilon)}(t,\bx,\bOmega) \\
-							       &=  {\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot 
+							       &=  {\sigma_s}\int_{\mathbb{S}^2}s(\bOmega \cdot
 							       \bOmega')\left(\psi_{(\varepsilon)}(t,\bx,\bOmega') -\psi_{(\varepsilon)}(t,\bx,\bOmega)\right)\, d\bOmega'.
 							       \label{eq:lineartransport_again_dimless_final_sigmas_sigmaa_eps}
 	\end{split}
 \end{equation}
-The diffusion limit lets $\varepsilon\rightarrow 0$. To compute $\psi_{(\varepsilon)}$ for 
-$\varepsilon\rightarrow 0$, we assume the existence of a Hilbert expansion for 
+The diffusion limit lets $\varepsilon\rightarrow 0$. To compute $\psi_{(\varepsilon)}$ for
+$\varepsilon\rightarrow 0$, we assume the existence of a Hilbert expansion for
 $\psi_{\varepsilon}$, that is
 \begin{align}
 	\psi_{(\varepsilon)}(t,\bx,\bOmega) = \sum_{n=0}^\infty \varepsilon^n \, \psi_i(t,\bx,\bOmega).
 	\label{eq:hilbertexpansion}
 \end{align}
-The $\psi_i$ in the Hilbert expansion are independent of $\varepsilon$. We substitute 
-\eqref{eq:hilbertexpansion} into 
-\eqref{eq:lineartransport_again_dimless_final_sigmas_sigmaa_eps} and collect matching 
-orders of $\varepsilon$ (up to second order) to get 
+The $\psi_i$ in the Hilbert expansion are independent of $\varepsilon$. We substitute
+\eqref{eq:hilbertexpansion} into
+\eqref{eq:lineartransport_again_dimless_final_sigmas_sigmaa_eps} and collect matching
+orders of $\varepsilon$ (up to second order) to get
 \begin{subequations}
 	\label{eq:matchingepsilons}%
 	\begin{eqnarray}
-		\mathcal{O}\left(\varepsilon^0\right):& 
+		\mathcal{O}\left(\varepsilon^0\right):&
 		0&=\sigma_s S(\psi_0), 	\label{eq:orders0}
 		\\
-		\mathcal{O}\left(\varepsilon^1\right):& 
-		\bOmega \cdot 
-		\nabla_\bx 
+		\mathcal{O}\left(\varepsilon^1\right):&
+		\bOmega \cdot
+		\nabla_\bx
 		\psi_0 &=
 		\sigma_s	S(\psi_1), 	\label{eq:orders1}
 		\\
-		\mathcal{O}\left(\varepsilon^2\right):& 
-		\partial_t \psi_0+\bOmega \cdot 
-		\nabla_\bx 
+		\mathcal{O}\left(\varepsilon^2\right):&
+		\partial_t \psi_0+\bOmega \cdot
+		\nabla_\bx
 		\psi_1 + \sigma_a \psi_0&=
 		\sigma_s	S(\psi_2), 	\label{eq:orders2}
 	\end{eqnarray}
 \end{subequations}
-where we omit the dependency on $t$, $\bx$, and $\bOmega$ in the $\psi_i$ and the collision 
+where we omit the dependency on $t$, $\bx$, and $\bOmega$ in the $\psi_i$ and the collision
 operator $S(\psi_i)\, $.
-Section \ref{subsec:propertiescollisionoperator} tells us that the kernel of $S$ consists of 
+Section \ref{subsec:propertiescollisionoperator} tells us that the kernel of $S$ consists of
 functions that are  independent of $\bOmega$; this implies $\psi_0(t,\bx,\bOmega) = \psi_0(t,\bx)$.
 
-Since $S$ is linear, we can rewrite \eqref{eq:orders1} as 
+Since $S$ is linear, we can rewrite \eqref{eq:orders1} as
 \begin{align}
 	\psi_1(t,\bx,\bOmega) =  -\frac{1}{\sigma_s} \sum_{i=1}^3 e_i(\bOmega) \partial_{x_i} \psi_0(t,\bx),
 \end{align}
 for some $e_i \in\mathcal{R}(S)$ with $S(e_i) = - \bOmega_i$ for $i=1,2,3$ \cite{kinetictheory201819}.
 Inserting this into \eqref{eq:orders2}, we get
 \begin{align}
-	\partial_t \psi_0(t,\bx)-\bOmega \cdot 
-	\nabla_\bx 
+	\partial_t \psi_0(t,\bx)-\bOmega \cdot
+	\nabla_\bx
 	 \frac{1}{\sigma_s} \sum_{i=1}^3 e_i(\bOmega) \partial_{x_i} \psi_0(t,\bx) + \sigma_a \psi_0(t,\bx)&=
 	\sigma_s	S(\psi_2). \label{eq:asdasdasd}
 \end{align}
-For the left-hand side to be in the range of $S$, $\psi_0$ has to be chosen such that 
+For the left-hand side to be in the range of $S$, $\psi_0$ has to be chosen such that
 \begin{align}
-	\int_{\mathcal{S}^2} 1 \cdot \left(\partial_t \psi_0(t,\bx)-\bOmega \cdot 
-	\nabla_\bx 
+	\int_{\mathcal{S}^2} 1 \cdot \left(\partial_t \psi_0(t,\bx)-\bOmega \cdot
+	\nabla_\bx
 	\frac{1}{\sigma_s} \sum_{i=1}^3 e_i(\bOmega) \partial_{x_i} \psi_0(t,\bx) + \sigma_a \psi_0(t,\bx) \right)\, d\bOmega&=0.
 \end{align}
-Changing the order of differentiation and integration in the second term, we obtain 
+Changing the order of differentiation and integration in the second term, we obtain
 \begin{align}
-	\partial_t \psi_0(t,\bx)- 
+	\partial_t \psi_0(t,\bx)-
 	\nabla_\bx \, \frac{1}{\sigma_s} \, A \,\nabla_\bx \psi_0(t,\bx) + \sigma_a \psi_0(t,\bx)  = 0,
 	\label{eq:diff1}
 \end{align}
-with a positive definite matrix $A \in \mathbb{R}^{3\times 3}$ that has entries $A_{i,j} = \int_{\mathbb{S}^2} \bOmega_i \, e_j(\bOmega) \, d\bOmega$. 
+with a positive definite matrix $A \in \mathbb{R}^{3\times 3}$ that has entries $A_{i,j} = \int_{\mathbb{S}^2} \bOmega_i \, e_j(\bOmega) \, d\bOmega$.
 
-We assumed constant cross sections independent of $\bx$, but \eqref{eq:diff1} 
+We assumed constant cross sections independent of $\bx$, but \eqref{eq:diff1}
 can analogously be written  for spatially varying cross sections.
 
 
 \section{Hyperbolic conservation laws}
-Conservation laws are building blocks for the mathematical description of physical reality. 
-They describe the evolution of one or several conserved quantities through space-time; 
-common conserved quantities are mass, momentum, or energy. We adapt the notation of the 
+Conservation laws are building blocks for the mathematical description of physical reality.
+They describe the evolution of one or several conserved quantities through space-time;
+common conserved quantities are mass, momentum, or energy. We adapt the notation of the
 classical book by LeVeque \cite{leveque1992numerical}.
 A scalar hyperbolic conservation law has the form
 \begin{align}
 \partial_t {u}(t,x) +\partial_x f\left(u(t,x)\right) = 0.
 \end{align}
-The conserved quantity is ${u}: \Rgeqz \times V \rightarrow 
-\mathbb{R}$. Time is denoted by $t \in \Rgeqz$ and space by $x \in 
+The conserved quantity is ${u}: \Rgeqz \times V \rightarrow
+\mathbb{R}$. Time is denoted by $t \in \Rgeqz$ and space by $x \in
 V \subseteq
-\mathbb{R}$. 
-For a spatially infinite domain, conservation means that $\int_{-\infty}^\infty  u(t,x) \, dx$ is 
-constant in time. The flux function of 
-the system is given by $f: \mathbb{R} \rightarrow \mathbb{R}$ and can be 
-interpreted as the flux of a conserved quantity across a surface. For $n$ conserved quantities 
-$\bm{u}(t,x) = (u_1(t,x),\ldots,u_n(t,x))^T$ in one space dimension with fluxes 
-$\bm{f}(\bm{u}(t,x)) = 
+\mathbb{R}$.
+For a spatially infinite domain, conservation means that $\int_{-\infty}^\infty  u(t,x) \, dx$ is
+constant in time. The flux function of
+the system is given by $f: \mathbb{R} \rightarrow \mathbb{R}$ and can be
+interpreted as the flux of a conserved quantity across a surface. For $n$ conserved quantities
+$\bm{u}(t,x) = (u_1(t,x),\ldots,u_n(t,x))^T$ in one space dimension with fluxes
+$\bm{f}(\bm{u}(t,x)) =
 (f_1(\bm{u}(t,x)),\ldots,f_n(\bm{u}(t,x)))^T$,
 \begin{align}
 \partial_t \bm{u}(t,x) + \partial_x \bm{f}(\bm{u}(t,x)) = 0
 \label{eq:systemhyperbolicconservationlaws}
 \end{align}
-is the corresponding system of $n$ conservation laws. The system is said to be 
-hyperbolic if 
+is the corresponding system of $n$ conservation laws. The system is said to be
+hyperbolic if
 \begin{align}
  A(\bm{u}(t,x)) \defas \bm{f}'(\bm{u}(t,x))
 \end{align}
-is diagonalizable with $n$ real eigenvalues for all $\bm{u}(t,x)$. If the $n$ real eigenvalues 
+is diagonalizable with $n$ real eigenvalues for all $\bm{u}(t,x)$. If the $n$ real eigenvalues
 are also distinct, the system is \textit{strictly }hyperbolic.
-The quasilinear form of \eqref{eq:systemhyperbolicconservationlaws}  is 
+The quasilinear form of \eqref{eq:systemhyperbolicconservationlaws}  is
 \begin{align}
 	\partial_t \bm{u}(t,x) + A(\bm{u}(t,x)) \partial_x\bm{u}(t,x) = 0.
 \end{align}
-For problems with two spatial dimension and $\bm{x}=(x,y)\in\mathbb{R}^2$, 
+For problems with two spatial dimension and $\bm{x}=(x,y)\in\mathbb{R}^2$,
 we write
 \begin{align}
 \partial_t \bm{u}(t,\bx) + \partial_x \bm{f}(\bm{u}(t,\bx)) + \partial_y \bm{g}(\bm{u}(t,\bx)) = 0,
 \label{eq:systemhyperbolicconservationlaws_2d}
 \end{align}
-with $\bm{f}(\bm{u}(t,\bx)) = 
-(f_1(\bm{u}(t,\bx)),\ldots,f_n(\bm{u}(t,\bx)))^T$ and $\bm{g}(\bm{u}(t,\bx))$ defined 
-analogously. 
-\FloatBarrier 
+with $\bm{f}(\bm{u}(t,\bx)) =
+(f_1(\bm{u}(t,\bx)),\ldots,f_n(\bm{u}(t,\bx)))^T$ and $\bm{g}(\bm{u}(t,\bx))$ defined
+analogously.
+\FloatBarrier
 \begin{exmp}[Linear advection equation]
-The simplest hyperbolic conservation law is  the one-dimensional linear advection equation 
+The simplest hyperbolic conservation law is  the one-dimensional linear advection equation
 with constant speed $a$,
 \begin{align}
 	\partial_t \rho(t,x) + a \, \partial_x \rho(t,x)=0,
@@ -885,7 +885,7 @@ The solution of \eqref{eq:linearadvection} is given by
 $\rho(t,x) = \rho_0(x-at)$ (that is, the initial mass is just shifted under consideration of $a$), shown in Figure \ref{fig:linear}.
 \begin{figure}[]
 	\centering
-	\includegraphics[width=1.0\linewidth]{Chapters/Chapter1/figs/probspeeds/kitlinear.pdf}	
+	\includegraphics[width=1.0\linewidth]{Chapters/Chapter1/figs/probspeeds/kitlinear.pdf}
 	\caption{Linear advection equation with $\rho_0(x) = \exp(-x^2)$.}
 	\label{fig:linear}
 \end{figure}
@@ -896,7 +896,7 @@ $\rho(t,x) = \rho_0(x-at)$ (that is, the initial mass is just shifted under cons
 
 \FloatBarrier
 \begin{exmp}[Inviscid Burgers's equation]
-	Let us now consider the inviscid Burgers's equation as a toy model for 
+	Let us now consider the inviscid Burgers's equation as a toy model for
 	non-linear hyperbolic conservation laws. The equation is given by
 	\begin{align}
 		\partial_t u(t,x) + u\, \partial_xu(t,x) = 0,
@@ -910,85 +910,85 @@ $\rho(t,x) = \rho_0(x-at)$ (that is, the initial mass is just shifted under cons
 	1,& x\geq 2 ,
 	\end{cases}
 	\end{align}
-	drawn in green. Since  the propagation speeds of the solution differ, a jump in the 
-	solution---called a shock---forms in finite time. 
-	Shocks are a ubiquitous phenomena in physical applications; exemplified by the formation 
+	drawn in green. Since  the propagation speeds of the solution differ, a jump in the
+	solution---called a shock---forms in finite time.
+	Shocks are a ubiquitous phenomena in physical applications; exemplified by the formation
 	of traffic jams in traffic flow simulations or pressure jumps in the flow field around airfoils.
- 
+
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=1.0\linewidth]{Chapters/Chapter1/figs/probspeeds/kitburgers.pdf}
-		\caption{Burgers's equation with initial data $u_0(x)$ shown in green. 
+		\caption{Burgers's equation with initial data $u_0(x)$ shown in green.
 		}
 		\label{fig:burgers}
 	\end{figure}
 \end{exmp}
 
-Since the analytical solution to non-linear hyperbolic conservation laws is known for 
-exceptionally few---and usually exceptionally simple---test cases, numerical methods need to be 
-considered. Significant contributions in the field of numerical methods for these types of 
-equations date back to the 1950s and 1960s with work by Sergei Konstantinovich Godunov, 
-Peter Lax, Kurt Otto Friedrichs, and Burton Wendroff.\footnote{This is by no means a 
-	complete list of all contributions. The names were 
+Since the analytical solution to non-linear hyperbolic conservation laws is known for
+exceptionally few---and usually exceptionally simple---test cases, numerical methods need to be
+considered. Significant contributions in the field of numerical methods for these types of
+equations date back to the 1950s and 1960s with work by Sergei Konstantinovich Godunov,
+Peter Lax, Kurt Otto Friedrichs, and Burton Wendroff.\footnote{This is by no means a
+	complete list of all contributions. The names were
 	selected since there exist famous numerical schemes named after all of these researchers.}
 %\todo{Check date range and names}
 %\todo{cite:  ref for burgers and analytical solution, see wiki}
 
 
-	
+
 
 
 \begin{exmp}[Radiative transfer with absent scattering in two space dimensions]
-	
+
 	\begin{figure}[t!]
 		\centering
 		\includegraphics[width=1.0\linewidth]{Chapters/Chapter1/figs/probspeed2d/1}
-		\caption{Evolution of an initial distribution $\psi_0(\bx,\bOmega)$ through space along a 
-			fixed  direction $\bOmega$ 
+		\caption{Evolution of an initial distribution $\psi_0(\bx,\bOmega)$ through space along a
+			fixed  direction $\bOmega$
 			with constant $\sigma_a$. Each \textit{bump} represents the solution at a different time step.}
 		\label{fig:2dadvection}
 	\end{figure}
-	
+
 Recall that the linear transport equations without scattering or sources can be written as
 \begin{equation*}
 \begin{split}
-\partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +\sigma_a 
+\partial_t \psi(t,\bx,\bOmega) +& \bOmega \cdot \nabla_\bx \psi(t,\bx,\bOmega) +\sigma_a
 \psi(t,\bx,\bOmega) =0.
 \end{split}
 \end{equation*}
-With scattering being absent, the equation can easily be solved for any fixed direction 
+With scattering being absent, the equation can easily be solved for any fixed direction
 $\bOmega$. Choosing  $\psi(0,\bx,\bOmega) =  \psi_0(\bx,\bOmega)$, the solution becomes
 \begin{equation*}
 \begin{split}
 \psi(t,\bx,\bOmega)  =   \psi_0(\bx-t\bOmega,\bOmega) e^{-\sigma_a t}.
 \end{split}
 \end{equation*}
-Thus, the initial condition is propagated along direction $\bOmega$ with absorption taking 
-place at the same time. When considering scattering, the solution cannot be derived 
-analytically, instead numerical algorithms need to be used. Note that without 
-scattering, the linear transport equation resembles the structure of the simple linear 
-advection equation. This is illustrated in Figure \ref{fig:2dadvection}, where we can see the 
-solution $\psi(t,\bx,\bOmega)$ to the linear transport equation for different times $t$ with a 
-fixed direction $\bOmega$. As initial condition, we chose $\psi_0(\bx,\bOmega) = 
-\exp(-||\bx||_2^2)$, the fixed direction is $\bOmega = (1/\sqrt{2},1/\sqrt{2})^T$, and $\sigma_a 
-= 
+Thus, the initial condition is propagated along direction $\bOmega$ with absorption taking
+place at the same time. When considering scattering, the solution cannot be derived
+analytically, instead numerical algorithms need to be used. Note that without
+scattering, the linear transport equation resembles the structure of the simple linear
+advection equation. This is illustrated in Figure \ref{fig:2dadvection}, where we can see the
+solution $\psi(t,\bx,\bOmega)$ to the linear transport equation for different times $t$ with a
+fixed direction $\bOmega$. As initial condition, we chose $\psi_0(\bx,\bOmega) =
+\exp(-||\bx||_2^2)$, the fixed direction is $\bOmega = (1/\sqrt{2},1/\sqrt{2})^T$, and $\sigma_a
+=
 0.1$.
 
 
-	
-	
+
+
 \end{exmp}
 
 
 
 
 %\section{Applications}
-%Equipped with the necessary mathematical and physical background, we will postpone the 
-%discussion of how to solve the aforementioned equations for a moment. Instead, let us first 
+%Equipped with the necessary mathematical and physical background, we will postpone the
+%discussion of how to solve the aforementioned equations for a moment. Instead, let us first
 %focus on relevant applications.
 %\todo{Find something that I can actually write about without sounding like an idiot}
 %\subsection{Nuclear engineering}
-%ubiquitous in nuclear engineering 
+%ubiquitous in nuclear engineering
 %pervasive %
 %here dive into diffusion too
 
@@ -1002,8 +1002,3 @@ fixed direction $\bOmega$. As initial condition, we chose $\psi_0(\bx,\bOmega) =
 
 %\subsection{Computer graphics}
 %here talk about monte carlo
-
-
-
-
-
